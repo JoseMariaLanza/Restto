@@ -84,12 +84,14 @@ class RegisterController extends Controller
         //     'email' => $data['email'],
         //     'password' => Hash::make($data['password']),
         // ]);
-
-        $user = [
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password'])
-        ];
+        
+        $user = $this->usersManagement->crearUsuarioYEditarPerfil(
+            [
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password'])
+            ]
+        );
 
         $empleado = [
             'Nombre' => $data['name'],
@@ -97,6 +99,5 @@ class RegisterController extends Controller
         ];
         
         $this->usersManagement->crearEmpleado($empleado);
-        return $this->usersManagement->crearUsuarioYEditarPerfil($user);
     }
 }

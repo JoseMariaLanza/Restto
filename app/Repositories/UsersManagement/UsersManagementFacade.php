@@ -16,8 +16,14 @@ class UsersManagementFacade extends ManageUser
         $this->manageUser = $manageUser;
     }
     
-    public function crearUsuarioYEditarPerfil(array $usuario)
+    public function crearUsuarioYEditarPerfil(array $data)
     {
+        $usuario = [
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password'])
+        ];
+
         return $this->manageUser->create($usuario);
     }
 
