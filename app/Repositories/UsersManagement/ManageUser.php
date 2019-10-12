@@ -7,9 +7,11 @@
 // ACTUAL
 namespace App\Repositories\UsersManagement;
 
+use Illuminate\Http\Request;
+
 // use App\Repositories\ICRUD;
 use App\User;
-use App\Empleado;
+// use App\Empleado;
 
 class ManageUser implements IUserRepository, IEmpleadoRepository // , ICRUD
 {
@@ -20,10 +22,10 @@ class ManageUser implements IUserRepository, IEmpleadoRepository // , ICRUD
     private $userModel;
     private $modeloEmpleado;
 
-    public function __construct(User $userModel, Empleado $modeloEmpleado)
+    public function __construct(User $userModel) // , Empleado $modeloEmpleado)
     {
         $this->userModel = $userModel;
-        $this->modeloEmpleado = $modeloEmpleado;
+        // $this->modeloEmpleado = $modeloEmpleado;
     }
 
     public function getAll(){
@@ -32,22 +34,20 @@ class ManageUser implements IUserRepository, IEmpleadoRepository // , ICRUD
 
     public function getById($id)
     {
-        // return "getById";
+        return $this->userModel->findOrFail($id);
     }
 
     public function create(array $user)
     {
         return $this->userModel->create($user);
     }
-    
-    public function crearEmpleado(array $empleado)
-    {
-        $this->modeloEmpleado->create($empleado);
-    }
 
-    public function update($id)
+    public function update(Request $request, $id)
     {
-        // return "update";
+        $usuarioUpdate = $this->userModel->getById($id);
+        $usuarioUpdate->name = $request->name;
+        $usuarioUpdate->email = $request->email;
+        $usuarioUpdate->save();
     }
 
     public function delete($id)

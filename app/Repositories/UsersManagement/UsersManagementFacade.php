@@ -2,6 +2,9 @@
 
 namespace App\Repositories\UsersManagement;
 
+use Illuminate\Http\Request;
+use App\Empleado;
+
 class UsersManagementFacade extends ManageUser
 {
     /**
@@ -16,19 +19,40 @@ class UsersManagementFacade extends ManageUser
         $this->manageUser = $manageUser;
     }
     
-    public function crearUsuarioYEditarPerfil(array $data)
+    public function crearUsuario(array $usuario)
     {
-        $usuario = [
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password'])
+        $nuevoUsuario = $this->manageUser->create($usuario);
+        $empleado = [
+            'Nombre' => $usuario['name'],
+            'User_Id' => $nuevoUsuario['id'],
         ];
-
-        return $this->manageUser->create($usuario);
+        $this->crearEmpleadoYEditar($empleado);
+        return $nuevoUsuario;
     }
 
-    public function crearEmpleado(array $empledo)
+    public function crearEmpleadoYEditar($empleado)// array $usuario)
     {
-        $this->manageUser->crearEmpleado($empledo);
+        Empleado::create($empleado); // separar luego a una clase ManageEmpleado
+        // Empleado::create([
+        //     'Nombre' => $usuario['name'],
+        //     'User_Id' => $usuario['id']
+        // ]);
+    }
+
+    public function obtenerUsuario($id)
+    {
+        return $this->getById($id);
+        // $usuario = $this->getById($id);
+        // $empleado = $this->obtenerEmpleado($id); // Lo llamo desde el controlador
+        // return $usuario;
+    }
+
+    public function obtenerEmpleado($id)
+    {
+        return Empleado::findOrFail($id); // separar luego a una clase ManageEmpleado
+    }
+
+    public function actualizarUsuario($request, $id){
+        return $this->manageUser->update($request, $id);
     }
 }

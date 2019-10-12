@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Schema;
 // Users Management
 // use App\Repositories\ICRUD;
 use App\Repositories\UsersManagement\IUserRepository;
-use App\Repositories\UsersManagement\IEmpleadoRepository;
+// use App\Repositories\UsersManagement\IEmpleadoRepository; // Hasta antes de comentar esta línea funcionaba bien
 use App\Repositories\UsersManagement\ManageUser;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
         //
         // $this->app->singleton(ICRUD::class, ManageUsers::class);
         $this->app->singleton(IUserRepository::class, ManageUser::class);
-        $this->app->singleton(IEmpleadoRepository::class, ManageUser::class);
+        // $this->app->singleton(IEmpleadoRepository::class, ManageUser::class);
     }
 
     /**

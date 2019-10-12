@@ -3,9 +3,25 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+// Users Management
+use App\Repositories\UsersManagement\UsersManagementFacade;
+use App\Repositories\UsersManagement\ManageUsers;
 
 class UsuariosController extends Controller
 {
+    /**
+     * Inicialización de Fachada
+     * 
+     * @var UsersManagementFacade
+     */
+    private $usersManagement;
+
+    public function __construct(UsersManagementFacade $usersManagement)//ICRUD $manageUsers)
+    {
+        $this->middleware('guest');
+        $this->usersManagement = $usersManagement;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -56,8 +72,8 @@ class UsuariosController extends Controller
      */
     public function edit($id)
     {
-        $usuario = User::findOrFail($id);
-        $empleado = Empleado::findOrFail($id);
+        $usuario = $this->usersManagement->obtenerEmpleado($id);
+        $empleado = $this->usersManagement->obtenerEmpleado($id);
         return view('Usuario.Editar', compact('usuario', 'empleado'));
     }
 
@@ -70,7 +86,19 @@ class UsuariosController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required'
+        ]);
+
+        // $usuarioUpdate = $this->usersManagement->obtenerUsuario($id);
+        $this->usersManagement->actualizarUsuario($request, $id);
+        // $usuarioUpdate = User::findOrFail($id);
+        // $usuarioUpdate->name = $request->name;
+        // $usuarioUpdate->email = $request->email;
+        // $usuarioUpdate->save();
+
+        return back()->with('mensaje', 'Cambios guardados correctamente');
     }
 
     /**

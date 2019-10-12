@@ -9,8 +9,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 // Users Management
-// use App\Repositories\ICRUD;
-// use App\Repositories\UsersManagement\IUsersRepository;
 use App\Repositories\UsersManagement\UsersManagementFacade;
 use App\Repositories\UsersManagement\ManageUsers;
 
@@ -41,13 +39,13 @@ class RegisterController extends Controller
      *
      * @return void
      */
+
     /**
      * Inicialización de Fachada
      * 
      * @var UsersManagementFacade // IUsersRepository //ICRUD
      */
     private $usersManagement;
-    private $administracionEmpleados;
 
     public function __construct(UsersManagementFacade $usersManagement)//ICRUD $manageUsers)
     {
@@ -78,26 +76,10 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        // Original
-        // return User::create([
-        //     'name' => $data['name'],
-        //     'email' => $data['email'],
-        //     'password' => Hash::make($data['password']),
-        // ]);
-        
-        $user = $this->usersManagement->crearUsuarioYEditarPerfil(
-            [
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'password' => Hash::make($data['password'])
-            ]
-        );
-
-        $empleado = [
-            'Nombre' => $data['name'],
-            'User_Id' => $user['id'],
-        ];
-        
-        $this->usersManagement->crearEmpleado($empleado);
+        return $this->usersManagement->crearUsuario([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password'])
+        ]);
     }
 }
