@@ -52,7 +52,20 @@ class UsersManagementFacade extends ManageUser
         return Empleado::findOrFail($id); // separar luego a una clase ManageEmpleado
     }
 
-    public function actualizarUsuario($request, $id){
+    public function actualizarUsuario($request, $id)
+    {
         return $this->manageUser->update($request, $id);
+    }
+
+    public function actualizarEmpleado(Request $request, $id)
+    {
+        $empleadoUpdate = Empleado::findOrFail($id);
+        $empleadoUpdate->Apellido = $request->Apellido;
+        $empleadoUpdate->Nombre = $request->Nombre;
+        $empleadoUpdate->Fecha_Nacimiento = $request->Fecha_Nacimiento;
+        $empleadoUpdate->Telefono = $request->Telefono;
+        $empleadoUpdate->Domicilio = $request->Domicilio;
+        $empleadoUpdate->Descripcion = $request->Descripcion;
+        $empleadoUpdate->save();
     }
 }

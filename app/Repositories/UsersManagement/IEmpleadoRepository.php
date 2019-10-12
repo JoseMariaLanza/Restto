@@ -2,6 +2,8 @@
 
 namespace App\Repositories\UsersManagement;
 
+use Illuminate\Http\Request;
+
 interface IEmpleadoRepository
 {
     public function getAll();
@@ -10,7 +12,7 @@ interface IEmpleadoRepository
 
     public function create(array $empleado);
 
-    public function update($id);
+    public function update(Request $request, $id);
 
     public function delete($id);
 }

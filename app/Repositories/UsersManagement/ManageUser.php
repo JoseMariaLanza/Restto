@@ -44,7 +44,7 @@ class ManageUser implements IUserRepository, IEmpleadoRepository // , ICRUD
 
     public function update(Request $request, $id)
     {
-        $usuarioUpdate = $this->userModel->getById($id);
+        $usuarioUpdate = $this->getById($id);
         $usuarioUpdate->name = $request->name;
         $usuarioUpdate->email = $request->email;
         $usuarioUpdate->save();

@@ -32,10 +32,12 @@
 
                             @endif
                     
-                            <input type="text" name="apellido" placeholder="Apellidos" class="form-control mb-2" value="{{ $empleado->apellido }}">
-                            <input type="text" name="nombre" placeholder="Nombres" class="form-control mb-2" value="{{ $empleado->nombre }}">
-                            <input type="text" name="telefono" placeholder="Teléfono" class="form-control mb-2" value="{{ $empleado->telefono }}">
-                            <input type="text" name="domicilio" placeholder="Domicilio" class="form-control mb-2" value="{{ $empleado->domicilio }}">
+                            <input type="text" name="Apellido" placeholder="Apellidos" class="form-control mb-2" value="{{ $empleado->Apellido }}">
+                            <input type="text" name="Nombre" placeholder="Nombres" class="form-control mb-2" value="{{ $empleado->Nombre }}">
+                            <input type="text" name="FechaNacimiento" placeholder="Fecha de Nacimiento" class="form-control mb-2" value="{{ $empleado->FechaNacimiento }}">
+                            <input type="text" name="Telefono" placeholder="Teléfono" class="form-control mb-2" value="{{ $empleado->Telefono }}">
+                            <input type="text" name="Domicilio" placeholder="Domicilio" class="form-control mb-2" value="{{ $empleado->Domicilio }}">
+                            <input type="text" name="Descripcion" placeholder="Descripcion" class="form-control mb-2" value="{{ $empleado->Descripcion }}">
                             <button class="btn btn-primary btn-block" type="submit">Guardar</button>
                         </form>
                     </div>

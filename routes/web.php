@@ -32,6 +32,11 @@ Route::get('/usuario/editar/{id}', 'UsuarioController@edit')->name('Usuario.Edit
 
 Route::put('/usuario/editar/{id}', 'UsuarioController@update')->name('Usuario.Actualizar');
 
+// Administración de Cajas
+Route::resource('Caja', 'CajaController');
+
+Route::get('/Caja', 'CajaController@index')->name('Caja.Administracion');
+
 
 
 

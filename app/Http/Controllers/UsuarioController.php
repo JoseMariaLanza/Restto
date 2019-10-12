@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Repositories\UsersManagement\UsersManagementFacade;
 use App\Repositories\UsersManagement\ManageUsers;
 
-class UsuariosController extends Controller
+class UsuarioController extends Controller
 {
     /**
      * Inicialización de Fachada
@@ -16,9 +16,9 @@ class UsuariosController extends Controller
      */
     private $usersManagement;
 
-    public function __construct(UsersManagementFacade $usersManagement)//ICRUD $manageUsers)
+    public function __construct(UsersManagementFacade $usersManagement)
     {
-        $this->middleware('guest');
+        $this->middleware('auth');
         $this->usersManagement = $usersManagement;
     }
 

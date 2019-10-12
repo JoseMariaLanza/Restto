@@ -2,6 +2,8 @@
 
 namespace App\Repositories\UsersManagement;
 
+use Illuminate\Http\Request;
+
 interface IUserRepository
 {
     public function getAll();

@@ -10,11 +10,13 @@
                         <a href="/editar/ {{ $empleado->id }}" class="btn btn-primary btn-sm">Editar datos personales...</a>
                     </div>
                     <div class="card-body">
-                        <h1>{{ $empleado->nombre }}</h1>
-                        <h4>Apellidos: {{ $empleado->apellido }}</h4>
-                        <h4>Nombres: {{ $empleado->nombre }}</h4>
-                        <h4>Teléfono: {{ $empleado->telefono }}</h4>
-                        <h4>Domicilio: {{ $empleado->domicilio }}</h4>
+                        <h1>{{ $empleado->Nombre }}</h1>
+                        <h4>Apellidos: {{ $empleado->Apellido }}</h4>
+                        <h4>Nombres: {{ $empleado->Nombre }}</h4>
+                        <h4>Fecha de Nacimiento: {{ $empleado->Fecha_Nacimiento }}</h4>
+                        <h4>Teléfono: {{ $empleado->Telefono }}</h4>
+                        <h4>Domicilio: {{ $empleado->Domicilio }}</h4>
+                        <h4>Descripción: {{ $empleado->Descripcion }}</h4>
                     </div>
                     <div class="card-header d-flex justify-content-between align-items-center">
                             <span>Datos de la cuenta</span>
@@ -24,6 +26,7 @@
                         <h1>{{ $usuarioEmpleado->name }}</h1>
                         <h4>Nombre de usuario: {{ $usuarioEmpleado->name }}</h4>
                         <h4>E-mail: {{ $usuarioEmpleado->email }}</h4>
+                        <h4>Descripción: {{ $usuarioEmpleado->Descripcion }}</h4>
                     </div>
                 </div>
             </div>
