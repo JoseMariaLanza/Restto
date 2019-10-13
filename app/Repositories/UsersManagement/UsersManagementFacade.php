@@ -5,7 +5,7 @@ namespace App\Repositories\UsersManagement;
 use Illuminate\Http\Request;
 use App\Empleado;
 
-class UsersManagementFacade extends ManageUser
+class UsersManagementFacade
 {
     /**
     * Inicialización de Interfaz
