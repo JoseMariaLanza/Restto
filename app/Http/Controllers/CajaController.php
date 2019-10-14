@@ -23,14 +23,11 @@ class CajaController extends Controller
         $this->salesManagement = $salesManagement;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        // Producto::buscar($request->get('texto'))->orderBy('id', 'DESC')->paginate(5);
+        $cajas = $this->salesManagement->obtenerCajas($request);
+        return view('Ventas.Caja.Index', compact('cajas'));
     }
 
     /**
@@ -38,13 +35,19 @@ class CajaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(array $data)
+    public function create(Request $request)
     {
-        return $this->salesManagement->crearCaja([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password'])
-        ]);
+        // $this->salesManagement->crearCaja([
+        //     'Nombre_Caja' => $data['nombreCaja'],
+        //     'Forma_Cobro' => $data['formaCobro'],
+        //     'Estado' => $data['estado'],
+        //     'Terminal' => 'MI PC',
+        //     'Descripcion' => $data['descripcion']
+        // ]);
+
+        $this->salesManagement->crearCaja($request);
+
+        return back()->with('mensaje', 'Caja agregada correctamente');
     }
 
     /**

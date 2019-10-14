@@ -11,6 +11,10 @@ use App\Repositories\UsersManagement\IUserRepository;
 // use App\Repositories\UsersManagement\IEmpleadoRepository; // Hasta antes de comentar esta línea funcionaba bien
 use App\Repositories\UsersManagement\ManageUser;
 
+// Administración de Cajas
+use App\Repositories\SalesManagement\CashManagement\ICashRepository;
+use App\Repositories\SalesManagement\CashManagement\ManageCash;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -23,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
         //
         // $this->app->singleton(ICRUD::class, ManageUsers::class);
         $this->app->singleton(IUserRepository::class, ManageUser::class);
+        $this->app->bind(ICashRepository::class, ManageCash::class);
         // $this->app->singleton(IEmpleadoRepository::class, ManageUser::class);
     }
 

@@ -7,7 +7,7 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <span>Editar Perfil</span>
-                        <a href="/detalles/ {{ $empleado->id }}" class="btn btn-primary btn-sm">Volver a detalles</a>
+                        <a href="/Empleado/Detalles/ {{ $empleado->id }}" class="btn btn-primary btn-sm">Volver a detalles</a>
                     </div>
                     <div class="card-body">     
                         @if (session('mensaje'))

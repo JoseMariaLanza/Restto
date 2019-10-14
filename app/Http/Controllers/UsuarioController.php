@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
 // Users Management
 use App\Repositories\UsersManagement\UsersManagementFacade;
 use App\Repositories\UsersManagement\ManageUsers;

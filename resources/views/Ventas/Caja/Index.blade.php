@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<!-- @inject('categorias', 'App\Http\Controllers\CategoriaController') -->
+
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
@@ -23,13 +23,10 @@
 
                 <div class="row justify-content-center" style="margin-bottom:30px">
                     <div class="col-md-5">
-                        @include('Caja.Crear')
+                        @include('Ventas.Caja.Crear')
                         @yield('agregarCaja')
                     </div>
-                    <!-- <div class="col-md-5">
-                        @include('Categoria.Crear')
-                        @yield('agregarCategoria')
-                    </div> -->
+                    
                 </div>
             </div>
         </div>
@@ -60,7 +57,7 @@
                     <div class="col-md-50">
                         <div class="card" style="margin-bottom:30px">
                             <div class="card-header d-flex justify-content-between align-items-center">
-                                <h1>{{ $item->nombreCaja }}</h1>
+                                <h1>{{ $item->Nombre_Caja }}</h1>
                                 <form action="{{ route('Caja.Eliminar', $item->id) }}" method='POST' class="d-inline">
                                     @method('DELETE')
                                     @csrf
@@ -70,18 +67,11 @@
                             <a href="{{ route('Caja.Editar', $item) }}" class="btn btn-primary btn-sm">Editar...</a>
                             <div class="card-body">
                                 <h4>Id: {{ $item->id }}</h4>
-                                <h4>Caja: {{ $item->nombreCaja }}</h4>
+                                <h4>Caja: {{ $item->Nombre_Caja }}</h4>
                                 <h4>Forma de Cobro: {{ $item->Forma_Cobro }}</h4>
                                 <h4>Estado: {{ $item->Estado }}</h4>
                                 <h4>Terminal: {{ $item->Terminal }}</h4>
                                 <h4>Descripción: {{ $item->Descripcion }}</h4>
-                                <!-- <h4>Categoría: 
-                                    @foreach($categorias->getCategorias() as $index => $categoria)
-                                        @if ($index == $item->categoria_id)
-                                            {{ $categoria }}
-                                        @endif
-                                    @endforeach    
-                                </h4> -->
                             </div>
                         </div>
                     </div>

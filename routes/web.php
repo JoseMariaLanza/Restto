@@ -20,32 +20,36 @@ Auth::routes();
 // Administración de Usuarios
 Route::resource('/Empleado', 'EmpleadoController');
 
-Route::get('empleado/detalles/{id}', 'EmpleadoController@show')->name('Empleado.Detalles');
+Route::get('Empleado/Detalles/{id}', 'EmpleadoController@show')->name('Empleado.Detalles');
 
-Route::get('empleado/editar/{id}', 'EmpleadoController@edit')->name('Empleado.Editar');
+Route::get('Empleado/Editar/{id}', 'EmpleadoController@edit')->name('Empleado.Editar');
 
-Route::put('empleado/editar/{id}', 'EmpleadoController@update')->name('Empleado.Actualizar');
+Route::put('Empleado/Editar/{id}', 'EmpleadoController@update')->name('Empleado.Actualizar');
 
 Route::resource('/Usuario', 'UsuarioController');
 
-Route::get('/usuario/editar/{id}', 'UsuarioController@edit')->name('Usuario.Editar');
+Route::get('/Usuario/Editar/{id}', 'UsuarioController@edit')->name('Usuario.Editar');
 
-Route::put('/usuario/editar/{id}', 'UsuarioController@update')->name('Usuario.Actualizar');
+Route::put('/Usuario/Editar/{id}', 'UsuarioController@update')->name('Usuario.Actualizar');
 
 // Administración de Cajas
-Route::resource('Caja', 'CajaController');
+Route::resource('/Caja', 'CajaController');
 
-Route::get('/Caja/index', 'CajaController@index')->name('Caja.Administrar');
+Route::get('/Caja/index', 'CajaController@index')->name('Caja.Index');
 
-Route::get('caja/detalles/{id}', 'CajaController@show')->name('Caja.Detalles');
+Route::get('/Caja/management', 'CajaController@manage')->name('Caja.Administrar');
 
-Route::post('/caja/crear/', 'CajaController@create')->name('Caja.Crear');
+// agregar route ->name('Caja.Administrar');
 
-Route::get('/caja/editar/{id}', 'CajaController@edit')->name('Caja.Editar');
+Route::get('Caja/Detalles/{id}', 'CajaController@show')->name('Caja.Detalles');
 
-Route::put('/caja/editar/{id}', 'CajaController@update')->name('Caja.Actualizar');
+Route::post('/Caja/Crear/', 'CajaController@create')->name('Caja.Crear');
 
-Route::delete('/caja/eliminar/{id}', 'CajaController@destroy')->name('Caja.Eliminar');
+Route::get('/Caja/Editar/{id}', 'CajaController@edit')->name('Caja.Editar');
+
+Route::put('/Caja/Editar/{id}', 'CajaController@update')->name('Caja.Actualizar');
+
+Route::delete('/Caja/Eliminar/{id}', 'CajaController@destroy')->name('Caja.Eliminar');
 
 
 

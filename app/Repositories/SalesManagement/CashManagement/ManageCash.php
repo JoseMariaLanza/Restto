@@ -19,8 +19,8 @@ class ManageCash implements ICashRepository
         $this->modeloCaja = $modeloCaja;
     }
 
-    public function getAll(){
-        // return "getAll";
+    public function getAll($request){
+        return $this->modeloCaja->buscar($request->get('texto'))->orderBy('id', 'DESC')->paginate(5);
     }
 
     public function getById($id)
@@ -28,9 +28,22 @@ class ManageCash implements ICashRepository
         return $this->modeloCaja->findOrFail($id);
     }
 
-    public function create(array $caja)
+    public function create(Request $request)
     {
-        return $this->modeloCaja->create($caja);
+        // $nuevaCaja = $this->modeloCaja->create($caja);
+        // $this->modeloCaja->create($caja);
+
+        
+
+        $nuevaCaja = new $this->modeloCaja();
+        $nuevaCaja->Nombre_Caja = $request->nombreCaja;
+        $nuevaCaja->Forma_Cobro = $request->formaCobro;
+        $nuevaCaja->Estado = $request->estado;
+        $nuevaCaja->Terminal = 'Esta PC';
+        $nuevaCaja->Descripcion = $request->descripcion;
+        $nuevaCaja->save();
+
+        // return $this->modeloCaja->create($caja);
     }
 
     public function update(Request $request, $id)

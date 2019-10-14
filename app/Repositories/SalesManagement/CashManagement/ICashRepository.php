@@ -6,11 +6,11 @@ use Illuminate\Http\Request;
 
 interface ICashRepository
 {
-    public function getAll();
+    public function getAll($request);
 
     public function getById($id);
 
-    public function create(array $caja);
+    public function create(Request $caja);
 
     public function update(Request $request, $id);
 

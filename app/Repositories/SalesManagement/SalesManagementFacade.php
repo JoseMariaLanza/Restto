@@ -26,16 +26,22 @@ class SalesManagementFacade
         $this->manageCash = $manageCash;
     }
 
-    public function crearCaja(array $caja)
+    public function obtenerCajas(Request $request)
     {
-        $nuevaCaja = $this->manageCash->create($caja);
+        return $this->manageCash->getAll($request);
+    }
+
+    public function crearCaja(Request $request)
+    {
+        // $nuevaCaja = $this->manageCash->create($caja);
         // Quitar comentarios para habilitar la inserción de detalles de la caja
         // $detalle = [
         //     'Sector_Id' => $caja['sectorId'],
         //     'Descripcion' => $caja['descripcion'],
         // ];
         // $this->agregarDetalle($detalle);
-        return $nuevaCaja;
+        // return $nuevaCaja;
+        $this->manageCash->create($request);
     }
 
     public function agregarDetalle(CajaDetalle $detalle)
@@ -45,7 +51,7 @@ class SalesManagementFacade
 
     public function obtenerCaja($id)
     {
-        return $this->getById($id);
+        return $this->manageCash->getById($id);
     }
 
     public function obtenerDetalles($id)

@@ -7,7 +7,7 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <span>Perfil</span>
-                        <a href="/editar/ {{ $empleado->id }}" class="btn btn-primary btn-sm">Editar datos personales...</a>
+                        <a href="/Empleado/Editar/ {{ $empleado->id }}" class="btn btn-primary btn-sm">Editar datos personales...</a>
                     </div>
                     <div class="card-body">
                         <h1>{{ $empleado->Nombre }}</h1>
@@ -20,7 +20,7 @@
                     </div>
                     <div class="card-header d-flex justify-content-between align-items-center">
                             <span>Datos de la cuenta</span>
-                            <a href="{{ url('/usuario/editar', $usuarioEmpleado->id) }}" class="btn btn-primary btn-sm">Editar datos de la cuenta...</a>
+                            <a href="{{ url('/Usuario/Editar', $usuarioEmpleado->id) }}" class="btn btn-primary btn-sm">Editar datos de la cuenta...</a>
                     </div>
                     <div class="card-body">     
                         <h1>{{ $usuarioEmpleado->name }}</h1>
