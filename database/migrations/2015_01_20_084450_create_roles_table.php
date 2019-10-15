@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 class CreateRolesTable extends Migration
 {
@@ -13,23 +12,26 @@ class CreateRolesTable extends Migration
      */
     public function up()
     {
-        Schema::create('roles', function (Blueprint $table) {
+        $name = config('shinobi.tables.roles');
+
+        Schema::create($name, function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('Rol');
-            $table->text('Descripcion');
-            $table->string('Campo_Extra_1');
-            $table->string('Campo_Extra_2');
+            $table->string('name')->unique();
+            $table->string('slug')->unique();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
 
     /**
-     * Reverse the migrations.
+     * Reverse the migration.
      *
      * @return void
      */
     public function down()
     {
-        Schema::dropIfExists('roles');
+        $name = config('shinobi.tables.roles');
+
+        Schema::drop($name);
     }
 }

@@ -44,7 +44,7 @@ class SalesManagementFacade
         $this->manageCash->create($request);
     }
 
-    public function agregarDetalle(CajaDetalle $detalle)
+    public function agregarDetalleCaja(CajaDetalle $detalle)
     {
         CajaDetalle::create($detalle);
     }
@@ -54,7 +54,7 @@ class SalesManagementFacade
         return $this->manageCash->getById($id);
     }
 
-    public function obtenerDetalles($id)
+    public function obtenerDetallesCaja($id)
     {
         return CajaDEtalle::findOrFail($id); // Llamado desde el controlador
     }
@@ -64,7 +64,7 @@ class SalesManagementFacade
         return $this->manageCash->update($request, $id);
     }
 
-    public function actualizarDetalles(Request $request, $id)
+    public function actualizarDetallesCaja(Request $request, $id)
     {
         // $empleadoUpdate = Empleado::findOrFail($id);
         // $empleadoUpdate->Apellido = $request->Apellido;
@@ -75,4 +75,13 @@ class SalesManagementFacade
         // $empleadoUpdate->Descripcion = $request->Descripcion;
         // $empleadoUpdate->save();
     }
+
+    public function eliminarCaja($id)
+    {
+        $this->manageCash->delete($id);
+    }
+
+
+    // Facturación
+    
 }

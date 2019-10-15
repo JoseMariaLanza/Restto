@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Repositories\UsersManagement\UsersManagementFacade;
 use App\Repositories\UsersManagement\ManageUsers;
 
-class UsuarioController extends Controller
+class UserController extends Controller
 {
     /**
      * Inicialización de Fachada
@@ -73,9 +73,9 @@ class UsuarioController extends Controller
      */
     public function edit($id)
     {
-        $usuario = $this->usersManagement->obtenerEmpleado($id);
+        $user = $this->usersManagement->obtenerUsuario($id);
         $empleado = $this->usersManagement->obtenerEmpleado($id);
-        return view('Usuario.Editar', compact('usuario', 'empleado'));
+        return view('Usuario.Editar', compact('user', 'empleado'));
     }
 
     /**

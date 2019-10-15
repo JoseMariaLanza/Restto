@@ -20,7 +20,7 @@
                             {{ session('mensaje') }}
                         </div>
                     @endif
-
+                @can('cajas.create')
                 <div class="row justify-content-center" style="margin-bottom:30px">
                     <div class="col-md-5">
                         @include('Ventas.Caja.Crear')
@@ -28,6 +28,7 @@
                     </div>
                     
                 </div>
+                @endcan
             </div>
         </div>
     </div>
@@ -58,13 +59,17 @@
                         <div class="card" style="margin-bottom:30px">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h1>{{ $item->Nombre_Caja }}</h1>
-                                <form action="{{ route('Caja.Eliminar', $item->id) }}" method='POST' class="d-inline">
+                                @can('cajas.destroy')
+                                <form action="{{ route('cajas.destroy', $item->id) }}" method='POST' class="d-inline">
                                     @method('DELETE')
                                     @csrf
                                     <button class="btn btn-danger btn-sm" type="submit">Eliminar...</button>
                                 </form>
+                                @endcan
                             </div>
-                            <a href="{{ route('Caja.Editar', $item) }}" class="btn btn-primary btn-sm">Editar...</a>
+                            @can('cajas.edit')
+                            <a href="{{ route('cajas.edit', $item) }}" class="btn btn-primary btn-sm">Editar...</a>
+                            @endcan
                             <div class="card-body">
                                 <h4>Id: {{ $item->id }}</h4>
                                 <h4>Caja: {{ $item->Nombre_Caja }}</h4>

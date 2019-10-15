@@ -26,7 +26,7 @@ class CajaController extends Controller
     public function index(Request $request)
     {
         // Producto::buscar($request->get('texto'))->orderBy('id', 'DESC')->paginate(5);
-        $cajas = $this->salesManagement->obtenerCajas($request);
+        $cajas = $this->salesManagement->obtenerCajas($request)->paginate(5);
         return view('Ventas.Caja.Index', compact('cajas'));
     }
 
@@ -45,9 +45,9 @@ class CajaController extends Controller
         //     'Descripcion' => $data['descripcion']
         // ]);
 
-        $this->salesManagement->crearCaja($request);
+        // $this->salesManagement->crearCaja($request);
 
-        return back()->with('mensaje', 'Caja agregada correctamente');
+        // return back()->with('mensaje', 'Caja agregada correctamente');
     }
 
     /**
@@ -58,7 +58,9 @@ class CajaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->salesManagement->crearCaja($request);
+
+        return back()->with('mensaje', 'Caja agregada correctamente');
     }
 
     /**
@@ -82,7 +84,8 @@ class CajaController extends Controller
      */
     public function edit($id)
     {
-        //
+        $caja = $this->salesManagement->obtenerCaja($id);
+        return view('Ventas.Caja.Editar', compact('caja'));
     }
 
     /**
@@ -94,7 +97,15 @@ class CajaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'Nombre_Caja' => 'required',
+            'Forma_Cobro' => 'required',
+            'Estado' => 'required',
+            'Descripcion' => 'required'
+        ]);
+
+        $this->salesManagement->actualizarCaja($request, $id);
+        return back()->with('mensaje', 'Caja actualizada correctamente');
     }
 
     /**
@@ -105,6 +116,7 @@ class CajaController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->salesManagement->eliminarCaja($id);
+        return back()->with('mensaje', 'Caja eliminada correctamente');
     }
 }

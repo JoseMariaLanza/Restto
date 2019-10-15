@@ -15,7 +15,7 @@
                                 {{ session('mensaje') }}
                             </div>
                         @endif
-                        <form action="{{ route('Usuario.Actualizar', $usuario->id) }}" method="POST">
+                        <form action="{{ route('users.update', $user->id) }}" method="POST">
                             @method('PUT')
                             @csrf
                     
@@ -32,8 +32,8 @@
 
                             @endif
                     
-                            <input type="text" name="name" placeholder="Nombre de usuario" class="form-control mb-2" value="{{ $usuario->name }}">
-                            <input type="text" name="email" placeholder="E-mail" class="form-control mb-2" value="{{ $usuario->email }}">
+                            <input type="text" name="name" placeholder="Nombre de usuario" class="form-control mb-2" value="{{ $user->name }}">
+                            <input type="text" name="email" placeholder="E-mail" class="form-control mb-2" value="{{ $user->email }}">
                             <button class="btn btn-primary btn-block" type="submit">Guardar</button>
                         </form>
                     </div>

@@ -41,7 +41,7 @@ class UsersManagementFacade
 
     public function obtenerUsuario($id)
     {
-        return $this->getById($id);
+        return $this->manageUser->getById($id);
         // $usuario = $this->getById($id);
         // $empleado = $this->obtenerEmpleado($id); // Lo llamo desde el controlador
         // return $usuario;
