@@ -39,7 +39,7 @@
                                 <a href="{{ route('users.show', $item->id) }}" class="btn btn-secondary btn-sm btn-block">Ver...</a>
                             @endcan
                             @can('users.edit')
-                                <a href="{{ route('users.edit', $item->id) }}" class="btn btn-primary btn-sm btn-block">Editar...</a>
+                                <a href="{{ route('users.edit', $item->id) }}" class="btn btn-primary btn-sm btn-block">Editar datos de la cuenta...</a>
                             @endcan
                             
                             <div class="card-body">

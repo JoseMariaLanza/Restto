@@ -6,7 +6,7 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <span>Editar Perfil</span>
+                        <span>Datos de la cuenta</span>
                         <a href="{{ route('users.index', $user->id) }}" class="btn btn-primary btn-sm">Volver a la lista de usuarios</a>
                     </div>
                     <div class="card-body">     
