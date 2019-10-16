@@ -62,9 +62,9 @@ class EmpleadoController extends Controller
      */
     public function show($id)
     {
-        $usuarioEmpleado = auth()->user();
-        $empleado = $this->usersManagement->obtenerEmpleado($usuarioEmpleado->id);
-        return view('Empleado.Detalles', compact('empleado', 'usuarioEmpleado'));
+        $user = auth()->user();
+        $empleado = $this->usersManagement->obtenerEmpleado($id);
+        return view('Empleado.Detalles', compact('empleado', 'user'));
     }
 
     /**
@@ -75,9 +75,8 @@ class EmpleadoController extends Controller
      */
     public function edit($id)
     {
-        $usuarioEmpleado = auth()->user()->id;
-        $empleado = $this->usersManagement->obtenerEmpleado($usuarioEmpleado);
-        return view('Empleado.Editar', compact('empleado'));
+        $empleado = $this->usersManagement->obtenerEmpleado($id);
+        return view('Empleado.Editar', compact('empleado', 'user'));
     }
 
     /**

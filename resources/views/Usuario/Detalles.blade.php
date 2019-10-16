@@ -7,7 +7,7 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <span>Perfil</span>
-                        <a href="{{ route('Empleado.Editar', $empleado->id) }}" class="btn btn-primary btn-sm">Editar datos personales...</a>
+                        <a href="{{ route('Empleado.Editar', $empleado->id) }}" class="btn btn-primary btn-sm">Editar datos del Empleado...</a>
                     </div>
                     <div class="card-body">
                         <h1>{{ $empleado->Nombre }}</h1>

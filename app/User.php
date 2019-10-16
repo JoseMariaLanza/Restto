@@ -41,4 +41,20 @@ class User extends Authenticatable
     public function empleado(){
         return $this->hasOne(Empleado::class);
     }
+
+    public function scopeBuscar($query, $texto){
+        
+        if (trim($texto) != ""){
+            $textoFormateado = str_replace("-", " ", $texto);
+            $textoFormateado = str_replace(".", " ", $textoFormateado);
+            $textoFormateado = str_replace("/", " ", $textoFormateado);
+            $textoFormateado = str_replace(",", " ", $textoFormateado);
+            $textoFormateado = str_replace(";", " ", $textoFormateado);
+            $palabras = explode(" ", $textoFormateado);
+            
+            foreach ($palabras as $palabra){
+                $query->where(\DB::raw("CONCAT(users.name, ' ', users.email)"), 'LIKE', "%$palabra%");
+            }
+        }
+    }
 }

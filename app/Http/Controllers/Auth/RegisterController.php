@@ -26,13 +26,17 @@ class RegisterController extends Controller
     */
 
     use RegistersUsers;
+    /**
+    * @var integer
+    */
+    protected $user;
 
     /**
      * Where to redirect users after registration.
      *
      * @var string
      */
-    protected $redirectTo = 'Empleado/Editar/{id}';
+    protected $redirectTo = 'Empleado/Editar/{{$user->id}}';
 
     /**
      * Create a new controller instance.
@@ -51,6 +55,7 @@ class RegisterController extends Controller
     {
         $this->middleware('guest');
         $this->usersManagement = $usersManagement;
+        $this->user = auth()->user();
     }
 
     /**

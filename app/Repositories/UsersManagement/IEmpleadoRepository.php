@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 interface IEmpleadoRepository
 {
-    public function getAll();
+    public function getAll(Request $request);
 
     public function getById($id);
 

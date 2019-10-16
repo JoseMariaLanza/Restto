@@ -17,9 +17,10 @@ class CreateCajasTable extends Migration
             $table->bigIncrements('id');
             $table->string('Nombre_Caja');
             $table->string('Forma_Cobro');
-            $table->boolean('Estado');
+            $table->string('Estado');
             $table->string('Terminal');
-            $table->text('Descripcion');
+            $table->text('Descripcion')->nullable();
+            $table->float('Monto_Inicial')->nullable();
             $table->string('Campo_Extra_1')->nullable();
             $table->string('Campo_Extra_2')->nullable();
             $table->timestamps();

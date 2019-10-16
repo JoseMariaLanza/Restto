@@ -4,37 +4,44 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+// Roles Management
+use Caffeinated\Shinobi\Models\Role;
+use Caffeinated\Shinobi\Models\Permission;
+
 class RoleController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $roles = Role::paginate();
+
+        return view('Role.Index', compact('roles'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
+        $permissions = Permission::get();
+
+        return view('Role.Crear', compact('permissions'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $role = Role::create($request->all());
+
+        // Actualización de permisos
+        $role->permissions()->sync($request->get('permissions'));
+
+        return back()->with('mensaje', 'Rol agregado correctamente');
     }
 
     /**
@@ -43,9 +50,9 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Role $role)
     {
-        //
+        return view('Role.Detalles', compact('role'));
     }
 
     /**
@@ -56,7 +63,12 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
-        //
+        // dd($id);
+        $role = Role::findOrFail($id);
+
+        $permissions = Permission::get();
+
+        return view('Role.Editar', compact('role', 'permissions'));
     }
 
     /**
@@ -68,7 +80,19 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'slug' => 'required'
+        ]);
+
+        // Actualización del rol
+        $role = Role::findOrFail($id);
+        $role->update($request->all());
+
+        // Actualización de permisos
+        $role->permissions()->sync($request->get('permissions'));
+
+        return back()->with('mensaje', 'Cambios guardados correctamente');
     }
 
     /**
@@ -79,6 +103,8 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $role = Role::findOrFail($id);
+        $role->delete();
+        return back()->with('mensaje', 'Rol eliminado correctamente');
     }
 }

@@ -87,5 +87,10 @@ class PermissionsTableSeeder extends Seeder
             'slug'          => 'cajas.destroy',
             'description'   => 'Eliminar cualquier caja del sistema',
         ]);
+        Permission::create([
+            'name'          => 'Abrir caja',
+            'slug'          => 'cajas.open',
+            'description'   => 'Abrir una caja del sistema',
+        ]);
     }
 }

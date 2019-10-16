@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use App\Repositories\UsersManagement\UsersManagementFacade;
 use App\Repositories\UsersManagement\ManageUsers;
 
+// Roles Management
+use Caffeinated\Shinobi\Models\Role;
+
 class UserController extends Controller
 {
     /**
@@ -28,30 +31,10 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+        $users = $this->usersManagement->obtenerUsuarios($request)->paginate(5);
+        return view('Usuario.Index', compact('users'));
     }
 
     /**
@@ -62,7 +45,9 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = $this->usersManagement->obtenerUsuario($id);
+        $empleado = $this->usersManagement->obtenerEmpleado($id);
+        return view('Usuario.Detalles', compact('user', 'empleado'));
     }
 
     /**
@@ -73,9 +58,12 @@ class UserController extends Controller
      */
     public function edit($id)
     {
+        // Roles del sistema
+        $roles = Role::get();
+
         $user = $this->usersManagement->obtenerUsuario($id);
         $empleado = $this->usersManagement->obtenerEmpleado($id);
-        return view('Usuario.Editar', compact('user', 'empleado'));
+        return view('Usuario.Editar', compact('user', 'empleado', 'roles'));
     }
 
     /**
@@ -92,12 +80,8 @@ class UserController extends Controller
             'email' => 'required'
         ]);
 
-        // $usuarioUpdate = $this->usersManagement->obtenerUsuario($id);
+        // Actualización del usuario
         $this->usersManagement->actualizarUsuario($request, $id);
-        // $usuarioUpdate = User::findOrFail($id);
-        // $usuarioUpdate->name = $request->name;
-        // $usuarioUpdate->email = $request->email;
-        // $usuarioUpdate->save();
 
         return back()->with('mensaje', 'Cambios guardados correctamente');
     }
@@ -110,6 +94,7 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->usersManagement->eliminarUsuarioEmpleado($id);
+        return back()->with('mensaje', 'Usuario eliminado correctamente');
     }
 }

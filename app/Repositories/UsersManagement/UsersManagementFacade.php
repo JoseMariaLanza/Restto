@@ -39,6 +39,11 @@ class UsersManagementFacade
         // ]);
     }
 
+    public function obtenerUsuarios(Request $request)
+    {
+        return $this->manageUser->getAll($request);
+    }
+
     public function obtenerUsuario($id)
     {
         return $this->manageUser->getById($id);
@@ -54,7 +59,7 @@ class UsersManagementFacade
 
     public function actualizarUsuario($request, $id)
     {
-        return $this->manageUser->update($request, $id);
+        $this->manageUser->update($request, $id);
     }
 
     public function actualizarEmpleado(Request $request, $id)
@@ -67,5 +72,12 @@ class UsersManagementFacade
         $empleadoUpdate->Domicilio = $request->Domicilio;
         $empleadoUpdate->Descripcion = $request->Descripcion;
         $empleadoUpdate->save();
+    }
+
+    public function eliminarUsuarioEmpleado($id)
+    {
+        $empleadoDelete = Empleado::findOrFail($id);
+        $empleadoDelete->delete();
+        $this->manageUser->delete($id);
     }
 }

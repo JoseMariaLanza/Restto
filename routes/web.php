@@ -71,15 +71,15 @@ Route::middleware(['auth'])->group(function(){
         ->middleware('has.permission:roles.create');
 
     Route::put('roles/{role}', 'RoleController@update')->name('roles.update')
-        ->middleware('haspermission:roles.edit');
+        ->middleware('has.permission:roles.edit');
 
-    Route::post('roles/{role}', 'RoleController@show')->name('roles.show')
+    Route::get('roles/{role}', 'RoleController@show')->name('roles.show')
         ->middleware('has.permission:roles.show');
 
     Route::delete('roles/{role}', 'RoleController@destroy')->name('roles.destroy')
         ->middleware('has.permission:roles.destroy');
 
-    Route::post('roles/{role}/edit', 'RoleController@edit')->name('roles.edit')
+    Route::get('roles/{role}/edit', 'RoleController@edit')->name('roles.edit')
         ->middleware('has.permission:roles.edit');
 
 
@@ -96,7 +96,7 @@ Route::middleware(['auth'])->group(function(){
     Route::put('cajas/{id}', 'CajaController@update')->name('cajas.update')
         ->middleware('has.permission:cajas.edit');
 
-    Route::post('cajas/{id}', 'CajaController@show')->name('cajas.show')
+    Route::get('cajas/{id}', 'CajaController@show')->name('cajas.show')
         ->middleware('has.permission:cajas.show');
 
     Route::delete('cajas/{id}', 'CajaController@destroy')->name('cajas.destroy')
@@ -113,7 +113,7 @@ Route::middleware(['auth'])->group(function(){
     Route::put('users/{id}', 'UserController@update')->name('users.update')
         ->middleware('has.permission:users.edit');
 
-    Route::post('users/{id}', 'UserController@show')->name('users.show')
+    Route::get('users/{id}', 'UserController@show')->name('users.show')
         ->middleware('has.permission:users.show');
 
     Route::delete('users/{id}', 'UserController@destroy')->name('users.destroy')

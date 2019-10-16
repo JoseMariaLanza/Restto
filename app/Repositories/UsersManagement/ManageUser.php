@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 
 // use App\Repositories\ICRUD;
 use App\User;
+use Caffeinated\Shinobi\Models\Role;
 // use App\Empleado;
 
 class ManageUser implements IUserRepository, IEmpleadoRepository // , ICRUD
@@ -28,8 +29,8 @@ class ManageUser implements IUserRepository, IEmpleadoRepository // , ICRUD
         // $this->modeloEmpleado = $modeloEmpleado;
     }
 
-    public function getAll(){
-        // return "getAll";
+    public function getAll(Request $request){
+        return $this->userModel->buscar($request->get('texto'))->orderBy('id', 'DESC');
     }
 
     public function getById($id)
@@ -48,10 +49,19 @@ class ManageUser implements IUserRepository, IEmpleadoRepository // , ICRUD
         $usuarioUpdate->name = $request->name;
         $usuarioUpdate->email = $request->email;
         $usuarioUpdate->save();
+
+        // Actualización de Roles
+        $usuarioUpdate->roles()->sync($request->get('roles'));
+    }
+
+    public function updateRoles(Request $request)
+    {
+        return roles()->sync($request->get('roles'));
     }
 
     public function delete($id)
     {
-        // return "delete";
+        $user = $this->getById($id);
+        $user->delete();
     }
 }

@@ -73,7 +73,7 @@ class CajaController extends Controller
     {
         $caja = $this->salesManagement->obtenerCaja($id);
         // TODO: Obtener detalles de la caja.
-        return view('Caja.Mostrar', compact('caja')); // , 'cajaDetalles');
+        return view('Caja.Mostrar', compact('caja'));
     }
 
     /**

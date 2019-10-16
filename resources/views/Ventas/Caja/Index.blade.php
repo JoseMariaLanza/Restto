@@ -22,7 +22,7 @@
                     @endif
                 @can('cajas.create')
                 <div class="row justify-content-center" style="margin-bottom:30px">
-                    <div class="col-md-5">
+                    <div class="col-md-8">
                         @include('Ventas.Caja.Crear')
                         @yield('agregarCaja')
                     </div>
@@ -60,15 +60,14 @@
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h1>{{ $item->Nombre_Caja }}</h1>
                                 @can('cajas.destroy')
-                                <form action="{{ route('cajas.destroy', $item->id) }}" method='POST' class="d-inline">
-                                    @method('DELETE')
+                                {!! Form::open(['route' => ['cajas.destroy', $item->id], 'method' => 'DELETE', 'class' => 'd-inline']) !!}
                                     @csrf
                                     <button class="btn btn-danger btn-sm" type="submit">Eliminar...</button>
-                                </form>
+                                {!! Form::close() !!}
                                 @endcan
                             </div>
                             @can('cajas.edit')
-                            <a href="{{ route('cajas.edit', $item) }}" class="btn btn-primary btn-sm">Editar...</a>
+                            <a href="{{ route('cajas.edit', $item) }}" class="btn btn-primary btn-sm btn-block">Editar...</a>
                             @endcan
                             <div class="card-body">
                                 <h4>Id: {{ $item->id }}</h4>
