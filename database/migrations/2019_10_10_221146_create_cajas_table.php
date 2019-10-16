@@ -17,7 +17,7 @@ class CreateCajasTable extends Migration
             $table->bigIncrements('id');
             $table->string('Nombre_Caja');
             $table->string('Forma_Cobro');
-            $table->string('Estado');
+            $table->enum('Estado', ['ABIERTA','CERRADA']);
             $table->string('Terminal');
             $table->text('Descripcion')->nullable();
             $table->float('Monto_Inicial')->nullable();

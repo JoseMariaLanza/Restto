@@ -20,7 +20,7 @@ class CreateOrdenesMenusTable extends Migration
             $table->unsignedBigInteger('Item_Id')->nullable();
             $table->foreign('Item_Id')->references('id')->on('menus');
             $table->float('Cantidad');
-            $table->string('Estado');
+            $table->enum('Estado', ['CANCELADA', 'EN PÉRDIDA']);
             $table->text('Descripcion');
             $table->string('Campo_Extra_1');
             $table->string('Campo_Extra_2');

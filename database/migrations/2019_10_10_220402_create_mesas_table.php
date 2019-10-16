@@ -17,7 +17,7 @@ class CreateMesasTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('Sector_Id')->nullable();
             $table->bigInteger('Numero');
-            $table->string('Estado');
+            $table->enum('Estado', ['OCUPADA', 'RESERVADA']);
             $table->text('Descripcion');
             $table->string('Campo_Extra_1');
             $table->string('Campo_Extra_2');

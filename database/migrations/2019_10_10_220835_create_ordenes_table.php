@@ -18,8 +18,8 @@ class CreateOrdenesTable extends Migration
             $table->unsignedBigInteger('Mesa_Id')->nullable();
             $table->foreign('Mesa_Id')->references('id')->on('mesas');
             $table->dateTime('Fecha_Hora_Orden_Entregada');
-            $table->string('Estado_Orden');
-            $table->string('Estado_Mesa');
+            $table->enum('Estado_Orden', ['EN PREPARACIÓN', 'PREPARADA', 'ENTREGADA', 'FACTURADA']);
+            $table->enum('Estado_Mesa', ['LIBRE', 'OCUPADA', 'RESERVADA']);
             $table->dateTime('Fecha_Hora_Orden_Finalizada')->nullable();
             $table->float('Total');
             $table->text('Descripcion');

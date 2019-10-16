@@ -17,8 +17,8 @@ class CreateMesasServiciosTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('Mesa_Id')->nullable();
             $table->foreign('Mesa_Id')->references('id')->on('mesas');
-            $table->string('Estado_Servicio');
-            $table->string('Estado_Mesa');
+            $table->enum('Estado_Servicio', ['BRINDANDO','CANCELADO', 'FACTURADO']);
+            $table->enum('Estado_Mesa', ['LIBRE', 'OCUPADA', 'RESERVADA']);
             $table->text('Descripcion');
             $table->string('Campo_Extra_1');
             $table->string('Campo_Extra_2');
