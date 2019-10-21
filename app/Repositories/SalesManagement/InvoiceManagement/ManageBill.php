@@ -4,6 +4,7 @@ namespace App\Repositories\SalesManagement\InvoiceManagement;
 
 use Illuminate\Http\Request;
 
+use App\Factura;
 use App\FacturaDetalle;
 
 class ManageBill implements IBillRepository
@@ -14,13 +15,18 @@ class ManageBill implements IBillRepository
      */
     private $modeloFactura;
 
-    public function __construct(Caja $modeloFactura)
+    public function __construct(Factura $modeloFactura)
     {
         $this->modeloFactura = $modeloFactura;
     }
 
     public function getAll($request){
-        return $this->modeloFactura->buscar($request->get('texto'))->orderBy('id', 'DESC');
+        // obtener todas las facuras
+    }
+
+    public function getDayBills($request)
+    {
+        return $this->modeloFactura->buscarfacturasdia($request->get('fechaInicio', 'fechaFin')); // ->orderBy('Fecha_Emision', 'DESC');
     }
 
     public function getById($id)
@@ -30,35 +36,35 @@ class ManageBill implements IBillRepository
 
     public function create(Request $request)
     {
-        // $nuevaCaja = $this->modeloCaja->create($caja);
-        // $this->modeloCaja->create($caja);
-
-        
-
+        // Quitar comentarios para implementar los campos
         $nuevaFactura = new $this->modeloFactura();
-        $nuevaFactura->Caja_Id = $request->cajaId;
-        $nuevaFactura->Usuario_Id = $request->userId;
-        $nuevaFactura->Serie = $request->serie;
-        $nuevaFactura->Numero = $request->numero;
-        $nuevaFactura->Tipo = $request->tipo;
-        $nuevaFactura->Cliente_Id = $request->clienteId;
-        $nuevaFactura->Fecha_Emision = $request->fechaEmision;
-        $nuevaFactura->Estado = $request->estado;
-        $nuevaFactura->Total = $request->total;
-        $nuevaFactura->Descripcion = $request->descripcion;
+        // $nuevaFactura->Caja_Id = $request->Caja_Id; // nullable - No se muestra para el ingreso
+        // $nuevaFactura->Usuario_Id = $request->User_Id; // nullable - No se muestra para el ingreso
+        // $nuevaFactura->Serie = $request->Serie; // nullable - No se muestra para el ingreso
+        // $nuevaFactura->Numero = $request->Numero; // nullable - No se muestra para el ingreso
+        $nuevaFactura->Tipo = $request->Tipo;
+        // $nuevaFactura->Cliente_Id = $request->Cliente_Id; // nullable - No se muestra para el ingreso
+        $nuevaFactura->Fecha_Emision = $request->Fecha_Emision;
+        $nuevaFactura->Estado = $request->Estado;
+        $nuevaFactura->Total = $request->Total;
+        $nuevaFactura->Descripcion = $request->Descripcion;
         $nuevaFactura->save();
-
-        // return $this->modeloCaja->create($caja);
     }
 
     public function update(Request $request, $id)
     {
+        // Quitar comentarios para implementar los campos
         $cajaUpdate = $this->getById($id);
-        $cajaUpdate->Nombre_Caja = $request->nombreCaja;
-        $cajaUpdate->Forma_Cobro = $request->formaCobro;
-        $cajaUpdate->Estado = $request->estado;
-        $cajaUpdate->Terminal = 'Esta PC';
-        $cajaUpdate->Descripcion = $request->descripcion;
+        // $nuevaFactura->Caja_Id = $request->Caja_Id; // nullable - No se muestra para el ingreso
+        // $nuevaFactura->Usuario_Id = $request->User_Id;  // nullable - No se muestra para el ingreso
+        // $nuevaFactura->Serie = $request->Serie; // nullable - No se muestra para el ingreso
+        // $nuevaFactura->Numero = $request->Numero; // nullable - No se muestra para el ingreso
+        $nuevaFactura->Tipo = $request->Tipo;
+        // $nuevaFactura->Cliente_Id = $request->Cliente_Id; // nullable - No se muestra para el ingreso
+        $nuevaFactura->Fecha_Emision = $request->Fecha_Emision;
+        $nuevaFactura->Estado = $request->Estado;
+        $nuevaFactura->Total = $request->Total;
+        $nuevaFactura->Descripcion = $request->Descripcion; // nullable pero si se muestra
         $cajaUpdate->save();
     }
 

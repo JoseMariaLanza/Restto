@@ -28,6 +28,10 @@ class ManageCash implements ICashRepository
         return $this->modeloCaja->findOrFail($id);
     }
 
+    public function getByTerminal($request){
+        return $this->modeloCaja->obtenercaja($request);
+    }
+
     public function create(Request $request)
     {
         // $nuevaCaja = $this->modeloCaja->create($caja);
@@ -38,8 +42,9 @@ class ManageCash implements ICashRepository
         $nuevaCaja = new $this->modeloCaja();
         $nuevaCaja->Nombre_Caja = $request->Nombre_Caja;
         $nuevaCaja->Forma_Cobro = $request->Forma_Cobro;
-        $nuevaCaja->Estado = $request->Estado;
-        $nuevaCaja->Terminal = 'Esta PC';
+        $nuevaCaja->Estado = 'CERRADA';// $request->Estado;
+        $nuevaCaja->Terminal = gethostname();
+        $nuevaCaja->Monto_Inicial = $request->Monto_Inicial;
         $nuevaCaja->Descripcion = $request->Descripcion;
         $nuevaCaja->save();
 
@@ -51,8 +56,9 @@ class ManageCash implements ICashRepository
         $cajaUpdate = $this->getById($id);
         $cajaUpdate->Nombre_Caja = $request->Nombre_Caja;
         $cajaUpdate->Forma_Cobro = $request->Forma_Cobro;
-        $cajaUpdate->Estado = $request->Estado;
-        $cajaUpdate->Terminal = 'Esta PC';
+        // $cajaUpdate->Estado = $request->Estado; // Campo no editable desde este método
+        $cajaUpdate->Terminal = gethostname();
+        $cajaUpdate->Monto_Inicial = $request->Monto_Inicial;
         $cajaUpdate->Descripcion = $request->Descripcion;
         $cajaUpdate->save();
     }
@@ -61,5 +67,20 @@ class ManageCash implements ICashRepository
     {
         $eliminarCaja = $this->getById($id);
         $eliminarCaja->delete();
+    }
+
+    public function updateState(Request $request, $id)
+    {
+        $caja = $this->getById($id);
+        // $cajaUpdate->Nombre_Caja = $request->Nombre_Caja;
+        // $cajaUpdate->Forma_Cobro = $request->Forma_Cobro;
+        $caja->Estado = $request->Estado;
+        // $cajaUpdate->Terminal = gethostname();
+        $caja->Monto_Inicial = $request->Monto_Inicial;
+        $caja->Monto_Final = $request->Monto_Final;
+        $caja->Fecha_Hora_Apertura = $request->Fecha_Hora_Apertura;
+        $caja->Fecha_Hora_Cierre = $request->Fecha_Hora_Cierre;
+        $caja->Descripcion = $request->Descripcion;
+        $caja->save();
     }
 }

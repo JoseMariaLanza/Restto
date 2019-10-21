@@ -5,6 +5,7 @@ namespace App\Repositories\SalesManagement;
 use Illuminate\Http\Request;
 
 use App\Repositories\SalesManagement\CashManagement\ICashRepository;
+use App\Repositories\SalesManagement\InvoiceManagement\IBillRepository;
 use App\CajaDetalle;
 use App\Apertura;
 use App\AperturaDetalle;
@@ -18,17 +19,25 @@ class SalesManagementFacade
     * Inicialización de Interfaz
     * 
     * @var ICashRepository
+    * @var IBillRepository
     */
     private $manageCash;
+    private $manageBill;
 
-    public function __construct(ICashRepository $manageCash)
+    public function __construct(ICashRepository $manageCash, IBillRepository $manageBill)
     {
         $this->manageCash = $manageCash;
+        $this->manageBill = $manageBill;
     }
 
     public function obtenerCajas(Request $request)
     {
         return $this->manageCash->getAll($request);
+    }
+
+    public function obtenerCajaDeTerminal(Request $request)
+    {
+        return $this->manageCash->getByTerminal($request);
     }
 
     public function crearCaja(Request $request)
@@ -56,12 +65,17 @@ class SalesManagementFacade
 
     public function obtenerDetallesCaja($id)
     {
-        return CajaDEtalle::findOrFail($id); // Llamado desde el controlador
+        return CajaDetalle::findOrFail($id); // Llamado desde el controlador
     }
 
     public function actualizarCaja($request, $id)
     {
         return $this->manageCash->update($request, $id);
+    }
+
+    public function updateState(Request $request, $id)
+    {
+        $this->manageCash->updateState($request, $id);
     }
 
     public function actualizarDetallesCaja(Request $request, $id)
@@ -81,7 +95,20 @@ class SalesManagementFacade
         $this->manageCash->delete($id);
     }
 
-
     // Facturación
     
+    public function obtenerFacturas(Request $request)
+    {
+        return $this->manageBill->getAll($request);
+    }
+
+    public function obtenerFacturasDelDia(Request $request)
+    {
+        return $this->manageBill->getDayBills($request);
+    }
+
+    public function crearFactura(Request $request)
+    {
+        $this->manageBill->create($request);
+    }
 }

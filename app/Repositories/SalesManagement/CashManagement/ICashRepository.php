@@ -10,9 +10,13 @@ interface ICashRepository
 
     public function getById($id);
 
+    public function getByTerminal(Request $request);
+
     public function create(Request $caja);
 
     public function update(Request $request, $id);
+
+    public function updateState(Request $request, $id);
 
     public function delete($id);
 }

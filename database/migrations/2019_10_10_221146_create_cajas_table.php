@@ -18,9 +18,12 @@ class CreateCajasTable extends Migration
             $table->string('Nombre_Caja');
             $table->string('Forma_Cobro');
             $table->enum('Estado', ['ABIERTA','CERRADA']);
-            $table->string('Terminal');
-            $table->text('Descripcion')->nullable();
+            $table->string('Terminal')->nullable()->unique();
             $table->float('Monto_Inicial')->nullable();
+            $table->float('Monto_Final')->nullable();
+            $table->text('Descripcion')->nullable();
+            $table->dateTime('Fecha_Hora_Apertura')->nullable();
+            $table->dateTime('Fecha_Hora_Cierre')->nullable();
             $table->string('Campo_Extra_1')->nullable();
             $table->string('Campo_Extra_2')->nullable();
             $table->timestamps();

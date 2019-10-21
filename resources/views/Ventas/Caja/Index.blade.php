@@ -74,7 +74,7 @@
                                 <h4>Caja: {{ $item->Nombre_Caja }}</h4>
                                 <h4>Forma de Cobro: {{ $item->Forma_Cobro }}</h4>
                                 <h4>Estado: {{ $item->Estado }}</h4>
-                                <h4>Terminal: {{ $item->Terminal }}</h4>
+                                <h4>Monto en caja: {{ $item->Monto_Inicial }}</h4>
                                 <h4>Descripción: {{ $item->Descripcion }}</h4>
                             </div>
                         </div>

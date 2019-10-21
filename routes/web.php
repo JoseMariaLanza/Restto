@@ -22,7 +22,7 @@ Route::resource('/Empleado', 'EmpleadoController');
 
 Route::get('Empleado/Detalles/{id}', 'EmpleadoController@show')->name('Empleado.Detalles');
 
-Route::get('Empleado/Editar/{id}', 'EmpleadoController@edit')->name('Empleado.Editar');
+Route::get('/Empleado/Editar/{id}', 'EmpleadoController@edit')->name('Empleado.Editar');
 
 Route::put('Empleado/Editar/{id}', 'EmpleadoController@update')->name('Empleado.Actualizar');
 
@@ -57,8 +57,6 @@ Route::put('Empleado/Editar/{id}', 'EmpleadoController@update')->name('Empleado.
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-
-
 Route::middleware(['auth'])->group(function(){
     // Roles
     Route::post('roles/store', 'RoleController@store')->name('roles.store')
@@ -81,9 +79,20 @@ Route::middleware(['auth'])->group(function(){
 
     Route::get('roles/{role}/edit', 'RoleController@edit')->name('roles.edit')
         ->middleware('has.permission:roles.edit');
+    
+    // Ventas
+    Route::get('ventas/create/{detallesFactura?}', 'SalesController@create')->name('ventas.create')
+        ->middleware('has.permission:ventas.create');
+        
+    // Route::post('ventas/createDetalle/{detallesFactura?}', 'SalesController@createDetalle')->name('ventas.createDetalle')
+    //     ->middleware('has.permission:ventas.create');
+        
+    Route::put('ventas/{id}/updateState', 'SalesController@updateState')->name('ventas.updateState')
+        ->middleware('has.permission:ventas.updateState');
+    // Facturas subsystem
+    
 
-
-    // Cajas
+    // Cajas subsystem
     Route::post('cajas/store', 'CajaController@store')->name('cajas.store')
         ->middleware('has.permission:cajas.create');
 
@@ -119,6 +128,6 @@ Route::middleware(['auth'])->group(function(){
     Route::delete('users/{id}', 'UserController@destroy')->name('users.destroy')
         ->middleware('has.permission:users.destroy');
 
-    Route::get('users/{id}/edit', 'UserController@edit')->name('users.edit')
-        ->middleware('has.permission:users.edit');
+    Route::get('users/{id}/edit', 'UserController@edit')->name('users.edit');
+        // ->middleware('has.permission:users.edit');
 });

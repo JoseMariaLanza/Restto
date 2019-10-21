@@ -7,7 +7,7 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <span>Editar Perfil</span>
-                        <a href="{{ route('Empleado.Detalles', $empleado->id) }}" class="btn btn-primary btn-sm">Volver a detalles</a>
+                        <a href="{{ route('Empleado.Detalles', $empleado->id) }}" class="btn btn-primary btn-sm">Ir a detalles</a>
                     </div>
                     <div class="card-body">     
                         @if (session('mensaje'))

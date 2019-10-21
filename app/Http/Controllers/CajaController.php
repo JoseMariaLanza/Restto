@@ -37,17 +37,7 @@ class CajaController extends Controller
      */
     public function create(Request $request)
     {
-        // $this->salesManagement->crearCaja([
-        //     'Nombre_Caja' => $data['nombreCaja'],
-        //     'Forma_Cobro' => $data['formaCobro'],
-        //     'Estado' => $data['estado'],
-        //     'Terminal' => 'MI PC',
-        //     'Descripcion' => $data['descripcion']
-        // ]);
-
-        // $this->salesManagement->crearCaja($request);
-
-        // return back()->with('mensaje', 'Caja agregada correctamente');
+        //
     }
 
     /**
@@ -58,6 +48,12 @@ class CajaController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'Nombre_Caja' => 'required',
+            'Forma_Cobro' => 'required',
+            'Descripcion' => 'required'
+        ]);
+
         $this->salesManagement->crearCaja($request);
 
         return back()->with('mensaje', 'Caja agregada correctamente');
@@ -100,7 +96,6 @@ class CajaController extends Controller
         $request->validate([
             'Nombre_Caja' => 'required',
             'Forma_Cobro' => 'required',
-            'Estado' => 'required',
             'Descripcion' => 'required'
         ]);
 

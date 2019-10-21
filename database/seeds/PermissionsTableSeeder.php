@@ -88,9 +88,15 @@ class PermissionsTableSeeder extends Seeder
             'description'   => 'Eliminar cualquier caja del sistema',
         ]);
         Permission::create([
-            'name'          => 'Abrir caja',
-            'slug'          => 'cajas.open',
-            'description'   => 'Abrir una caja del sistema',
+            'name'          => 'Actualizar el estado de la caja',
+            'slug'          => 'ventas.updateState',
+            'description'   => 'Abrir o cerrar una caja del sistema',
+        ]);
+
+        Permission::create([
+            'name'          => 'Ingresar una venta en el sistema',
+            'slug'          => 'ventas.create',
+            'description'   => 'Creación de facturas y detalles',
         ]);
     }
 }

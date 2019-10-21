@@ -8,6 +8,8 @@ interface IBillRepository
 {
     public function getAll($request);
 
+    public function getDayBills($request);
+
     public function getById($id);
 
     public function create(Request $factura);

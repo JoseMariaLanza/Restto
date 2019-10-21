@@ -20,16 +20,16 @@ class CreateFacturasTable extends Migration
             $table->unsignedBigInteger('Usuario_Id')->nullable(); // luego también será obligatorio
             $table->foreign('Usuario_Id')->references('id')->on('users');
             $table->integer('Serie')->nullable(); // implementar incremento 0001 - 9998 (4 dígitos)
-            $table->integer('Numero'); // implementar incremento 00000001 - 99999999 (8 dígitos)
+            $table->integer('Numero')->nullable(); // implementar incremento 00000001 - 99999999 (8 dígitos)
             $table->string('Tipo');
             $table->unsignedBigInteger('Cliente_Id')->nullable();
             $table->foreign('Cliente_Id')->references('id')->on('clientes');
             $table->dateTime('Fecha_Emision');
             $table->enum('Estado', ['EMITIDA', 'ANULADA']);
             $table->float('Total');
-            $table->text('Descripcion');
-            $table->string('Campo_Extra_1');
-            $table->string('Campo_Extra_2');
+            $table->text('Descripcion')->nullable();
+            $table->string('Campo_Extra_1')->nullable();
+            $table->string('Campo_Extra_2')->nullable();
             $table->timestamps();
         });
     }

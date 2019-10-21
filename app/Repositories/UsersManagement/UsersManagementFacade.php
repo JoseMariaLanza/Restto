@@ -54,7 +54,8 @@ class UsersManagementFacade
 
     public function obtenerEmpleado($id)
     {
-        return Empleado::findOrFail($id); // separar luego a una clase ManageEmpleado
+        // return Empleado::findOrFail($id); // separar luego a una clase ManageEmpleado
+        return Empleado::ObtenerEmpleadoPorIdDeUsuario($id);
     }
 
     public function actualizarUsuario($request, $id)

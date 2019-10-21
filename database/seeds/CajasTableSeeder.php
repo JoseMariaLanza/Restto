@@ -16,7 +16,7 @@ class CajasTableSeeder extends Seeder
         Caja::create([
             'Nombre_Caja' => 'Caja 001',
             'Forma_Cobro' => 'Todas',
-            'Estado' => 'ABIERTA',
+            'Estado' => 'CERRADA',
             'Terminal' => gethostname(), // php_uname(),
             'Descripcion' => 'Caja general'
         ]);
