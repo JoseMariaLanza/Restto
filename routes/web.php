@@ -81,11 +81,16 @@ Route::middleware(['auth'])->group(function(){
         ->middleware('has.permission:roles.edit');
     
     // Ventas
-    Route::get('ventas/create/{detallesFactura?}', 'SalesController@create')->name('ventas.create')
+    Route::resource('/ventas', 'SalesController');
+
+    Route::get('ventas/create', 'SalesController@create')->name('ventas.create')
+        ->middleware('has.permission:ventas.create');
+    
+    Route::post('ventas/store', 'SalesController@store')->name('ventas.store')
         ->middleware('has.permission:ventas.create');
         
-    // Route::post('ventas/createDetalle/{detallesFactura?}', 'SalesController@createDetalle')->name('ventas.createDetalle')
-    //     ->middleware('has.permission:ventas.create');
+    Route::post('ventas/storeDetail', 'SalesController@storeDetail')->name('ventas.storeDetail')
+        ->middleware('has.permission:ventas.create');
         
     Route::put('ventas/{id}/updateState', 'SalesController@updateState')->name('ventas.updateState')
         ->middleware('has.permission:ventas.updateState');

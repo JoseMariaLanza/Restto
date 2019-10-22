@@ -63,42 +63,19 @@
                     <div class="col-md-50">
                         <div class="card" style="margin-bottom:30px">
                             <div class="card-header d-flex justify-content-between align-items-center">
-                                <h1>Factura Nº: {{ $item->Id }}</h1>
+                                <h1>Factura Nº: {{ $item->id }}</h1>
                                 @can('facturas.destroy')
-                                {!! Form::open(['route' => ['facturas.destroy', $item->id], 'method' => 'DELETE', 'class' => 'd-inline']) !!}
+                                {!! Form::open(['route' => ['ventas.destroy', $item->id], 'method' => 'DELETE', 'class' => 'd-inline']) !!}
                                     @csrf
                                     <button class="btn btn-danger btn-sm" type="submit">Anular venta...</button>
                                 {!! Form::close() !!}
                                 @endcan
                             </div>
                             
-                            <div class="card-body pull-left" style:"width:30%;">
-                                <h4>Fecha y Hora: {{ $item->Fecha }}</h4>
+                            <div class="card-body pull-left" style="width:30%;">
+                                <h4>Fecha y Hora: {{ $item->Fecha_Emision }}</h4>
                                 <h4>Total: {{ $item->Total }}</h4>
                                 <h4>Descripción: {{ $item->Descripcion }}</h4>
-                            </div>
-
-                            <div class="card-body pull-rigth" style:"width:70%;">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                        <th scope="col">Descripción (orden/mesa)</th>
-                                        <th scope="col">Precio unitario</th>
-                                        <th scope="col">Cantidad</th>
-                                        <th scope="col">Subtotal</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($detallesFacturas as $detalleFactura)
-                                            <tr>
-                                            <th>{{ $detalleFactura->Descripcion }}</th>
-                                            <td>{{ $detalleFactura->Precio_Unitario }}</td>
-                                            <td>{{ $detalleFactura->Cantidad }}</td>
-                                            <td>{{ $detalleFactura->Subtotal }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
                             </div>
                         </div>
                     </div>

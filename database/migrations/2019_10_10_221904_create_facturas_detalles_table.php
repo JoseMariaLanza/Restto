@@ -23,8 +23,8 @@ class CreateFacturasDetallesTable extends Migration
             $table->float('Cantidad');
             $table->float('Subtotal');
             $table->text('Descripcion');
-            $table->string('Campo_Extra_1');
-            $table->string('Campo_Extra_2');
+            $table->string('Campo_Extra_1')->nullable();
+            $table->string('Campo_Extra_2')->nullable();
             $table->timestamps();
         });
     }

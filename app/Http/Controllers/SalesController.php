@@ -81,66 +81,19 @@ class SalesController extends Controller
                 $facturas = Factura::buscarfacturasdia($request->get($fechaInicio, $fechaFin))->paginate(5);
                 // Pasar este código a la clase SalesManagement, dejar solamente la primera línea de abajo
                 // esto se hace para que haya un objeto detallesFactura
-                $detalleFactura = new FacturaDetalle();
-                $detalleFactura->Descripcion = $request->Descripcion;
-                $detalleFactura->Precio_Unitario = $request->Precio_Unitario;
-                $detalleFactura->Cantidad = $request->Cantidad;
-                $detalleFactura->Subtotal = $detalleFactura->Precio_Unitario * $detalleFactura->Cantidad;
+                // $detalleFactura = new FacturaDetalle();
+                // $detalleFactura->Descripcion = $request->Descripcion;
+                // $detalleFactura->Precio_Unitario = $request->Precio_Unitario;
+                // $detalleFactura->Cantidad = $request->Cantidad;
+                // $detalleFactura->Subtotal = $detalleFactura->Precio_Unitario * $detalleFactura->Cantidad;
                 
-                $detallesFactura = collect();
-                // $detallesFactura->add($detalleFactura);
+                // $detallesFactura = collect();
+                // // $detallesFactura->add($detalleFactura);
                 
-                return view('Ventas.Crear', compact('caja', 'facturas', 'detallesFactura'));
+                return view('Ventas.Crear', compact('caja', 'facturas')); //, 'detallesFactura'));
             }
         }
     }
-
-    // public function createDetalle(Request $request, $detallesFactura)
-    // {
-    //     $detallesFactura = collect();
-    //     dd($detallesFactura);
-    //     $cajas = Caja::where('Estado', 'CERRADA')->get();
-    //     if ($cajas != null)
-    //     {
-    //         foreach($cajas as $caja)
-    //         {
-    //             if($caja->Terminal == gethostname())
-    //             {
-    //                 return view('Ventas.Caja.partials.formAbrir', compact('caja'))
-    //                     ->with('mensaje', 'Debe abrir la caja para empezar a vender');
-    //             }
-    //         }
-    //     }
-
-    //     $cajas = Caja::where('Estado', 'ABIERTA')->get();
-    //     foreach($cajas as $caja)
-    //     {
-    //         if($caja->Terminal == gethostname())
-    //         {
-    //             $now = Carbon::now('America/Argentina/Buenos_Aires');
-    //             $fechaInicio = $caja->Fecha_Hora_Apertura;
-    //             $fechaFin = $now->format('d/m/Y H:i:s');
-
-    //             $facturas = Factura::buscarfacturasdia($request->get($fechaInicio, $fechaFin))->paginate(5);
-                
-    //             $detalleFactura = new FacturaDetalle();
-    //             $detalleFactura->Descripcion = $request->Descripcion;
-    //             $detalleFactura->Precio_Unitario = $request->Precio_Unitario;
-    //             $detalleFactura->Cantidad = $request->Cantidad;
-    //             $detalleFactura->Subtotal = $detalleFactura->Precio_Unitario * $detalleFactura->Cantidad;
-                
-    //             $detallesFactura = collect(new FacturaDetalle);
-    //             // $detallesFactura->push($detalleFactura);
-    //             // $detallesFactura->all();
-    //             // return $detallesFactura->add($detalleFactura);
-    //             // $detallesFactura->add($detalleFactura);
-    //             // return $detallesFactura->add($detalleFactura);
-    //             // dd($detallesFactura);
-    //             return view('Ventas.Crear', compact('caja', 'facturas', 'detallesFactura'));
-    //             // return view('Ventas.Facturacion.partials.lista', compact('detallesFactura'));
-    //         }
-    //     }
-    // }
 
     /**
      * Store a newly created resource in storage.
@@ -148,9 +101,17 @@ class SalesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $id)
+    public function store(Request $request)
     {
-        //
+        $request->validate([
+            'Descripcion' => 'required'
+        ]);
+
+        return $this->salesManagement->crearFactura($request);
+    }
+
+    public function storeDetail(Request $request){
+        $this->salesManagement->crearDetalleFactura($request);
     }
 
     /**

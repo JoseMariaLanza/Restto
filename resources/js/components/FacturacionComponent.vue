@@ -7,7 +7,7 @@
                 <div class="card" style="margin-bottom:30px">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h1>Venta</h1>
-                        <h1 class="d-flex">Total: $<h1 v-text="factura.Total"></h1></h1>
+                        <h1 class="d-flex" v-text="totalFormateado"></h1>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -29,11 +29,11 @@
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">$</span>
                                                     </div>
-                                                    <input type="number" step="0.01" placeholder="Precio por unidad" class="form-control" v-model="detalle.Precio_Unitario">
+                                                    <input type="number" step="0.01" min="0.01" placeholder="Precio por unidad" class="form-control" v-model="detalle.Precio_Unitario">
                                                 </div>
                                             </div>
                                             <div class="col">
-                                                <input type="number" step="0.001" placeholder="Cantidad vendida" class="form-control" v-model="detalle.Cantidad">
+                                                <input type="number" step="0.001" min="0.001" placeholder="Cantidad vendida" class="form-control" v-model="detalle.Cantidad">
                                             </div>
                                             <div class="col">
                                                 <button type="submit" class="btn btn-primary mb-2">Agregar</button>
@@ -43,6 +43,7 @@
                                 </div>
 
                                 <!-- Factura -->
+                                <form @submit.prevent="guardar">
                                 <div class="card">
                                     <div class="card-header d-flex justify-content-between align-items-center">
                                         <h4>Información de la venta</h4>
@@ -54,10 +55,11 @@
                                     </div>
                                     <div class="form-row">
                                         <div class="col">
-                                            <button type="submit" class="btn btn-success mb-2">Concretar venta</button>
+                                            <button class="btn btn-success mb-2">Concretar venta</button>
                                         </div>
                                     </div>
-                                </div>                                
+                                </div>      
+                                </form>                          
                             </div>
 
                             <div class="col-md-8">
@@ -78,12 +80,15 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr v-for="item in detalles">
+                                                <tr v-for="(item, index) in detalles">
                                                     <td v-text="item.Descripcion"></td>
                                                     <td v-text="item.Precio_Unitario"></td>
                                                     <td v-text="item.Cantidad"></td>
                                                     <td v-text="item.Subtotal"></td>
-                                                    <td><a href="" class="btn btn-danger btn-sm btn-block">Quitar</a></td>
+                                                    <!-- <td><a href="" class="btn btn-danger btn-sm btn-block">Quitar</a></td> -->
+                                                    <td>
+                                                        <button class="btn btn-danger btn-sm btn-block" @click="quitar(item, index)">Quitar</button>
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -104,18 +109,27 @@ export default {
     data() {
         return {
             detalles: [],
-            detalle: { Descripcion: '', Precio_Unitario: '', Candtidad: '', Subtotal: 0 },
+            detalle: { Factura_Id: '', Descripcion: '', Precio_Unitario: '', Cantidad: '', Subtotal: '' },
 
-            // No funciona el llenado automático
-            fields: ['Descripcion', 'Precio_Unitario', 'Cantidad', 'Subtotal'],
-
+            // Colección de facturas registradas en el día
+            facturas: [],
             //Factura
-            factura: { Tipo: '', Fecha: '', Estado: '', Total: 0.00, Descripcion: '' }
+            factura: { Tipo: '', Fecha: '', Estado: '', Total: 0.00, Descripcion: '' },
+            totalFormateado: ''
         }
     },
+    // En componente que lista las ventas
+    // created() {
+    //     axios.get('/ventas/create')
+    //         .then(res => {
+    //             this.facturas = res.data;
+    //         })
+    // },
     methods: {
         agregar() {
-            if (this.detalle.Descripcion.trim() === '' || this.detalle.Precio_Unitario === 0 || this.detalle.Cantidad === 0){
+            if (this.detalle.Descripcion.trim() === '' || 
+            this.detalle.Precio_Unitario === '0' || this.detalle.Cantidad === '0' ||
+            this.detalle.Precio_Unitario === '' || this.detalle.Cantidad === ''){
                 alert('Debe completar todos los campos antes de agregar el detalle.');
                 return;
             }
@@ -128,16 +142,46 @@ export default {
             this.detalles.push(params);
             
             this.factura.Total = this.factura.Total + params.Subtotal;
+            this.totalFormateado = 'Total: $' + this.factura.Total;
 
             this.detalle.Descripcion = '';
             this.detalle.Precio_Unitario = '';
             this.detalle.Cantidad = '';
             
             // POST para el caso en que se concreta la venta
-            // axios.past('/ventas/create', params)
+            // axios.post('/ventas', factura)
             //    .then(res =>{
-            //        this.factura.push(res.data)
+            //        this.facturas.push(res.data)
             // })
+        },
+        guardar() {
+            if (this.detalles.length <= 0 || this.factura.Descripcion === '') {
+                alert('Ingrese los detalles de la venta');
+                return;
+            }
+            const params = {
+                Descripcion: this.factura.Descripcion,
+                Total: this.factura.Total
+            }
+            this.factura.Descripcion = '';
+            this.factura.Total = '';
+            axios.post('/ventas/store', params)
+               .then(res =>{
+                   this.facturas.push(res.data);
+                   this.detalles.forEach(element => {
+                       element.Factura_Id = res.data.id;
+                       axios.post('/ventas/storeDetail', element);
+                       this.detalles = [];
+                   });
+                })
+            
+            // alert('Venta guardada correctamente');
+            
+        },
+        quitar(item, index) {
+            this.factura.Total = this.factura.Total - item.Subtotal;
+            this.totalFormateado = 'Total: $' + this.factura.Total;
+            this.detalles.splice(index, 1);
         }
     }
 }

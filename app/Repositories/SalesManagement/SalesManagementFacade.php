@@ -109,6 +109,11 @@ class SalesManagementFacade
 
     public function crearFactura(Request $request)
     {
-        $this->manageBill->create($request);
+        return $this->manageBill->create($request);
+    }
+
+    public function crearDetalleFactura(Request $request)
+    {
+        $this->manageBill->createDetail($request);
     }
 }

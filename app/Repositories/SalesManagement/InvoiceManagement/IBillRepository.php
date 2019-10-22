@@ -14,6 +14,8 @@ interface IBillRepository
 
     public function create(Request $factura);
 
+    public function createDetail(Request $request);
+
     public function update(Request $request, $id);
 
     public function delete($id);

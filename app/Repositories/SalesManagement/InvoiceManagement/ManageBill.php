@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Factura;
 use App\FacturaDetalle;
 
+use Carbon\Carbon;
+
 class ManageBill implements IBillRepository
 {
     /**
@@ -14,10 +16,12 @@ class ManageBill implements IBillRepository
      * @var Factura
      */
     private $modeloFactura;
+    private $modeloDetalleFactura;
 
-    public function __construct(Factura $modeloFactura)
+    public function __construct(Factura $modeloFactura, FacturaDetalle $modeloDetalleFactura)
     {
         $this->modeloFactura = $modeloFactura;
+        $this->modeloDetalleFactura = $modeloDetalleFactura;
     }
 
     public function getAll($request){
@@ -42,13 +46,28 @@ class ManageBill implements IBillRepository
         // $nuevaFactura->Usuario_Id = $request->User_Id; // nullable - No se muestra para el ingreso
         // $nuevaFactura->Serie = $request->Serie; // nullable - No se muestra para el ingreso
         // $nuevaFactura->Numero = $request->Numero; // nullable - No se muestra para el ingreso
-        $nuevaFactura->Tipo = $request->Tipo;
+        $nuevaFactura->Tipo = 'Factura A'; // $request->Tipo; // Temporalmente solo Factura A, después se implementará la selección de tipo de factura
+        // mediante $request->Tipo
         // $nuevaFactura->Cliente_Id = $request->Cliente_Id; // nullable - No se muestra para el ingreso
-        $nuevaFactura->Fecha_Emision = $request->Fecha_Emision;
-        $nuevaFactura->Estado = $request->Estado;
+        $nuevaFactura->Fecha_Emision = Carbon::now(); // $request->Fecha_Emision;
+        $nuevaFactura->Estado = 'EMITIDA'; // $request->Estado;
         $nuevaFactura->Total = $request->Total;
         $nuevaFactura->Descripcion = $request->Descripcion;
         $nuevaFactura->save();
+
+        return $nuevaFactura;
+    }
+
+    public function createDetail(Request $request)
+    {
+        $nuevoDetalle = new $this->modeloDetalleFactura();
+        $nuevoDetalle->Factura_Id = $request->Factura_Id;
+        // Orden_Id
+        $nuevoDetalle->Precio_Unitario = $request->Precio_Unitario;
+        $nuevoDetalle->Cantidad = $request->Cantidad;
+        $nuevoDetalle->Subtotal = $request->Subtotal;
+        $nuevoDetalle->Descripcion = $request->Descripcion;
+        $nuevoDetalle->save();
     }
 
     public function update(Request $request, $id)
@@ -70,7 +89,6 @@ class ManageBill implements IBillRepository
 
     public function delete($id)
     {
-        $eliminarCaja = $this->getById($id);
-        $eliminarCaja->delete();
+        // NO ELIMINA SINO QUE EDITA EL CAMPO 'Estado' a 'ANULADA'
     }
 }
