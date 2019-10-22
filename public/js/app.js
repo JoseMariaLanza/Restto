@@ -2046,6 +2046,7 @@ __webpack_require__.r(__webpack_exports__);
       };
       this.factura.Descripcion = '';
       this.factura.Total = '';
+      this.totalFormateado = '';
       axios.post('/ventas/store', params).then(function (res) {
         _this.facturas.push(res.data);
 
@@ -37629,14 +37630,14 @@ var render = function() {
                     [
                       _vm._m(5),
                       _vm._v(" "),
-                      _c("div", { staticClass: "table-responsive-sm" }, [
+                      _c("div", { staticClass: "table-responsive" }, [
                         _c("table", { staticClass: "table" }, [
                           _vm._m(6),
                           _vm._v(" "),
                           _c(
                             "tbody",
                             _vm._l(_vm.detalles, function(item, index) {
-                              return _c("tr", [
+                              return _c("tr", { key: index }, [
                                 _c("td", {
                                   domProps: {
                                     textContent: _vm._s(item.Descripcion)
@@ -37756,14 +37757,9 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass:
-          "card-header d-flex justify-content-between align-items-center"
-      },
-      [_c("h4", [_vm._v("Detalles de la orden")])]
-    )
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h4", [_vm._v("Detalles de la orden")])
+    ])
   },
   function() {
     var _vm = this

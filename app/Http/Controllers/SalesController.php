@@ -76,9 +76,10 @@ class SalesController extends Controller
                 // y pasarlas mediante compact
                 $now = Carbon::now('America/Argentina/Buenos_Aires');
                 $fechaInicio = $caja->Fecha_Hora_Apertura;
-                $fechaFin = $now->format('d/m/Y H:i:s');
+                // $fechaFin = $now->format('d/m/Y H:i:s');
 
-                $facturas = Factura::buscarfacturasdia($request->get($fechaInicio, $fechaFin))->paginate(5);
+                $facturas = Factura::buscarfacturasdia($fechaInicio)->orderBy('id', 'DESC')->paginate(5);
+                
                 // Pasar este código a la clase SalesManagement, dejar solamente la primera línea de abajo
                 // esto se hace para que haya un objeto detallesFactura
                 // $detalleFactura = new FacturaDetalle();

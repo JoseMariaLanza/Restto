@@ -38,6 +38,8 @@
                                         <input name="Estado" type="hidden" value="{{ $caja->Estado }}">
                                         <h4>Forma de Cobro: {{ $caja->Forma_Cobro }}</h4>
                                         <h4>Terminal: {{ $caja->Terminal === gethostname() ? 'Este dispositivo' : $caja->Terminal }}</h4>
+                                        {{ Form::hidden('Fecha_Hora_Apertura', null) }}
+                                        {{ Form::hidden('Fecha_Hora_Cierre', null) }}
                                         @if($caja->Estado === 'CERRADA')
                                             <h4>Monto inicial en caja: </h4>
                                             {{ Form::number('Monto_Inicial', null, [ 'class' => 'form-control mb-2', 'step' => '0.1', 'placeholder' => 'Monto inicial en caja', 'value' => "old('Monto_Inicial')" ]) }}

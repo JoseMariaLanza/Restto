@@ -34,11 +34,6 @@ class ManageCash implements ICashRepository
 
     public function create(Request $request)
     {
-        // $nuevaCaja = $this->modeloCaja->create($caja);
-        // $this->modeloCaja->create($caja);
-
-        
-
         $nuevaCaja = new $this->modeloCaja();
         $nuevaCaja->Nombre_Caja = $request->Nombre_Caja;
         $nuevaCaja->Forma_Cobro = $request->Forma_Cobro;

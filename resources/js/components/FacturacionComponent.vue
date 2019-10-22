@@ -64,10 +64,10 @@
 
                             <div class="col-md-8">
                                 <div class="card" style="margin-bottom:30px">
-                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                    <div class="card-header">
                                         <h4>Detalles de la orden</h4>
                                     </div>
-                                    <div class="table-responsive-sm">
+                                    <div class="table-responsive">
                                         <!-- Detalles de la factura -->
                                         <table class="table">
                                             <thead>
@@ -80,7 +80,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr v-for="(item, index) in detalles">
+                                                <tr v-for="(item, index) in detalles" :key="index">
                                                     <td v-text="item.Descripcion"></td>
                                                     <td v-text="item.Precio_Unitario"></td>
                                                     <td v-text="item.Cantidad"></td>
@@ -165,6 +165,7 @@ export default {
             }
             this.factura.Descripcion = '';
             this.factura.Total = '';
+            this.totalFormateado = '';
             axios.post('/ventas/store', params)
                .then(res =>{
                    this.facturas.push(res.data);
