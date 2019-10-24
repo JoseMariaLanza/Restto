@@ -38,7 +38,7 @@ class ManageCash implements ICashRepository
         $nuevaCaja->Nombre_Caja = $request->Nombre_Caja;
         $nuevaCaja->Forma_Cobro = $request->Forma_Cobro;
         $nuevaCaja->Estado = 'CERRADA';// $request->Estado;
-        $nuevaCaja->Terminal = gethostname();
+        // $nuevaCaja->Terminal = gethostname();
         $nuevaCaja->Monto_Inicial = $request->Monto_Inicial;
         $nuevaCaja->Descripcion = $request->Descripcion;
         $nuevaCaja->save();
@@ -52,7 +52,7 @@ class ManageCash implements ICashRepository
         $cajaUpdate->Nombre_Caja = $request->Nombre_Caja;
         $cajaUpdate->Forma_Cobro = $request->Forma_Cobro;
         // $cajaUpdate->Estado = $request->Estado; // Campo no editable desde este método
-        $cajaUpdate->Terminal = gethostname();
+        $cajaUpdate->Terminal = $request->Terminal;
         $cajaUpdate->Monto_Inicial = $request->Monto_Inicial;
         $cajaUpdate->Descripcion = $request->Descripcion;
         $cajaUpdate->save();

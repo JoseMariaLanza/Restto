@@ -1977,6 +1977,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1992,6 +1993,7 @@ __webpack_require__.r(__webpack_exports__);
       facturas: [],
       //Factura
       factura: {
+        Caja_Id: '',
         Tipo: '',
         Fecha: '',
         Estado: '',
@@ -2024,6 +2026,8 @@ __webpack_require__.r(__webpack_exports__);
       this.detalles.push(params);
       this.factura.Total = this.factura.Total + params.Subtotal;
       this.totalFormateado = 'Total: $' + this.factura.Total;
+      this.factura.Caja_Id = app.$refs.caja_id.value;
+      console.log(this.factura.Caja_Id);
       this.detalle.Descripcion = '';
       this.detalle.Precio_Unitario = '';
       this.detalle.Cantidad = ''; // POST para el caso en que se concreta la venta
@@ -37611,7 +37615,32 @@ var render = function() {
                                 }
                               }
                             })
-                          ])
+                          ]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.factura.Caja_Id,
+                                expression: "factura.Caja_Id"
+                              }
+                            ],
+                            attrs: { type: "hidden" },
+                            domProps: { value: _vm.factura.Caja_Id },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.factura,
+                                  "Caja_Id",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          })
                         ]),
                         _vm._v(" "),
                         _vm._m(4)

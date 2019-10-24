@@ -52,6 +52,7 @@
                                         <div class="col-md-12">
                                             <textarea placeholder="Mesa/Mozo/Otras descripciones" class="form-control mb-2" rows="2" v-model="factura.Descripcion"></textarea>
                                         </div>
+                                        <input type="hidden" v-model="factura.Caja_Id">
                                     </div>
                                     <div class="form-row">
                                         <div class="col">
@@ -114,7 +115,7 @@ export default {
             // Colección de facturas registradas en el día
             facturas: [],
             //Factura
-            factura: { Tipo: '', Fecha: '', Estado: '', Total: 0.00, Descripcion: '' },
+            factura: { Caja_Id: '', Tipo: '', Fecha: '', Estado: '', Total: 0.00, Descripcion: '' },
             totalFormateado: ''
         }
     },
@@ -143,6 +144,10 @@ export default {
             
             this.factura.Total = this.factura.Total + params.Subtotal;
             this.totalFormateado = 'Total: $' + this.factura.Total;
+
+            this.factura.Caja_Id = app.$refs.caja_id.value;
+
+            console.log(this.factura.Caja_Id);
 
             this.detalle.Descripcion = '';
             this.detalle.Precio_Unitario = '';

@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 use App\Repositories\SalesManagement\SalesManagementFacade;
 use App\Repositories\SalesManagement\CashManagement\ManageCash;
 
+// Validaciones
+// use Illuminate\Validation\Rule;
+// use Illuminate\Support\Facades\Validator;
+
 class CajaController extends Controller
 {
     /**
@@ -48,10 +52,19 @@ class CajaController extends Controller
      */
     public function store(Request $request)
     {
+        if($request->Terminal === 'on'){
+            $request['Terminal'] = gethostname();
+        }
+        else
+        {
+            $request->Terminal = null;
+        }
+
         $request->validate([
-            'Nombre_Caja' => 'required',
+            'Nombre_Caja' => 'required|unique:cajas,Nombre_Caja',
             'Forma_Cobro' => 'required',
-            'Descripcion' => 'required'
+            'Descripcion' => 'required',
+            'Terminal' => 'unique:cajas,Terminal'
         ]);
 
         $this->salesManagement->crearCaja($request);
@@ -93,10 +106,19 @@ class CajaController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if($request->Terminal === 'on'){
+            $request['Terminal'] = gethostname();
+        }
+        else
+        {
+            $request->Terminal = null;
+        }
+
         $request->validate([
             'Nombre_Caja' => 'required',
             'Forma_Cobro' => 'required',
-            'Descripcion' => 'required'
+            'Descripcion' => 'required',
+            'Terminal' => 'unique:cajas,Terminal'
         ]);
 
         $this->salesManagement->actualizarCaja($request, $id);
