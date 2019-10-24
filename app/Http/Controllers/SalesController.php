@@ -78,7 +78,14 @@ class SalesController extends Controller
                 $fechaInicio = $caja->Fecha_Hora_Apertura;
                 // $fechaFin = $now->format('d/m/Y H:i:s');
 
-                $facturas = Factura::buscarfacturasdia($fechaInicio)->orderBy('id', 'DESC')->paginate(5);
+                if ($request->ajax())
+                {
+                    return $facturas = Factura::buscarfacturasdia($fechaInicio)->get();
+                }
+                else
+                {
+                    return view('Ventas.Crear', compact('caja', 'facturas')); //, 'detallesFactura'));
+                }
                 
                 // Pasar este código a la clase SalesManagement, dejar solamente la primera línea de abajo
                 // esto se hace para que haya un objeto detallesFactura
@@ -91,7 +98,6 @@ class SalesController extends Controller
                 // $detallesFactura = collect();
                 // // $detallesFactura->add($detalleFactura);
                 
-                return view('Ventas.Crear', compact('caja', 'facturas')); //, 'detallesFactura'));
             }
         }
     }
@@ -107,8 +113,10 @@ class SalesController extends Controller
         $request->validate([
             'Descripcion' => 'required'
         ]);
-
-        return $this->salesManagement->crearFactura($request);
+        
+        $factura = $this->salesManagement->crearFactura($request);
+        $factura->Fecha_Emision = $factura->Fecha_Emision->format('d/m/Y H:i:s');
+        return $factura;
     }
 
     public function storeDetail(Request $request){
@@ -157,14 +165,14 @@ class SalesController extends Controller
                 'Monto_Inicial' => 'required'
             ]);
             $request->Estado = 'ABIERTA';
-            $request->Fecha_Hora_Apertura = Carbon::now();
+            $request->Fecha_Hora_Apertura = Carbon::now('America/Argentina/Buenos_Aires');
         }
         else{
             $request->validate([
                 'Monto_Final' => 'required'
             ]);
             $request->Estado = 'CERRADA';
-            $request->Fecha_Hora_Cierre = Carbon::now();
+            $request->Fecha_Hora_Cierre = Carbon::now('America/Argentina/Buenos_Aires');
         }
         $this->salesManagement->updateState($request, $id);
         return back();
@@ -178,6 +186,6 @@ class SalesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return $this->salesManagement->anularFactura($id);
     }
 }

@@ -94,6 +94,9 @@ Route::middleware(['auth'])->group(function(){
         
     Route::put('ventas/{id}/updateState', 'SalesController@updateState')->name('ventas.updateState')
         ->middleware('has.permission:ventas.updateState');
+
+    Route::put('ventas/destroy/{id}', 'SalesController@destroy')->name('ventas.destroy')
+        ->middleware('has.permission:ventas.destroy');
     // Facturas subsystem
     
 

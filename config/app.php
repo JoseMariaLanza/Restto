@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC', //'America/Argentina/Buenos_Aires',// 'UTC',
+    'timezone' => date_default_timezone_get(), // 'America/Argentina/Buenos_Aires',// 'UTC',
 
     /*
     |--------------------------------------------------------------------------

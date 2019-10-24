@@ -116,4 +116,9 @@ class SalesManagementFacade
     {
         $this->manageBill->createDetail($request);
     }
+
+    public function anularFactura($id)
+    {
+        return $this->manageBill->delete($id);
+    }
 }

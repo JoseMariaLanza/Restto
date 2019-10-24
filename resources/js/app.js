@@ -30,4 +30,5 @@ Vue.component('ventas-facturacion', require('./components/FacturacionComponent.v
 
 const app = new Vue({
     el: '#app',
+    // idCaja = app.$refs.caja_id.value
 });

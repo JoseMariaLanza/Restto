@@ -32,7 +32,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="form-group">
-                                    <input type="hidden" ref="caja_id" value="{{ $caja->id }}">
+                                    <input type="hidden" id="cajaId" value="{{ $caja->id }}">
                                         <h4>Estado: {{ $caja->Estado }}</h4>
                                         <input name="Estado" type="hidden" value="{{ $caja->Estado }}">
                                         <h4>Forma de Cobro: {{ $caja->Forma_Cobro }}</h4>

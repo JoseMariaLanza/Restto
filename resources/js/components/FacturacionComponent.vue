@@ -9,11 +9,11 @@
                         <h1>Venta</h1>
                         <h1 class="d-flex" v-text="totalFormateado"></h1>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body-mb-2">
                         <div class="row">
                             <div class="col">
-                                <div class="card" style="margin-bottom:30px">
-                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                <div class="card" style="margin-bottom:20px">
+                                    <div class="card-header d-flex">
                                         <h4>Agregar orden</h4>
                                     </div>
                                     <!-- Agregar detalles de la factura (formulario) -->
@@ -24,19 +24,19 @@
                                             </div>
                                         </div>
                                         <div class="form-row">
-                                            <div class="col-mb-2">
-                                                <div class="input-group mb-2">
+                                            <div class="form-group col-md-8">
+                                                <div class="input-group">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">$</span>
                                                     </div>
                                                     <input type="number" step="0.01" min="0.01" placeholder="Precio por unidad" class="form-control" v-model="detalle.Precio_Unitario">
                                                 </div>
                                             </div>
-                                            <div class="col">
-                                                <input type="number" step="0.001" min="0.001" placeholder="Cantidad vendida" class="form-control" v-model="detalle.Cantidad">
+                                            <div class="form-group col-md-4">
+                                                <input type="number" step="0.001" min="0.001" placeholder="Cantidad" class="form-control" v-model="detalle.Cantidad">
                                             </div>
-                                            <div class="col">
-                                                <button type="submit" class="btn btn-primary mb-2">Agregar</button>
+                                            <div class="form-group col-md-12">
+                                                <button type="submit" class="btn btn-primary btn-block">Agregar</button>
                                             </div>
                                         </div>
                                     </form>
@@ -56,7 +56,7 @@
                                     </div>
                                     <div class="form-row">
                                         <div class="col">
-                                            <button class="btn btn-success mb-2">Concretar venta</button>
+                                            <button class="btn btn-success btn-block">Concretar venta</button>
                                         </div>
                                     </div>
                                 </div>      
@@ -85,7 +85,7 @@
                                                     <td v-text="item.Descripcion"></td>
                                                     <td v-text="item.Precio_Unitario"></td>
                                                     <td v-text="item.Cantidad"></td>
-                                                    <td v-text="item.Subtotal"></td>
+                                                    <td v-text="'$' + item.Subtotal"></td>
                                                     <!-- <td><a href="" class="btn btn-danger btn-sm btn-block">Quitar</a></td> -->
                                                     <td>
                                                         <button class="btn btn-danger btn-sm btn-block" @click="quitar(item, index)">Quitar</button>
@@ -99,6 +99,63 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Ventas del día -->
+        <div class="container">
+            <div class="row-md-10">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h1>Ventas del día</h1>
+                        <!-- Búsqueda entre fechas -->
+                        <!-- <form role="search" class="navban-form navbar-left pull-right" method='GET'>
+                            <div class="row justify-content-end" style="margin-bottom:30px">
+                                <div class="form-goup">
+                                    Buscar entre las fechas:
+                                    {{ Form::date('fechaInicio', Carbon\Carbon::now(), [ 'class' => 'mb-2 d-inline', 'value' => "old(fechaInicio)" ]) }}
+                                    y
+                                    {{ Form::date('fechaFin', Carbon\Carbon::now(), [ 'class' => 'mb-2 d-inline', 'value' => "old(fechaFin)" ]) }}
+                                </div>
+                                <button type="submit" class="btn btn-default">Buscar</button>
+                            </div>
+                        </form> -->
+                    </div>
+                    <div class="panel-body">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="table-responsive">
+                    <!-- Detalles de la factura -->
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="col-ms-4">Nº de Factura</th>
+                                <th>Descripción</th>
+                                <th>Fecha y Hora de la venta</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(item, index) in facturas" :key="index">
+                                <td v-text="item.id"></td>
+                                <td v-text="item.Descripcion"></td>
+                                <td v-text="item.Fecha_Emision"></td>
+                                <td v-text="'$' + item.Total"></td>
+                                <td v-text="item.Estado"></td>
+                                <!-- <td><a href="" class="btn btn-danger btn-sm btn-block">Quitar</a></td> -->
+                                <td>
+                                    <button class="btn btn-danger btn-sm btn-block" @click="anular(item, index)">Anular</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
             </div>
         </div>
 
@@ -119,13 +176,16 @@ export default {
             totalFormateado: ''
         }
     },
-    // En componente que lista las ventas
-    // created() {
-    //     axios.get('/ventas/create')
-    //         .then(res => {
-    //             this.facturas = res.data;
-    //         })
-    // },
+    created() {
+        // Obteniendo el id de la caja abierta para definir la foreign key
+        var caja_id = document.getElementById('cajaId');
+        this.factura.Caja_Id = caja_id.value;
+        // Listado de ventas del día
+        axios.get('/ventas/create')
+            .then(res => {
+                this.facturas = res.data;
+            })
+    },
     methods: {
         agregar() {
             if (this.detalle.Descripcion.trim() === '' || 
@@ -145,19 +205,9 @@ export default {
             this.factura.Total = this.factura.Total + params.Subtotal;
             this.totalFormateado = 'Total: $' + this.factura.Total;
 
-            this.factura.Caja_Id = app.$refs.caja_id.value;
-
-            console.log(this.factura.Caja_Id);
-
             this.detalle.Descripcion = '';
             this.detalle.Precio_Unitario = '';
             this.detalle.Cantidad = '';
-            
-            // POST para el caso en que se concreta la venta
-            // axios.post('/ventas', factura)
-            //    .then(res =>{
-            //        this.facturas.push(res.data)
-            // })
         },
         guardar() {
             if (this.detalles.length <= 0 || this.factura.Descripcion === '') {
@@ -166,7 +216,8 @@ export default {
             }
             const params = {
                 Descripcion: this.factura.Descripcion,
-                Total: this.factura.Total
+                Total: this.factura.Total,
+                Caja_Id: this.factura.Caja_Id
             }
             this.factura.Descripcion = '';
             this.factura.Total = '';
@@ -181,13 +232,19 @@ export default {
                    });
                 })
             
-            // alert('Venta guardada correctamente');
-            
         },
         quitar(item, index) {
             this.factura.Total = this.factura.Total - item.Subtotal;
             this.totalFormateado = 'Total: $' + this.factura.Total;
             this.detalles.splice(index, 1);
+        },
+        anular(item, index) {
+            axios.put(`/ventas/destroy/${item.id}`) //'/ventas/destroy', item.id``)
+            .then(res => {
+                console.log(res);
+                const index = this.facturas.findIndex(facturaBuscar => facturaBuscar.id === res.data.id)
+                this.facturas[index].Estado = res.data.Estado;
+            })
         }
     }
 }

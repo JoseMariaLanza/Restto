@@ -42,14 +42,14 @@ class ManageBill implements IBillRepository
     {
         // Quitar comentarios para implementar los campos
         $nuevaFactura = new $this->modeloFactura();
-        // $nuevaFactura->Caja_Id = $request->Caja_Id; // nullable - No se muestra para el ingreso
+        $nuevaFactura->Caja_Id = $request->Caja_Id; // nullable - No se muestra para el ingreso
         // $nuevaFactura->Usuario_Id = $request->User_Id; // nullable - No se muestra para el ingreso
         // $nuevaFactura->Serie = $request->Serie; // nullable - No se muestra para el ingreso
         // $nuevaFactura->Numero = $request->Numero; // nullable - No se muestra para el ingreso
         $nuevaFactura->Tipo = 'Factura A'; // $request->Tipo; // Temporalmente solo Factura A, después se implementará la selección de tipo de factura
         // mediante $request->Tipo
         // $nuevaFactura->Cliente_Id = $request->Cliente_Id; // nullable - No se muestra para el ingreso
-        $nuevaFactura->Fecha_Emision = Carbon::now(); // $request->Fecha_Emision;
+        $nuevaFactura->Fecha_Emision = Carbon::now('America/Argentina/Buenos_Aires'); // $request->Fecha_Emision;
         $nuevaFactura->Estado = 'EMITIDA'; // $request->Estado;
         $nuevaFactura->Total = $request->Total;
         $nuevaFactura->Descripcion = $request->Descripcion;
@@ -90,5 +90,10 @@ class ManageBill implements IBillRepository
     public function delete($id)
     {
         // NO ELIMINA SINO QUE EDITA EL CAMPO 'Estado' a 'ANULADA'
+        $anularFactura = $this->getById($id);
+        $anularFactura->Estado = 'ANULADA';
+        $anularFactura->save();
+
+        return $anularFactura;
     }
 }

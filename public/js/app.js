@@ -1978,6 +1978,63 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2003,13 +2060,17 @@ __webpack_require__.r(__webpack_exports__);
       totalFormateado: ''
     };
   },
-  // En componente que lista las ventas
-  // created() {
-  //     axios.get('/ventas/create')
-  //         .then(res => {
-  //             this.facturas = res.data;
-  //         })
-  // },
+  created: function created() {
+    var _this = this;
+
+    // Obteniendo el id de la caja abierta para definir la foreign key
+    var caja_id = document.getElementById('cajaId');
+    this.factura.Caja_Id = caja_id.value; // Listado de ventas del día
+
+    axios.get('/ventas/create').then(function (res) {
+      _this.facturas = res.data;
+    });
+  },
   methods: {
     agregar: function agregar() {
       if (this.detalle.Descripcion.trim() === '' || this.detalle.Precio_Unitario === '0' || this.detalle.Cantidad === '0' || this.detalle.Precio_Unitario === '' || this.detalle.Cantidad === '') {
@@ -2026,18 +2087,12 @@ __webpack_require__.r(__webpack_exports__);
       this.detalles.push(params);
       this.factura.Total = this.factura.Total + params.Subtotal;
       this.totalFormateado = 'Total: $' + this.factura.Total;
-      this.factura.Caja_Id = app.$refs.caja_id.value;
-      console.log(this.factura.Caja_Id);
       this.detalle.Descripcion = '';
       this.detalle.Precio_Unitario = '';
-      this.detalle.Cantidad = ''; // POST para el caso en que se concreta la venta
-      // axios.post('/ventas', factura)
-      //    .then(res =>{
-      //        this.facturas.push(res.data)
-      // })
+      this.detalle.Cantidad = '';
     },
     guardar: function guardar() {
-      var _this = this;
+      var _this2 = this;
 
       if (this.detalles.length <= 0 || this.factura.Descripcion === '') {
         alert('Ingrese los detalles de la venta');
@@ -2046,25 +2101,40 @@ __webpack_require__.r(__webpack_exports__);
 
       var params = {
         Descripcion: this.factura.Descripcion,
-        Total: this.factura.Total
+        Total: this.factura.Total,
+        Caja_Id: this.factura.Caja_Id
       };
       this.factura.Descripcion = '';
       this.factura.Total = '';
       this.totalFormateado = '';
       axios.post('/ventas/store', params).then(function (res) {
-        _this.facturas.push(res.data);
+        _this2.facturas.push(res.data);
 
-        _this.detalles.forEach(function (element) {
+        _this2.detalles.forEach(function (element) {
           element.Factura_Id = res.data.id;
           axios.post('/ventas/storeDetail', element);
-          _this.detalles = [];
+          _this2.detalles = [];
         });
-      }); // alert('Venta guardada correctamente');
+      });
     },
     quitar: function quitar(item, index) {
       this.factura.Total = this.factura.Total - item.Subtotal;
       this.totalFormateado = 'Total: $' + this.factura.Total;
       this.detalles.splice(index, 1);
+    },
+    anular: function anular(item, index) {
+      var _this3 = this;
+
+      axios.put("/ventas/destroy/".concat(item.id)) //'/ventas/destroy', item.id``)
+      .then(function (res) {
+        console.log(res);
+
+        var index = _this3.facturas.findIndex(function (facturaBuscar) {
+          return facturaBuscar.id === res.data.id;
+        });
+
+        _this3.facturas[index].Estado = res.data.Estado;
+      });
     }
   }
 });
@@ -37435,14 +37505,14 @@ var render = function() {
               ]
             ),
             _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
+            _c("div", { staticClass: "card-body-mb-2" }, [
               _c("div", { staticClass: "row" }, [
                 _c("div", { staticClass: "col" }, [
                   _c(
                     "div",
                     {
                       staticClass: "card",
-                      staticStyle: { "margin-bottom": "30px" }
+                      staticStyle: { "margin-bottom": "20px" }
                     },
                     [
                       _vm._m(0),
@@ -37492,8 +37562,8 @@ var render = function() {
                           ]),
                           _vm._v(" "),
                           _c("div", { staticClass: "form-row" }, [
-                            _c("div", { staticClass: "col-mb-2" }, [
-                              _c("div", { staticClass: "input-group mb-2" }, [
+                            _c("div", { staticClass: "form-group col-md-8" }, [
+                              _c("div", { staticClass: "input-group" }, [
                                 _vm._m(1),
                                 _vm._v(" "),
                                 _c("input", {
@@ -37531,7 +37601,7 @@ var render = function() {
                               ])
                             ]),
                             _vm._v(" "),
-                            _c("div", { staticClass: "col" }, [
+                            _c("div", { staticClass: "form-group col-md-4" }, [
                               _c("input", {
                                 directives: [
                                   {
@@ -37546,7 +37616,7 @@ var render = function() {
                                   type: "number",
                                   step: "0.001",
                                   min: "0.001",
-                                  placeholder: "Cantidad vendida"
+                                  placeholder: "Cantidad"
                                 },
                                 domProps: { value: _vm.detalle.Cantidad },
                                 on: {
@@ -37687,7 +37757,7 @@ var render = function() {
                                 _vm._v(" "),
                                 _c("td", {
                                   domProps: {
-                                    textContent: _vm._s(item.Subtotal)
+                                    textContent: _vm._s("$" + item.Subtotal)
                                   }
                                 }),
                                 _vm._v(" "),
@@ -37720,6 +37790,57 @@ var render = function() {
           ]
         )
       ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "container" }, [
+      _vm._m(7),
+      _vm._v(" "),
+      _c("div", { staticClass: "row justify-content-center" }, [
+        _c("div", { staticClass: "table-responsive" }, [
+          _c("table", { staticClass: "table" }, [
+            _vm._m(8),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              _vm._l(_vm.facturas, function(item, index) {
+                return _c("tr", { key: index }, [
+                  _c("td", { domProps: { textContent: _vm._s(item.id) } }),
+                  _vm._v(" "),
+                  _c("td", {
+                    domProps: { textContent: _vm._s(item.Descripcion) }
+                  }),
+                  _vm._v(" "),
+                  _c("td", {
+                    domProps: { textContent: _vm._s(item.Fecha_Emision) }
+                  }),
+                  _vm._v(" "),
+                  _c("td", {
+                    domProps: { textContent: _vm._s("$" + item.Total) }
+                  }),
+                  _vm._v(" "),
+                  _c("td", { domProps: { textContent: _vm._s(item.Estado) } }),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-danger btn-sm btn-block",
+                        on: {
+                          click: function($event) {
+                            return _vm.anular(item, index)
+                          }
+                        }
+                      },
+                      [_vm._v("Anular")]
+                    )
+                  ])
+                ])
+              }),
+              0
+            )
+          ])
+        ])
+      ])
     ])
   ])
 }
@@ -37728,14 +37849,9 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass:
-          "card-header d-flex justify-content-between align-items-center"
-      },
-      [_c("h4", [_vm._v("Agregar orden")])]
-    )
+    return _c("div", { staticClass: "card-header d-flex" }, [
+      _c("h4", [_vm._v("Agregar orden")])
+    ])
   },
   function() {
     var _vm = this
@@ -37749,10 +37865,10 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col" }, [
+    return _c("div", { staticClass: "form-group col-md-12" }, [
       _c(
         "button",
-        { staticClass: "btn btn-primary mb-2", attrs: { type: "submit" } },
+        { staticClass: "btn btn-primary btn-block", attrs: { type: "submit" } },
         [_vm._v("Agregar")]
       )
     ])
@@ -37776,7 +37892,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "form-row" }, [
       _c("div", { staticClass: "col" }, [
-        _c("button", { staticClass: "btn btn-success mb-2" }, [
+        _c("button", { staticClass: "btn btn-success btn-block" }, [
           _vm._v("Concretar venta")
         ])
       ])
@@ -37805,6 +37921,40 @@ var staticRenderFns = [
         _c("th", [_vm._v("Cantidad")]),
         _vm._v(" "),
         _c("th", [_vm._v("Subtotal")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Acción")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row-md-10" }, [
+      _c("div", { staticClass: "panel panel-default" }, [
+        _c("div", { staticClass: "panel-heading" }, [
+          _c("h1", [_vm._v("Ventas del día")])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "panel-body" })
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { staticClass: "col-ms-4" }, [_vm._v("Nº de Factura")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Descripción")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Fecha y Hora de la venta")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Total")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Estado")]),
         _vm._v(" "),
         _c("th", [_vm._v("Acción")])
       ])
@@ -49987,7 +50137,8 @@ Vue.component('ventas-facturacion', __webpack_require__(/*! ./components/Factura
  */
 
 var app = new Vue({
-  el: '#app'
+  el: '#app' // idCaja = app.$refs.caja_id.value
+
 });
 
 /***/ }),
