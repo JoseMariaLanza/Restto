@@ -21,6 +21,7 @@ window.Vue = require('vue');
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('ventas-facturacion', require('./components/FacturacionComponent.vue').default);
+Vue.component('ventas', require('./components/FacturasComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -29,6 +30,5 @@ Vue.component('ventas-facturacion', require('./components/FacturacionComponent.v
  */
 
 const app = new Vue({
-    el: '#app',
-    // idCaja = app.$refs.caja_id.value
+    el: '#app'
 });

@@ -18,6 +18,9 @@ class Factura extends Model
 
     public function scopeBuscar($query, $fechaInicio, $fechaFin)
     {
+        // $fechaInicio = $fechaInicio->format('d/m/Y H:i:s');
+        // $fechaFin = $fechaFin->format('d/m/Y H:i:s');
+
         $query->whereBetween('Fecha_Emision', [$fechaInicio, $fechaFin])->get();
     }
 

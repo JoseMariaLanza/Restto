@@ -83,6 +83,12 @@ Route::middleware(['auth'])->group(function(){
     // Ventas
     Route::resource('/ventas', 'SalesController');
 
+    // Route::get('ventas/index', 'SalesController@index')->name('ventas.index')
+    //     ->middleware('has.permission:ventas.index');
+
+    Route::post('ventas/buscar', 'SalesController@buscar')->name('ventas.buscar')
+        ->middleware('has.permission:ventas.index');
+
     Route::get('ventas/create', 'SalesController@create')->name('ventas.create')
         ->middleware('has.permission:ventas.create');
     
@@ -97,6 +103,9 @@ Route::middleware(['auth'])->group(function(){
 
     Route::put('ventas/destroy/{id}', 'SalesController@destroy')->name('ventas.destroy')
         ->middleware('has.permission:ventas.destroy');
+
+    // Route::put('ventas/buscar/{fechaInicio}/{fechaFin}', 'SalesController@buscar')->name('ventas.buscar')
+    //     ->middleware('has.permission:ventas.index');
     // Facturas subsystem
     
 

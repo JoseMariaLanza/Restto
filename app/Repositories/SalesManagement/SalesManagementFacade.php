@@ -42,14 +42,6 @@ class SalesManagementFacade
 
     public function crearCaja(Request $request)
     {
-        // $nuevaCaja = $this->manageCash->create($caja);
-        // Quitar comentarios para habilitar la inserción de detalles de la caja
-        // $detalle = [
-        //     'Sector_Id' => $caja['sectorId'],
-        //     'Descripcion' => $caja['descripcion'],
-        // ];
-        // $this->agregarDetalle($detalle);
-        // return $nuevaCaja;
         $this->manageCash->create($request);
     }
 
@@ -80,14 +72,7 @@ class SalesManagementFacade
 
     public function actualizarDetallesCaja(Request $request, $id)
     {
-        // $empleadoUpdate = Empleado::findOrFail($id);
-        // $empleadoUpdate->Apellido = $request->Apellido;
-        // $empleadoUpdate->Nombre = $request->Nombre;
-        // $empleadoUpdate->Fecha_Nacimiento = $request->Fecha_Nacimiento;
-        // $empleadoUpdate->Telefono = $request->Telefono;
-        // $empleadoUpdate->Domicilio = $request->Domicilio;
-        // $empleadoUpdate->Descripcion = $request->Descripcion;
-        // $empleadoUpdate->save();
+        // No implementado
     }
 
     public function eliminarCaja($id)
@@ -99,12 +84,17 @@ class SalesManagementFacade
     
     public function obtenerFacturas(Request $request)
     {
-        return $this->manageBill->getAll($request);
+        return $this->manageBill->getBills($request);
     }
 
-    public function obtenerFacturasDelDia(Request $request)
+    // public function obtenerFacturas($fechaInicio, $fechaFin)
+    // {
+    //     return $this->manageBill->getBills($fechaInicio, $fechaFin);
+    // }
+
+    public function obtenerFacturasDelDia($fechaInicio)
     {
-        return $this->manageBill->getDayBills($request);
+        return $this->manageBill->getDayBills($fechaInicio);
     }
 
     public function crearFactura(Request $request)

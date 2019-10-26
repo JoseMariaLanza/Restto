@@ -24,13 +24,29 @@ class ManageBill implements IBillRepository
         $this->modeloDetalleFactura = $modeloDetalleFactura;
     }
 
-    public function getAll($request){
+    public function getBills($request){
         // obtener todas las facuras
+        // if ($request->fechaInicio == null){
+        //     return $this->modeloFactura->all();
+        // }
+        return $this->modeloFactura->buscar($request->get('fechaInicio'), $request->get('fechaFin'))->orderBy('id', 'DESC');
+        // $fechaInicio = $request->get('fechaInicio');
+        // $fechaFin = $request->get('fechaFin');
+        // return $this->modeloFactura->buscar($fechaInicio, $fechaFin); // $request->get('fechaInicio', $request->get('fechaFin')));
     }
 
-    public function getDayBills($request)
+    // public function getBills($fechaInicio, $fechaFin){
+    //     // obtener todas las facuras
+    //     // if ($request->fechaInicio == null){
+    //     //     return $this->modeloFactura->all();
+    //     // }
+    //     // return $this->modeloFactura->buscar($request->get('fechaInicio'), $request->get('fechaFin'))->orderBy('id', 'DESC');
+    //     return $this->modeloFactura->buscar($fechaInicio, $fechaFin);
+    // }
+
+    public function getDayBills($fechaInicio)
     {
-        return $this->modeloFactura->buscarfacturasdia($request->get('fechaInicio', 'fechaFin')); // ->orderBy('Fecha_Emision', 'DESC');
+        return $this->modeloFactura->buscarfacturasdia($fechaInicio)->orderBy('Fecha_Emision', 'DESC');
     }
 
     public function getById($id)

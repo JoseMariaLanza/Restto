@@ -35,10 +35,15 @@ class SalesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Muestra una lista de todas las ventas realizadas
-        // Además se puede filtrar por fechas (entre fechas)
+        return view('Ventas.Index');
+    }
+
+    public function buscar(Request $request)
+    {
+        $facturas = $this->salesManagement->obtenerFacturas($request)->get();
+        return $facturas;
     }
 
     /**
@@ -72,31 +77,31 @@ class SalesController extends Controller
         {
             if($caja->Terminal == gethostname())
             {
-                // Obtener las ventas que se van haciendo desde la apertura de la caja
-                // y pasarlas mediante compact
-                $now = Carbon::now('America/Argentina/Buenos_Aires');
                 $fechaInicio = $caja->Fecha_Hora_Apertura;
+                // $request->fechaInicio = $fechaInicio;
                 // $fechaFin = $now->format('d/m/Y H:i:s');
+                // $request->fechaFin = $fechaFin;
 
                 if ($request->ajax())
                 {
-                    return $facturas = Factura::buscarfacturasdia($fechaInicio)->get();
+                    $facturas = $this->salesManagement->obtenerFacturasDelDia($fechaInicio)->get();
+                    // return[
+                    //     'paginate' => [
+                    //         'total' => $facturas->total(),
+                    //         'current_page' => $facturas->currentPage(),
+                    //         'per_page' => $facturas->perPage(),
+                    //         'last_page' => $facturas->lastPage(),
+                    //         'from' => $facturas->firstItem(),
+                    //         'to' => $facturas->lastPage()
+                    //     ],
+                    //     'facturas' => $facturas
+                    // ];
+                    return $facturas;
                 }
                 else
                 {
-                    return view('Ventas.Crear', compact('caja', 'facturas')); //, 'detallesFactura'));
+                    return view('Ventas.Crear', compact('caja'));
                 }
-                
-                // Pasar este código a la clase SalesManagement, dejar solamente la primera línea de abajo
-                // esto se hace para que haya un objeto detallesFactura
-                // $detalleFactura = new FacturaDetalle();
-                // $detalleFactura->Descripcion = $request->Descripcion;
-                // $detalleFactura->Precio_Unitario = $request->Precio_Unitario;
-                // $detalleFactura->Cantidad = $request->Cantidad;
-                // $detalleFactura->Subtotal = $detalleFactura->Precio_Unitario * $detalleFactura->Cantidad;
-                
-                // $detallesFactura = collect();
-                // // $detallesFactura->add($detalleFactura);
                 
             }
         }
@@ -115,7 +120,7 @@ class SalesController extends Controller
         ]);
         
         $factura = $this->salesManagement->crearFactura($request);
-        $factura->Fecha_Emision = $factura->Fecha_Emision->format('d/m/Y H:i:s');
+        $factura->Fecha_Emision = $factura->Fecha_Emision->format('Y-m-d H:i:s');
         return $factura;
     }
 

@@ -6,9 +6,11 @@ use Illuminate\Http\Request;
 
 interface IBillRepository
 {
-    public function getAll($request);
+    // public function getBills($fechaInicio, $fechaFin);
 
-    public function getDayBills($request);
+    public function getBills($request);
+
+    public function getDayBills($fechaInicio);
 
     public function getById($id);
 

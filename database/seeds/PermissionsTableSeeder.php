@@ -94,8 +94,20 @@ class PermissionsTableSeeder extends Seeder
         ]);
 
         Permission::create([
+            'name'          => 'Visualizar ventas',
+            'slug'          => 'ventas.index',
+            'description'   => 'Puede visualizar las ventas realizadas',
+        ]);
+
+        Permission::create([
+            'name'          => 'Anular facturas',
+            'slug'          => 'ventas.anular',
+            'description'   => 'Puede anular cualquier venta del sistema',
+        ]);
+
+        Permission::create([
             'name'          => 'Ingresar una venta en el sistema',
-            'slug'          => 'ventas.create',
+            'slug'          => 'ventas.destroy',
             'description'   => 'Creación de facturas y detalles',
         ]);
     }

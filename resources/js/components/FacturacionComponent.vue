@@ -70,7 +70,7 @@
                                     </div>
                                     <div class="table-responsive">
                                         <!-- Detalles de la factura -->
-                                        <table class="table">
+                                        <table class="table table-hover">
                                             <thead>
                                                 <tr>
                                                     <th class="col-ms-4">Descripción del pedido</th>
@@ -129,7 +129,7 @@
             <div class="row justify-content-center">
                 <div class="table-responsive">
                     <!-- Detalles de la factura -->
-                    <table class="table">
+                    <table class="table table-hover">
                         <thead>
                             <tr>
                                 <th class="col-ms-4">Nº de Factura</th>
@@ -241,8 +241,6 @@ export default {
         anular(item, index) {
             axios.put(`/ventas/destroy/${item.id}`) //'/ventas/destroy', item.id``)
             .then(res => {
-                console.log(res);
-                const index = this.facturas.findIndex(facturaBuscar => facturaBuscar.id === res.data.id)
                 this.facturas[index].Estado = res.data.Estado;
             })
         }
