@@ -4,26 +4,32 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+// Administración de Cajas
+use App\Repositories\ExpensesManagement\ExpensesManagementFacade;
+
+use Carbon\Carbon;
+
 class GastoController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Inicialización de Fachada
+     * 
+     * @var ExpensesManagementFacade
      */
-    public function index()
+    private $expensesManagement;
+
+    public function __construct(ExpensesManagementFacade $expensesManagement)
     {
-        //
+        $this->middleware('auth');
+        $this->expensesManagement = $expensesManagement;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function index(Request $request)
     {
-        //
+        $gastos = $this->expensesManagement->obtenerGastos($request)->paginate(5);
+        $periodos = $this->expensesManagement->obtenerEnums();
+        // dd($gastos);
+        return view('Gasto.Index', compact('gastos', 'periodos'));
     }
 
     /**
@@ -34,41 +40,18 @@ class GastoController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'Concepto' => 'required',
+            'Monto' => 'required',
+            'Periodo' => 'required',
+            'Descripcion' => 'required'
+        ]);
+        // $request->request->add(['Fecha']);
+        // $request->Fecha = Carbon::now();
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+        $this->expensesManagement->crearGasto($request);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
+        return back()->with('mensaje', 'Gasto agregado correctamente');
     }
 
     /**
@@ -79,6 +62,7 @@ class GastoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->expensesManagement->eliminarGasto($id);
+        return back()->with('mensaje', 'Gasto eliminado correctamente');
     }
 }

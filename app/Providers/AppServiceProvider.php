@@ -19,6 +19,10 @@ use App\Repositories\SalesManagement\CashManagement\ManageCash;
 use App\Repositories\SalesManagement\InvoiceManagement\IBillRepository;
 use App\Repositories\SalesManagement\InvoiceManagement\ManageBill;
 
+// Gastos
+use App\Repositories\ExpensesManagement\IExpenseRepository;
+use App\Repositories\ExpensesManagement\ManageExpense;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -33,6 +37,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(IUserRepository::class, ManageUser::class);
         $this->app->bind(ICashRepository::class, ManageCash::class);
         $this->app->bind(IBillRepository::class, ManageBill::class);
+        $this->app->bind(IExpenseRepository::class, ManageExpense::class);
         // $this->app->singleton(IEmpleadoRepository::class, ManageUser::class);
     }
 

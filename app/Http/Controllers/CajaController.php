@@ -29,7 +29,6 @@ class CajaController extends Controller
 
     public function index(Request $request)
     {
-        // Producto::buscar($request->get('texto'))->orderBy('id', 'DESC')->paginate(5);
         $cajas = $this->salesManagement->obtenerCajas($request)->paginate(5);
         return view('Ventas.Caja.Index', compact('cajas'));
     }

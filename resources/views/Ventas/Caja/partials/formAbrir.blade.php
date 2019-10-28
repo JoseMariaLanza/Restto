@@ -42,12 +42,12 @@
                                         {{ Form::hidden('Fecha_Hora_Cierre', null) }}
                                         @if($caja->Estado === 'CERRADA')
                                             <h4>Monto inicial en caja: </h4>
-                                            {{ Form::number('Monto_Inicial', null, [ 'class' => 'form-control mb-2', 'step' => '0.1', 'placeholder' => 'Monto inicial en caja', 'value' => "old('Monto_Inicial')" ]) }}
+                                            {{ Form::number('Monto_Inicial', null, [ 'class' => 'form-control mb-2', 'step' => '0.01', 'placeholder' => 'Monto inicial en caja', 'value' => "old('Monto_Inicial')" ]) }}
                                             {{ Form::hidden('Monto_Final', null) }}
                                         @else
                                             <h4>Monto final en caja: </h4>
                                             {{ Form::hidden('Monto_Inicial', null) }}
-                                            {{ Form::number('Monto_Final', null, [ 'class' => 'form-control mb-2', 'step' => '0.1', 'placeholder' => 'Monto final en caja', 'value' => "old('Monto_Final')" ]) }}
+                                            {{ Form::number('Monto_Final', null, [ 'class' => 'form-control mb-2', 'step' => '0.01', 'placeholder' => 'Monto final en caja', 'value' => "old('Monto_Final')" ]) }}
                                         @endif
                                         <h4>Descripción: {{ $caja->Descripcion }}</h4>
                                     </div>

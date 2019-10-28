@@ -42,6 +42,9 @@
                     @can('roles.index')
                         <a class="navbar-brand" href="{{ route('roles.index') }}">Roles</a>
                     @endcan
+                    @can('gastos.index')
+                        <a class="navbar-brand" href="{{ route('gastos.index') }}">Gastos</a>
+                    @endcan
                     @can('ventas.index')
                         <a class="navbar-brand" href="{{ route('ventas.index') }}">Ventas</a>
                     @endcan

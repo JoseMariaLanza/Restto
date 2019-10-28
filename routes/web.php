@@ -83,9 +83,6 @@ Route::middleware(['auth'])->group(function(){
     // Ventas
     Route::resource('/ventas', 'SalesController');
 
-    // Route::get('ventas/index', 'SalesController@index')->name('ventas.index')
-    //     ->middleware('has.permission:ventas.index');
-
     Route::post('ventas/buscar', 'SalesController@buscar')->name('ventas.buscar')
         ->middleware('has.permission:ventas.index');
 
@@ -104,8 +101,6 @@ Route::middleware(['auth'])->group(function(){
     Route::put('ventas/destroy/{id}', 'SalesController@destroy')->name('ventas.destroy')
         ->middleware('has.permission:ventas.destroy');
 
-    // Route::put('ventas/buscar/{fechaInicio}/{fechaFin}', 'SalesController@buscar')->name('ventas.buscar')
-    //     ->middleware('has.permission:ventas.index');
     // Facturas subsystem
     
 
@@ -131,6 +126,15 @@ Route::middleware(['auth'])->group(function(){
     Route::get('cajas/{id}/edit', 'CajaController@edit')->name('cajas.edit')
         ->middleware('has.permission:cajas.edit');
 
+    // Gastos
+    Route::get('gastos', 'GastoController@index')->name('gastos.index')
+        ->middleware('has.permission:gastos.index');
+
+    Route::post('gastos/create', 'GastoController@store')->name('gastos.create')
+        ->middleware('has.permission:gastos.create');
+
+    Route::delete('gastos/{id}', 'GastoController@destroy')->name('gastos.destroy')
+        ->middleware('has.permission:gastos.destroy');
 
     // Users
     Route::get('users', 'UserController@index')->name('users.index')

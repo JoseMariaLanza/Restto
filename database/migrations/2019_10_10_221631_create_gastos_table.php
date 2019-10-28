@@ -19,9 +19,9 @@ class CreateGastosTable extends Migration
             $table->float('Monto');
             $table->enum('Periodo', ['Diario', 'Semanal', 'Mensual', 'Bimestral', 'Trimestral', 'Anual', 'Esporádico', 'No definido', 'Otro']);
             $table->dateTime('Fecha');
-            $table->text('Descripcion');
-            $table->string('Campo_Extra_1');
-            $table->string('Campo_Extra_2');
+            $table->text('Descripcion')->nullable();
+            $table->string('Campo_Extra_1')->nullable();
+            $table->string('Campo_Extra_2')->nullable();
             $table->timestamps();
         });
     }
