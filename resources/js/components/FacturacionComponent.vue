@@ -108,20 +108,6 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h1>Ventas del día</h1>
-                        <!-- Búsqueda entre fechas -->
-                        <!-- <form role="search" class="navban-form navbar-left pull-right" method='GET'>
-                            <div class="row justify-content-end" style="margin-bottom:30px">
-                                <div class="form-goup">
-                                    Buscar entre las fechas:
-                                    {{ Form::date('fechaInicio', Carbon\Carbon::now(), [ 'class' => 'mb-2 d-inline', 'value' => "old(fechaInicio)" ]) }}
-                                    y
-                                    {{ Form::date('fechaFin', Carbon\Carbon::now(), [ 'class' => 'mb-2 d-inline', 'value' => "old(fechaFin)" ]) }}
-                                </div>
-                                <button type="submit" class="btn btn-default">Buscar</button>
-                            </div>
-                        </form> -->
-                    </div>
-                    <div class="panel-body">
                     </div>
                 </div>
             </div>
