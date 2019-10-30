@@ -19,7 +19,7 @@ class CreateOrdenesArticulosTable extends Migration
             $table->foreign('Orden_Id')->references('id')->on('ordenes');
             $table->unsignedBigInteger('Articulo_Id')->nullable();
             $table->foreign('Articulo_Id')->references('id')->on('articulos');
-            $table->float('Cantidad');
+            $table->decimal('Cantidad', 20, 3);
             $table->enum('Estado', ['CANCELADA', 'EN PÉRDIDA']);
             $table->text('Descripcion');
             $table->string('Campo_Extra_1');

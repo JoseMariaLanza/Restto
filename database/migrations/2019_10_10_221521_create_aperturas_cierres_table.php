@@ -19,7 +19,7 @@ class CreateAperturasCierresTable extends Migration
             $table->foreign('Apertura_Id')->references('id')->on('aperturas');
             $table->unsignedBigInteger('Cierre_Id')->nullable();
             $table->foreign('Cierre_Id')->references('id')->on('cierres');
-            $table->float('Diferencia');
+            $table->decimal('Diferencia', 20, 2);
             $table->enum('Estado', ['ABIERTA', 'CERRADA']);
             $table->text('Descripcion');
             $table->string('Campo_Extra_1');

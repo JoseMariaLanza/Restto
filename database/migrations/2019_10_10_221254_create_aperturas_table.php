@@ -20,7 +20,7 @@ class CreateAperturasTable extends Migration
             $table->unsignedBigInteger('Empleado_Id');
             $table->foreign('Empleado_Id')->references('id')->on('empleados');
             $table->dateTime('Fecha_Hora_Apertura');
-            $table->float('Total'); // Es el monto en $$ con el que inicia la caja
+            $table->decimal('Total', 20, 2); // Es el monto en $$ con el que inicia la caja
             $table->text('Descripcion');
             $table->string('Campo_Extra_1');
             $table->string('Campo_Extra_2');

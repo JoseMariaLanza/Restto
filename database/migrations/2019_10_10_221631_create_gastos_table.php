@@ -16,7 +16,7 @@ class CreateGastosTable extends Migration
         Schema::create('gastos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('Concepto');
-            $table->float('Monto');
+            $table->decimal('Monto', 20, 2);
             $table->enum('Periodo', ['Diario', 'Semanal', 'Mensual', 'Bimestral', 'Trimestral', 'Anual', 'Esporádico', 'No definido', 'Otro']);
             $table->dateTime('Fecha');
             $table->text('Descripcion')->nullable();

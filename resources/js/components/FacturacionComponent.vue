@@ -18,11 +18,7 @@
                                     </div>
                                     <!-- Agregar detalles de la factura (formulario) -->
                                     <form @submit.prevent="agregar">
-                                        <div class="row">
-                                            <div class="col">
-                                                <textarea placeholder="Descripción de la orden" class="form-control mb-2" rows="2" v-model="detalle.Descripcion"></textarea>
-                                            </div>
-                                        </div>
+                                        
                                         <div class="form-row">
                                             <div class="form-group col-md-8">
                                                 <div class="input-group">
@@ -35,9 +31,16 @@
                                             <div class="form-group col-md-4">
                                                 <input type="number" step="0.001" min="0.001" placeholder="Cantidad" class="form-control" v-model="detalle.Cantidad">
                                             </div>
-                                            <div class="form-group col-md-12">
-                                                <button type="submit" class="btn btn-primary btn-block">Agregar</button>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col">
+                                                <textarea placeholder="Descripción de la orden" class="form-control mb-2" rows="2" v-model="detalle.Descripcion"></textarea>
                                             </div>
+                                        </div>
+
+                                        <div class="form-group col-md-12">
+                                            <button type="submit" class="btn btn-primary btn-block">Agregar</button>
                                         </div>
                                     </form>
                                 </div>
@@ -108,6 +111,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h1>Ventas del día</h1>
+                        <h1 class="d-flex" v-text="TotalVentas"></h1>
                     </div>
                 </div>
             </div>
@@ -153,10 +157,12 @@ export default {
     data() {
         return {
             detalles: [],
-            detalle: { Factura_Id: '', Descripcion: '', Precio_Unitario: '', Cantidad: '', Subtotal: '' },
+            detalle: { Factura_Id: '', Descripcion: '', Precio_Unitario: '', Cantidad: '', Subtotal: 0.00 },
 
             // Colección de facturas registradas en el día
             facturas: [],
+            // Total de ventas en el día
+            TotalVentas: 0.00,
             //Factura
             factura: { Caja_Id: '', Tipo: '', Fecha: '', Estado: '', Total: 0.00, Descripcion: '' },
             totalFormateado: ''
@@ -170,6 +176,11 @@ export default {
         axios.get('/ventas/create')
             .then(res => {
                 this.facturas = res.data;
+                    this.facturas.forEach(element => {
+                    if(element.Estado != 'ANULADA'){
+                        this.TotalVentas += element.Total;
+                    }
+                })
             })
     },
     methods: {
@@ -180,13 +191,22 @@ export default {
                 alert('Debe completar todos los campos antes de agregar el detalle.');
                 return;
             }
+            if (this.detalle.Precio_Unitario > 2000000 ||
+            this.detalle.Cantidad > 2000000){
+                alert('Límite excedido, el número es muy elevado');
+                return;
+            }
             const params = {
                 Descripcion: this.detalle.Descripcion,
                 Precio_Unitario: this.detalle.Precio_Unitario,
                 Cantidad: this.detalle.Cantidad,
                 Subtotal: this.detalle.Precio_Unitario * this.detalle.Cantidad
             }
-            this.detalles.push(params);
+            if (params.Subtotal > 2000000){
+                alert('El valor del subtotal es muy elevado');
+                return;
+            }
+            this.detalles.unshift(params);
             
             this.factura.Total = this.factura.Total + params.Subtotal;
             this.totalFormateado = 'Total: $' + this.factura.Total;
@@ -206,11 +226,11 @@ export default {
                 Caja_Id: this.factura.Caja_Id
             }
             this.factura.Descripcion = '';
-            this.factura.Total = '';
+            this.factura.Total = 0.00;
             this.totalFormateado = '';
             axios.post('/ventas/store', params)
                .then(res =>{
-                   this.facturas.push(res.data);
+                   this.facturas.unshift(res.data);
                    this.detalles.forEach(element => {
                        element.Factura_Id = res.data.id;
                        axios.post('/ventas/storeDetail', element);

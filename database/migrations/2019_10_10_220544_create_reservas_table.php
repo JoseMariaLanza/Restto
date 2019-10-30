@@ -17,7 +17,7 @@ class CreateReservasTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('Cliente_Id')->nullable();
             $table->foreign('Cliente_Id')->references('id')->on('clientes');
-            $table->float('Abonado');
+            $table->decimal('Monto_Abonado', 20, 2);
             $table->integer('Cantidad_Comensales');
             $table->dateTime('Fecha_Hora_Reserva');
             $table->text('Descripcion');

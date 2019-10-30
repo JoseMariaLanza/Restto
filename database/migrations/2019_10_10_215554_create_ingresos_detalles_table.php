@@ -19,12 +19,12 @@ class CreateIngresosDetallesTable extends Migration
             $table->foreign('Ingreso_Id')->references('id')->on('ingresos');
             $table->unsignedBigInteger('Articulo_Id')->nullable();
             $table->foreign('Articulo_Id')->references('id')->on('articulos');
-            $table->float('Precio_Costo');
-            $table->float('Precio_Venta');
+            $table->decimal('Precio_Costo', 20, 2);
+            $table->decimal('Precio_Venta', 20, 2);
             $table->dateTime('Fecha_Produccion')->nullable();
             $table->dateTime('Fecha_Vencimiento')->nullable();
-            $table->float('Cantidad');
-            $table->float('Subtotal');
+            $table->decimal('Cantidad', 20, 3);
+            $table->decimal('Subtotal', 20, 2);
             // $table->unsignedBigInteger('Ubicacion_Id')->nullable();
             // $table->foreign('Ubicacion_Id')->references('id')->on('ubicaciones')->nullable();
             $table->text('Descripcion');

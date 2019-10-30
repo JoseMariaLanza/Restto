@@ -19,7 +19,7 @@ class CreatePromocionesTable extends Migration
             $table->dateTime('Fecha_Alta');
             $table->dateTime('Fecha_Baja')->nullable();
             $table->boolean('Activa');
-            $table->float('Precio_Venta');
+            $table->decimal('Precio_Venta', 20, 2);
             $table->text('Descripcion');
             $table->string('Campo_Extra_1');
             $table->string('Campo_Extra_2');

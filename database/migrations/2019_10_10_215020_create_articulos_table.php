@@ -18,9 +18,9 @@ class CreateArticulosTable extends Migration
             $table->string('Nombre');
             $table->unsignedBigInteger('Categoria_Id');
             $table->foreign('Categoria_Id')->references('id')->on('categorias');
-            $table->float('Precio_Costo');
-            $table->float('Precio_Venta');
-            $table->float('Cantidad');
+            $table->decimal('Precio_Costo', 20, 2);
+            $table->decimal('Precio_Venta', 20, 2);
+            $table->decimal('Cantidad', 20, 2);
             $table->boolean('Apto_Venta_Unitaria');
             $table->text('Descripcion');
             $table->string('Campo_Extra_1');

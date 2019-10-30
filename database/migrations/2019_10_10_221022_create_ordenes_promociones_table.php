@@ -19,7 +19,7 @@ class CreateOrdenesPromocionesTable extends Migration
             $table->foreign('Orden_Id')->references('id')->on('ordenes');
             $table->unsignedBigInteger('Promocion_Id')->nullable();
             $table->foreign('Promocion_Id')->references('id')->on('promociones');
-            $table->float('Cantidad');
+            $table->decimal('Cantidad', 20, 3);
             $table->enum('Estado', ['CANCELADA', 'EN PÉRDIDA']);
             $table->text('Descripcion');
             $table->string('Campo_Extra_1');

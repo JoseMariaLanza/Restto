@@ -46,7 +46,9 @@ class UserController extends Controller
     public function show($id)
     {
         $user = $this->usersManagement->obtenerUsuario($id);
+        // dd($user);
         $empleado = $this->usersManagement->obtenerEmpleado($id);
+        // dd($empleado);
         return view('Usuario.Detalles', compact('user', 'empleado'));
     }
 

@@ -24,7 +24,7 @@ class CreateIngresosTable extends Migration
             $table->foreign('Proveedor_Id')->references('id')->on('proveedores')->nullable();
             $table->dateTime('Fecha');
             $table->string('Estado');
-            $table->float('Total');
+            $table->decimal('Total', 20, 2);
             $table->text('Descripcion');
             $table->string('Campo_Extra_1');
             $table->string('Campo_Extra_2');

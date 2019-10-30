@@ -20,8 +20,8 @@ class CreateCierresTable extends Migration
             $table->unsignedBigInteger('Empleado_Id');
             $table->foreign('Empleado_Id')->references('id')->on('empleados');
             $table->dateTime('Fecha_Hora_Cierre');
-            $table->float('Total_Final_Sistema');
-            $table->float('Total_Final_Real');
+            $table->decimal('Total_Final_Sistema', 20, 2);
+            $table->decimal('Total_Final_Real', 20, 2);
             $table->text('Descripcion');
             $table->string('Campo_Extra_1');
             $table->string('Campo_Extra_2');

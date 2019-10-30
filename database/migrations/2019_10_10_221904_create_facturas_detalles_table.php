@@ -19,9 +19,9 @@ class CreateFacturasDetallesTable extends Migration
             $table->foreign('Factura_Id')->references('id')->on('facturas');
             $table->unsignedBigInteger('Orden_Id')->nullable();
             $table->foreign('Orden_Id')->references('id')->on('ordenes');
-            $table->float('Precio_Unitario');
-            $table->float('Cantidad');
-            $table->float('Subtotal');
+            $table->decimal('Precio_Unitario', 20, 2);
+            $table->decimal('Cantidad', 20, 3);
+            $table->decimal('Subtotal', 20, 2);
             $table->text('Descripcion');
             $table->string('Campo_Extra_1')->nullable();
             $table->string('Campo_Extra_2')->nullable();

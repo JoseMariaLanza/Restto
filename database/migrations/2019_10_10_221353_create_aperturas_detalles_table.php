@@ -18,9 +18,9 @@ class CreateAperturasDetallesTable extends Migration
             $table->unsignedBigInteger('Apertura_Id');
             $table->foreign('Apertura_Id')->references('id')->on('aperturas');
             $table->string('Moneda');
-            $table->float('Denominacion');
-            $table->float('Cantidad');
-            $table->float('Subtotal');
+            $table->decimal('Denominacion', 20, 2);
+            $table->decimal('Cantidad', 20, 3);
+            $table->decimal('Subtotal', 20, 2);
             $table->text('Descripcion');
             $table->string('Campo_Extra_1');
             $table->string('Campo_Extra_2');

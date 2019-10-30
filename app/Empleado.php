@@ -14,6 +14,6 @@ class Empleado extends Model
 
     public function scopeObtenerEmpleadoPorIdDeUsuario($query, $id)
     {
-        $query->where('user_id', $id);
+        return $query->where('User_Id', $id)->first();
     }
 }

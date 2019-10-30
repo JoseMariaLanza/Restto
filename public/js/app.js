@@ -1988,6 +1988,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1997,10 +2001,12 @@ __webpack_require__.r(__webpack_exports__);
         Descripcion: '',
         Precio_Unitario: '',
         Cantidad: '',
-        Subtotal: ''
+        Subtotal: 0.00
       },
       // Colección de facturas registradas en el día
       facturas: [],
+      // Total de ventas en el día
+      TotalVentas: 0.00,
       //Factura
       factura: {
         Caja_Id: '',
@@ -2022,6 +2028,12 @@ __webpack_require__.r(__webpack_exports__);
 
     axios.get('/ventas/create').then(function (res) {
       _this.facturas = res.data;
+
+      _this.facturas.forEach(function (element) {
+        if (element.Estado != 'ANULADA') {
+          _this.TotalVentas += element.Total;
+        }
+      });
     });
   },
   methods: {
@@ -2031,13 +2043,24 @@ __webpack_require__.r(__webpack_exports__);
         return;
       }
 
+      if (this.detalle.Precio_Unitario > 2000000 || this.detalle.Cantidad > 2000000) {
+        alert('Límite excedido, el número es muy elevado');
+        return;
+      }
+
       var params = {
         Descripcion: this.detalle.Descripcion,
         Precio_Unitario: this.detalle.Precio_Unitario,
         Cantidad: this.detalle.Cantidad,
         Subtotal: this.detalle.Precio_Unitario * this.detalle.Cantidad
       };
-      this.detalles.push(params);
+
+      if (params.Subtotal > 2000000) {
+        alert('El valor del subtotal es muy elevado');
+        return;
+      }
+
+      this.detalles.unshift(params);
       this.factura.Total = this.factura.Total + params.Subtotal;
       this.totalFormateado = 'Total: $' + this.factura.Total;
       this.detalle.Descripcion = '';
@@ -2058,10 +2081,10 @@ __webpack_require__.r(__webpack_exports__);
         Caja_Id: this.factura.Caja_Id
       };
       this.factura.Descripcion = '';
-      this.factura.Total = '';
+      this.factura.Total = 0.00;
       this.totalFormateado = '';
       axios.post('/ventas/store', params).then(function (res) {
-        _this2.facturas.push(res.data);
+        _this2.facturas.unshift(res.data);
 
         _this2.detalles.forEach(function (element) {
           element.Factura_Id = res.data.id;
@@ -55206,39 +55229,6 @@ var render = function() {
                           }
                         },
                         [
-                          _c("div", { staticClass: "row" }, [
-                            _c("div", { staticClass: "col" }, [
-                              _c("textarea", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.detalle.Descripcion,
-                                    expression: "detalle.Descripcion"
-                                  }
-                                ],
-                                staticClass: "form-control mb-2",
-                                attrs: {
-                                  placeholder: "Descripción de la orden",
-                                  rows: "2"
-                                },
-                                domProps: { value: _vm.detalle.Descripcion },
-                                on: {
-                                  input: function($event) {
-                                    if ($event.target.composing) {
-                                      return
-                                    }
-                                    _vm.$set(
-                                      _vm.detalle,
-                                      "Descripcion",
-                                      $event.target.value
-                                    )
-                                  }
-                                }
-                              })
-                            ])
-                          ]),
-                          _vm._v(" "),
                           _c("div", { staticClass: "form-row" }, [
                             _c("div", { staticClass: "form-group col-md-8" }, [
                               _c("div", { staticClass: "input-group" }, [
@@ -55310,10 +55300,43 @@ var render = function() {
                                   }
                                 }
                               })
-                            ]),
-                            _vm._v(" "),
-                            _vm._m(2)
-                          ])
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "row" }, [
+                            _c("div", { staticClass: "col" }, [
+                              _c("textarea", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.detalle.Descripcion,
+                                    expression: "detalle.Descripcion"
+                                  }
+                                ],
+                                staticClass: "form-control mb-2",
+                                attrs: {
+                                  placeholder: "Descripción de la orden",
+                                  rows: "2"
+                                },
+                                domProps: { value: _vm.detalle.Descripcion },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.detalle,
+                                      "Descripcion",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _vm._m(2)
                         ]
                       )
                     ]
@@ -55471,12 +55494,23 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "container" }, [
-      _vm._m(7),
+      _c("div", { staticClass: "row-md-10" }, [
+        _c("div", { staticClass: "panel panel-default" }, [
+          _c("div", { staticClass: "panel-heading" }, [
+            _c("h1", [_vm._v("Ventas del día")]),
+            _vm._v(" "),
+            _c("h1", {
+              staticClass: "d-flex",
+              domProps: { textContent: _vm._s(_vm.TotalVentas) }
+            })
+          ])
+        ])
+      ]),
       _vm._v(" "),
       _c("div", { staticClass: "row justify-content-center" }, [
         _c("div", { staticClass: "table-responsive" }, [
           _c("table", { staticClass: "table table-hover" }, [
-            _vm._m(8),
+            _vm._m(7),
             _vm._v(" "),
             _c(
               "tbody",
@@ -55601,18 +55635,6 @@ var staticRenderFns = [
         _c("th", [_vm._v("Subtotal")]),
         _vm._v(" "),
         _c("th", [_vm._v("Acción")])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row-md-10" }, [
-      _c("div", { staticClass: "panel panel-default" }, [
-        _c("div", { staticClass: "panel-heading" }, [
-          _c("h1", [_vm._v("Ventas del día")])
-        ])
       ])
     ])
   },
@@ -70455,7 +70477,6 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
 Vue.component('ventas-facturacion', __webpack_require__(/*! ./components/FacturacionComponent.vue */ "./resources/js/components/FacturacionComponent.vue")["default"]);
 Vue.component('ventas', __webpack_require__(/*! ./components/FacturasComponent.vue */ "./resources/js/components/FacturasComponent.vue")["default"]);
 /**
@@ -70512,17 +70533,6 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     encrypted: true
 // });
-
-/***/ }),
-
-/***/ "./resources/js/components/ExampleComponent.vue":
-/*!******************************************************!*\
-  !*** ./resources/js/components/ExampleComponent.vue ***!
-  \******************************************************/
-/*! exports provided: default */
-/***/ (function(module, exports) {
-
-throw new Error("Module build failed (from ./node_modules/vue-loader/lib/index.js):\nError: ENOENT: no such file or directory, open 'C:\\xampp\\htdocs\\proyectos\\laravel\\Restto\\resources\\js\\components\\ExampleComponent.vue'");
 
 /***/ }),
 

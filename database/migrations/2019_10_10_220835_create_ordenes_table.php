@@ -21,7 +21,7 @@ class CreateOrdenesTable extends Migration
             $table->enum('Estado_Orden', ['EN PREPARACIÓN', 'PREPARADA', 'ENTREGADA', 'FACTURADA']);
             $table->enum('Estado_Mesa', ['LIBRE', 'OCUPADA', 'RESERVADA']);
             $table->dateTime('Fecha_Hora_Orden_Finalizada')->nullable();
-            $table->float('Total');
+            $table->decimal('Total', 20, 2);
             $table->text('Descripcion');
             $table->string('Campo_Extra_1');
             $table->string('Campo_Extra_2');

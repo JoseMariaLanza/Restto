@@ -18,7 +18,7 @@ class CreateMenusTable extends Migration
             $table->unsignedBigInteger('Categoria_Id')->nullable();
             $table->foreign('Categoria_Id')->references('id')->on('categorias')->nullable();
             $table->string('Nombre_Plato');
-            $table->float('Precio_Venta');
+            $table->decimal('Precio_Venta', 20, 2);
             $table->text('Descripcion');
             $table->string('Campo_Extra_1');
             $table->string('Campo_Extra_2');

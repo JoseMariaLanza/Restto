@@ -17,7 +17,7 @@ class CreateLiquidacionesTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('Empleado_Id');
             $table->foreign('Empleado_Id')->references('id')->on('empleados');
-            $table->float('Sueldo_Hora');
+            $table->decimal('Sueldo_Hora', 20, 2);
             $table->text('Descripcion');
             $table->string('Campo_Extra_1');
             $table->string('Campo_Extra_2');

@@ -33,22 +33,6 @@
         </div>
     </div>
 
-    <!-- <form role="search" @submit.prevent="buscar" method="GET">
-                    <div class="form-row justify-content-end">
-                        <div class="row">
-                            <div class="row-md-2">Buscar entre</div>
-                            <div class="col">
-                                <datepicker v-model="date1" :language="es" :format="dateFormat"></datepicker>
-                            </div>
-                            <div class="row-md-2">y</div>
-                            <div class="col">
-                                <datepicker v-model="date2" :language="es" :format="dateFormat"></datepicker>
-                            </div>
-                            <button class="btn btn-default" type="submit">Buscar</button>
-                        </div>
-                    </div>
-                </form> -->
-
     <div class="container">
         <div class="row-md-10">
             <div class="panel panel-default">
@@ -58,12 +42,10 @@
                         <div class="row justify-content-end" style="margin-bottom:30px">
                             <div class="col-md-2">Buscar entre</div>
                             <div class="form-goup">
-                                <!-- <input type="text" name="texto" class="form-control" placeholder="Búsqueda"> -->
                                 {{ Form::date('fechaInicio', Carbon\Carbon::now(), [ 'class' => 'form-control mb-2', 'value' => "old('fechaInicio')" ]) }}
                             </div>
                             <div class="col-md-1">y</div>
                             <div class="form-goup">
-                                <!-- <input type="text" name="texto" class="form-control" placeholder="Búsqueda"> -->
                                 {{ Form::date('fechaFin', Carbon\Carbon::now(), [ 'class' => 'form-control mb-2', 'value' => "old('fechaFin')" ]) }}
                             </div>
                             <button type="submit" class="btn btn-default">Buscar</button>
