@@ -42,8 +42,34 @@ class SalesController extends Controller
 
     public function buscar(Request $request)
     {
-        $facturas = $this->salesManagement->obtenerFacturas($request)->get();
-        return $facturas;
+        // IMPORTANTE -> NO se llama al método get(), de hacerlo arroja error 500
+        // $facturas = $this->salesManagement->obtenerFacturas($request)->paginate(5);
+        // $TotalFinalFacturas = $this->salesManagement->calcularTotalVentas($facturas);
+        // $facturas->add(['tot', $totalVentas]);
+
+        $queryResult = $this->salesManagement->obtenerFacturas($request);
+
+        $facturas = $this->salesManagement->separarFacturas($queryResult)->paginate(10);
+        $TotalFinalFacturas = $this->salesManagement->separaryObtenerTotal($queryResult);
+
+        return[
+            'pagination' => [
+                'total' => $facturas->total(),
+                'current_page' => $facturas->currentPage(),
+                'per_page' => $facturas->perPage(),
+                'last_page' => $facturas->lastPage(),
+                'from' => $facturas->firstItem(),
+                'to' => $facturas->lastPage()
+            ],
+            // 'list' => [ //TODO: retornar un array con un elemento $facturas y otro totalFinalFacturas en SalesManagementFacade
+            //     // y separarlo aquí en controlador para obtener las dos siguientes variables:
+            //     'facturas' => $facturas, // Obtener mediante función en SalesManagementFacade
+            //     'TotalFinalFacturas' => $TotalFinalFacturas // Obtener mediante función en SalesManagementFacade
+            // ]
+            'facturas' => $facturas,
+            'TotalFinalFacturas' => $TotalFinalFacturas
+        ];
+        // return $facturas;
     }
 
     /**

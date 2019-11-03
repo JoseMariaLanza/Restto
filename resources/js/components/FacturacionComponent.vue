@@ -109,9 +109,9 @@
         <div class="container">
             <div class="row-md-10">
                 <div class="panel panel-default">
-                    <div class="panel-heading">
+                    <div class="panel-heading d-flex justify-content-between align-items-center">
                         <h1>Ventas del día</h1>
-                        <h1 class="d-flex" v-text="TotalVentas"></h1>
+                        <h1 class="d-flex" v-text="totalVentasFormateado"></h1>
                     </div>
                 </div>
             </div>
@@ -162,7 +162,9 @@ export default {
             // Colección de facturas registradas en el día
             facturas: [],
             // Total de ventas en el día
-            TotalVentas: 0.00,
+            totalVentas: 0.00,
+            // Total de ventas formateado para mostrar al usuario
+            totalVentasFormateado: '',
             //Factura
             factura: { Caja_Id: '', Tipo: '', Fecha: '', Estado: '', Total: 0.00, Descripcion: '' },
             totalFormateado: ''
@@ -176,11 +178,12 @@ export default {
         axios.get('/ventas/create')
             .then(res => {
                 this.facturas = res.data;
-                    this.facturas.forEach(element => {
-                    if(element.Estado != 'ANULADA'){
-                        this.TotalVentas += element.Total;
-                    }
+                this.facturas.forEach(element => {
+                if(element.Estado != 'ANULADA'){
+                    this.totalVentas += element.Total;
+                }
                 })
+                this.totalVentasFormateado = 'Total ventas del día: $' + this.totalVentas;
             })
     },
     methods: {
@@ -230,11 +233,13 @@ export default {
             this.totalFormateado = '';
             axios.post('/ventas/store', params)
                .then(res =>{
-                   this.facturas.unshift(res.data);
-                   this.detalles.forEach(element => {
-                       element.Factura_Id = res.data.id;
-                       axios.post('/ventas/storeDetail', element);
-                       this.detalles = [];
+                    this.facturas.unshift(res.data);
+                    this.totalVentas += params.Total;
+                    this.totalVentasFormateado = 'Total ventas del día: $' + this.totalVentas;
+                    this.detalles.forEach(element => {
+                        element.Factura_Id = res.data.id;
+                        axios.post('/ventas/storeDetail', element);
+                        this.detalles = [];
                    });
                 })
             
@@ -245,9 +250,13 @@ export default {
             this.detalles.splice(index, 1);
         },
         anular(item, index) {
-            axios.put(`/ventas/destroy/${item.id}`) //'/ventas/destroy', item.id``)
+            axios.put(`/ventas/destroy/${item.id}`)
             .then(res => {
-                this.facturas[index].Estado = res.data.Estado;
+                if (this.facturas[index].Estado == 'EMITIDA'){
+                    this.facturas[index].Estado = res.data.Estado;
+                    this.totalVentas -= this.facturas[index].Total;
+                    this.totalVentasFormateado = 'Total ventas del día: $' + this.totalVentas;
+                }
             })
         }
     }

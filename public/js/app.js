@@ -2006,7 +2006,9 @@ __webpack_require__.r(__webpack_exports__);
       // Colección de facturas registradas en el día
       facturas: [],
       // Total de ventas en el día
-      TotalVentas: 0.00,
+      totalVentas: 0.00,
+      // Total de ventas formateado para mostrar al usuario
+      totalVentasFormateado: '',
       //Factura
       factura: {
         Caja_Id: '',
@@ -2031,9 +2033,11 @@ __webpack_require__.r(__webpack_exports__);
 
       _this.facturas.forEach(function (element) {
         if (element.Estado != 'ANULADA') {
-          _this.TotalVentas += element.Total;
+          _this.totalVentas += element.Total;
         }
       });
+
+      _this.totalVentasFormateado = 'Total ventas del día: $' + _this.totalVentas;
     });
   },
   methods: {
@@ -2086,6 +2090,9 @@ __webpack_require__.r(__webpack_exports__);
       axios.post('/ventas/store', params).then(function (res) {
         _this2.facturas.unshift(res.data);
 
+        _this2.totalVentas += params.Total;
+        _this2.totalVentasFormateado = 'Total ventas del día: $' + _this2.totalVentas;
+
         _this2.detalles.forEach(function (element) {
           element.Factura_Id = res.data.id;
           axios.post('/ventas/storeDetail', element);
@@ -2101,9 +2108,12 @@ __webpack_require__.r(__webpack_exports__);
     anular: function anular(item, index) {
       var _this3 = this;
 
-      axios.put("/ventas/destroy/".concat(item.id)) //'/ventas/destroy', item.id``)
-      .then(function (res) {
-        _this3.facturas[index].Estado = res.data.Estado;
+      axios.put("/ventas/destroy/".concat(item.id)).then(function (res) {
+        if (_this3.facturas[index].Estado == 'EMITIDA') {
+          _this3.facturas[index].Estado = res.data.Estado;
+          _this3.totalVentas -= _this3.facturas[index].Total;
+          _this3.totalVentasFormateado = 'Total ventas del día: $' + _this3.totalVentas;
+        }
       });
     }
   }
@@ -2210,18 +2220,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2232,11 +2230,27 @@ __webpack_require__.r(__webpack_exports__);
     return {
       // Facturas
       facturas: [],
+      // Total por página
+      totalVentas: 0.00,
+      totalVentasFormateado: '',
+      // Total todas las páginas
+      totalFinalFacturas: 0.00,
+      totalFinalFacturasFormateado: '',
       // Fechas
       es: vuejs_datepicker_dist_locale__WEBPACK_IMPORTED_MODULE_1__["es"],
       date1: new Date(),
       date2: new Date(),
-      dateFormat: 'dd/MM/yyyy'
+      dateFormat: 'dd/MM/yyyy',
+      // Paginación
+      pagination: {
+        'total': 0,
+        'current_page': 0,
+        'per_page': 0,
+        'last_page': 0,
+        'from': 0,
+        'to': 0
+      },
+      offset: 3
     };
   },
   // EL FILTRADO SE REALIZA LLAMANDO AL MÉTODO BUSCAR
@@ -2248,25 +2262,78 @@ __webpack_require__.r(__webpack_exports__);
   //         console.log(res);
   //     })
   // },
+  // Paginación
+  computed: {
+    isActived: function isActived() {
+      return this.pagination.current_page;
+    },
+    pagesNumber: function pagesNumber() {
+      if (!this.pagination.to) {
+        return [];
+      }
+
+      var from = this.pagination.current_page - this.offset;
+
+      if (from < 1) {
+        from = 1;
+      }
+
+      var to = from + this.offset * 2;
+
+      if (to >= this.pagination.last_page) {
+        to = this.pagination.last_page;
+      }
+
+      var pagesArray = [];
+
+      while (from <= to) {
+        pagesArray.push(from);
+        from++;
+      }
+
+      return pagesArray;
+    }
+  },
   methods: {
     anular: function anular(item, index) {
       var _this = this;
 
-      axios.put("/ventas/destroy/".concat(item.id)) //'/ventas/destroy', item.id``)
+      axios.put("/ventas/destroy/".concat(item.id)) // se llama a la función destroy pero ésta no elimina nada, sino que cambia el estado a ANULADA
       .then(function (res) {
-        _this.facturas[index].Estado = res.data.Estado;
+        if (_this.facturas[index].Estado == 'EMITIDA') {
+          _this.facturas[index].Estado = res.data.Estado;
+          _this.totalVentas -= _this.facturas[index].Total;
+          _this.totalVentasFormateado = 'Total de la página: $' + _this.totalVentas;
+          _this.totalFinalFacturas -= _this.facturas[index].Total;
+          _this.totalFinalFacturasFormateado = 'Total final: $' + _this.totalFinalFacturas;
+        }
       });
     },
-    buscar: function buscar() {
+    buscar: function buscar(page) {
       var _this2 = this;
 
+      this.totalVentas = 0.00;
       var params = {
         fechaInicio: this.backEndDateFormatFrom(this.date1),
-        fechaFin: this.backEndDateFormatTo(this.date2)
+        fechaFin: this.backEndDateFormatTo(this.date2),
+        page: page
       };
-      console.log(params);
       axios.post('/ventas/buscar', params).then(function (res) {
-        _this2.facturas = res.data;
+        _this2.facturas = res.data.facturas.data;
+        console.log(res.data.facturas.data);
+        console.log(res.data.TotalFinalFacturas);
+        _this2.totalFinalFacturas = res.data.TotalFinalFacturas;
+        _this2.totalFinalFacturasFormateado = 'Total final: $' + _this2.totalFinalFacturas; // Paginación
+
+        _this2.pagination = res.data.pagination;
+
+        _this2.facturas.forEach(function (element) {
+          if (element.Estado != 'ANULADA') {
+            _this2.totalVentas += element.Total;
+          }
+        });
+
+        _this2.totalVentasFormateado = 'Total de la página: $' + _this2.totalVentas;
       });
     },
     backEndDateFormatFrom: function backEndDateFormatFrom(date) {
@@ -2278,6 +2345,10 @@ __webpack_require__.r(__webpack_exports__);
       var moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 
       return moment(date).format('Y-MM-DD 23:23:59'); // 'DD/MM/Y H:mm:ss');
+    },
+    changePage: function changePage(page) {
+      this.pagination.current_page = page;
+      this.buscar(page);
     }
   }
 });
@@ -55496,14 +55567,21 @@ var render = function() {
     _c("div", { staticClass: "container" }, [
       _c("div", { staticClass: "row-md-10" }, [
         _c("div", { staticClass: "panel panel-default" }, [
-          _c("div", { staticClass: "panel-heading" }, [
-            _c("h1", [_vm._v("Ventas del día")]),
-            _vm._v(" "),
-            _c("h1", {
-              staticClass: "d-flex",
-              domProps: { textContent: _vm._s(_vm.TotalVentas) }
-            })
-          ])
+          _c(
+            "div",
+            {
+              staticClass:
+                "panel-heading d-flex justify-content-between align-items-center"
+            },
+            [
+              _c("h1", [_vm._v("Ventas del día")]),
+              _vm._v(" "),
+              _c("h1", {
+                staticClass: "d-flex",
+                domProps: { textContent: _vm._s(_vm.totalVentasFormateado) }
+              })
+            ]
+          )
         ])
       ]),
       _vm._v(" "),
@@ -55683,87 +55761,92 @@ var render = function() {
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row-md-10" }, [
       _c("div", { staticClass: "panel panel-default" }, [
-        _c("div", { staticClass: "panel-heading" }, [
-          _c("h1", [_vm._v("Ventas")]),
-          _vm._v(" "),
-          _c(
-            "form",
-            {
-              attrs: { role: "search", method: "GET" },
-              on: {
-                submit: function($event) {
-                  $event.preventDefault()
-                  return _vm.buscar($event)
-                }
+        _c(
+          "form",
+          {
+            attrs: { role: "search", method: "GET" },
+            on: {
+              submit: function($event) {
+                $event.preventDefault()
+                return _vm.buscar($event)
               }
-            },
-            [
-              _c("div", { staticClass: "form-row justify-content-end" }, [
-                _c("div", { staticClass: "row" }, [
-                  _c("div", { staticClass: "row-md-2" }, [
-                    _vm._v("Buscar entre")
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "col" },
-                    [
-                      _c("datepicker", {
-                        attrs: { language: _vm.es, format: _vm.dateFormat },
-                        model: {
-                          value: _vm.date1,
-                          callback: function($$v) {
-                            _vm.date1 = $$v
-                          },
-                          expression: "date1"
-                        }
-                      })
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "row-md-2" }, [_vm._v("y")]),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "col" },
-                    [
-                      _c("datepicker", {
-                        attrs: { language: _vm.es, format: _vm.dateFormat },
-                        model: {
-                          value: _vm.date2,
-                          callback: function($$v) {
-                            _vm.date2 = $$v
-                          },
-                          expression: "date2"
-                        }
-                      })
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-default",
-                      attrs: { type: "submit" }
-                    },
-                    [_vm._v("Buscar")]
-                  )
-                ])
+            }
+          },
+          [
+            _c("div", { staticClass: "form-row justify-content-end" }, [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "row-md-2" }, [_vm._v("Desde: ")]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "col" },
+                  [
+                    _c("datepicker", {
+                      attrs: { language: _vm.es, format: _vm.dateFormat },
+                      model: {
+                        value: _vm.date1,
+                        callback: function($$v) {
+                          _vm.date1 = $$v
+                        },
+                        expression: "date1"
+                      }
+                    })
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "row-md-2" }, [_vm._v("Hasta: ")]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "col" },
+                  [
+                    _c("datepicker", {
+                      attrs: { language: _vm.es, format: _vm.dateFormat },
+                      model: {
+                        value: _vm.date2,
+                        callback: function($$v) {
+                          _vm.date2 = $$v
+                        },
+                        expression: "date2"
+                      }
+                    })
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  { staticClass: "btn btn-default", attrs: { type: "submit" } },
+                  [_vm._v("Buscar")]
+                )
               ])
-            ]
-          ),
-          _vm._v(" "),
-          _vm._m(0)
-        ])
+            ])
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass:
+              "panel-heading d-flex justify-content-between align-items-center"
+          },
+          [
+            _c("h1", [_vm._v("Ventas")]),
+            _vm._v(" "),
+            _c("h1", {
+              staticClass: "d-flex",
+              domProps: { textContent: _vm._s(_vm.totalVentasFormateado) }
+            })
+          ]
+        )
       ])
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "row justify-content-center" }, [
       _c("div", { staticClass: "table-responsive" }, [
         _c("table", { staticClass: "table table-hover" }, [
-          _vm._m(1),
+          _vm._m(0),
           _vm._v(" "),
           _c(
             "tbody",
@@ -55804,29 +55887,107 @@ var render = function() {
             0
           )
         ])
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass:
+            "panel-heading d-flex justify-content-between align-items-center"
+        },
+        [
+          _c("h1", {
+            staticClass: "d-flex",
+            domProps: { textContent: _vm._s(_vm.totalFinalFacturasFormateado) }
+          })
+        ]
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c("nav", { staticClass: "d-flex" }, [
+        _c(
+          "ul",
+          { staticClass: "pagination" },
+          [
+            _vm.pagination.current_page > 1
+              ? _c("li", { staticClass: "page-item" }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "page-link",
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.changePage(_vm.pagination.current_page - 1)
+                        }
+                      }
+                    },
+                    [_c("span", [_vm._v("Anterior")])]
+                  )
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm._l(_vm.pagesNumber, function(page) {
+              return _c(
+                "li",
+                {
+                  key: page,
+                  staticClass: "page-item",
+                  class: [page == _vm.isActived ? "active" : ""]
+                },
+                [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "page-link",
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.changePage(page)
+                        }
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\r\n                        " +
+                          _vm._s(page) +
+                          "\r\n                    "
+                      )
+                    ]
+                  )
+                ]
+              )
+            }),
+            _vm._v(" "),
+            _vm.pagination.current_page < _vm.pagination.last_page
+              ? _c("li", { staticClass: "page-item" }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "page-link",
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.changePage(_vm.pagination.current_page + 1)
+                        }
+                      }
+                    },
+                    [_c("span", [_vm._v("Siguiente")])]
+                  )
+                ])
+              : _vm._e()
+          ],
+          2
+        )
       ])
     ])
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "form",
-      {
-        staticClass: "navban-form navbar-left pull-right",
-        attrs: { role: "search", method: "GET" }
-      },
-      [
-        _c("div", {
-          staticClass: "form-row",
-          staticStyle: { "margin-bottom": "30px" }
-        })
-      ]
-    )
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement

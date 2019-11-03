@@ -13,7 +13,7 @@ class Factura extends Model
 
     public function scopeBuscarFacturasDia($query, $fechaInicio)
     {
-        $query->whereBetween('Fecha_Emision', [$fechaInicio, Carbon::now()])->get();
+        return $query->whereBetween('Fecha_Emision', [$fechaInicio, Carbon::now()]);
     }
 
     public function scopeBuscar($query, $fechaInicio, $fechaFin)

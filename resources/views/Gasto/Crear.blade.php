@@ -1,5 +1,5 @@
 @section('agregarGasto')
-    <h1>Agragar un gasto</h1>
+    <h1>Agregar un gasto</h1>
 
     {!! Form::open(['route' => ['gastos.create']]) !!}
 

@@ -13,6 +13,8 @@ use App\Cierre;
 use App\CierreDetalle;
 use App\AperturaCierre;
 
+use Illuminate\Support\Collection;
+
 class SalesManagementFacade
 {
     /**
@@ -84,13 +86,36 @@ class SalesManagementFacade
     
     public function obtenerFacturas(Request $request)
     {
-        return $this->manageBill->getBills($request);
+        // Retornando array con $facturas y $totalQueryFacturas
+        $facturas = $this->manageBill->getBills($request);
+        $queryResult = [];
+        // $queryResult->add(['facturas', $facturas]);
+        $queryResult['facturas'] = $facturas;
+        $totalQueryFacturas = $this->calcularTotalVentas($facturas->get()); // con get() abtengo el array para poder recorrerlo
+        $queryResult['totalQueryFacturas'] = $totalQueryFacturas;
+        return $queryResult;
     }
 
-    // public function obtenerFacturas($fechaInicio, $fechaFin)
-    // {
-    //     return $this->manageBill->getBills($fechaInicio, $fechaFin);
-    // }
+    public function separarFacturas($queryResult)
+    {
+        return $queryResult['facturas'];
+    }
+
+    public function separaryObtenerTotal($queryResult)
+    {
+        return $queryResult['totalQueryFacturas'];
+    }
+
+    public function calcularTotalVentas($facturas)
+    {
+        $total = 0.00;
+        foreach($facturas as $factura){
+            if($factura->Estado == 'EMITIDA'){
+                $total += $factura->Total;
+            }
+        }
+        return $total;
+    }
 
     public function obtenerFacturasDelDia($fechaInicio)
     {
