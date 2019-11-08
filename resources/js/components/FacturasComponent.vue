@@ -1,5 +1,133 @@
 <template>
 <div class="container">
+
+    <!-- Editar la factura -->
+    <div class="row justify-content-center" v-if="editarActivo">
+        <div class="col-md-12">
+            <div class="card" style="margin-bottom:30px">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h1>Venta</h1>
+                    <h1 class="d-flex" v-text="totalFormateado"></h1>
+                </div>
+                <div class="card-body-mb-2">
+                    <div class="row">
+                        <div class="col">
+                            <div class="card" style="margin-bottom:20px">
+                                <div class="card-header d-flex">
+                                    <h4>Modificar orden</h4>
+                                </div>
+                                <!-- Editar detalles de la factura (formulario) -->
+                                <form @submit.prevent="agregar">
+                                    
+                                    <div class="form-row">
+                                        <div class="form-group col-md-8">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">$</span>
+                                                </div>
+                                                <input type="number" step="0.01" min="0.01" placeholder="Precio por unidad" class="form-control" v-model="detalle.Precio_Unitario">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <input type="number" step="0.001" min="0.001" placeholder="Cantidad" class="form-control" v-model="detalle.Cantidad">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <textarea placeholder="Descripción de la orden" class="form-control mb-2" rows="2" v-model="detalle.Descripcion"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <button type="submit" class="btn btn-primary btn-block">Agregar</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- Factura -->
+                            <form @submit.prevent="actualizar(factura)">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h4>Información de la venta</h4>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="input-group mb-2">
+                                            <div class="input-group-prepend">
+                                                <select class="custom-select btn btn-outline-secondary dropdown-toggle" type="button" aria-haspopup="true" aria-expanded="false" @change="modificarEstado(factura)" v-model="factura.Estado">
+                                                    <option value="EMITIDA">EMITIR</option>
+                                                    <option value="ANULADA">ANULAR</option>
+                                                </select>    
+                                                <fieldset disabled>
+                                                    <input type="text" class="form-control" aria-label="Text input with dropdown button" v-model="factura.Estado">
+                                                </fieldset>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <textarea placeholder="Mesa/Mozo/Otras descripciones" class="form-control mb-2" rows="2" v-model="factura.Descripcion"></textarea>
+                                    </div>
+                                    <input type="hidden" v-model="factura.Caja_Id">
+                                </div>
+                                <div class="form-row">
+                                    <div class="col">
+                                        <button class="btn btn-success btn-block">Guardar</button>
+                                    </div>
+                                    <div class="col">
+                                        <button class="btn btn-default btn-block" @click="cancelarEdicion">Cancelar</button>
+                                    </div>
+                                </div>
+                            </div>      
+                            </form>                          
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card" style="margin-bottom:30px">
+                                <div class="card-header">
+                                    <h4>Detalles de la orden</h4>
+                                </div>
+                                <div class="table-responsive">
+                                    <!-- Detalles de la factura -->
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th class="col-ms-4">Descripción del pedido</th>
+                                                <th>Precio Unitario</th>
+                                                <th>Cantidad</th>
+                                                <th>Subtotal</th>
+                                                <th>Estado</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(item, index) in detalles" :key="index">
+                                                <td v-text="item.Descripcion"></td>
+                                                <td v-text="item.Precio_Unitario"></td>
+                                                <td v-text="item.Cantidad"></td>
+                                                <td v-text="'$' + item.Subtotal"></td>
+                                                <td v-if="item.id > 0">
+                                                    <div class="input-group mb-2">
+                                                        <select class="custom-select" @change="cambiarEstadoOrden(item, index)" v-model="item.Estado">
+                                                            <option value="REGISTRADA">REGISTRADA</option>
+                                                            <option value="ANULADA">ANULADA</option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td v-else>
+                                                    <!-- <button class="btn btn-danger btn-sm btn-block" @click="anularOrden(item, index)">Anular</button> -->
+                                                    <button class="btn btn-danger btn-sm btn-block" @click="quitar(item, index)">Quitar</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ventas -->
     <div class="row-md-10">
         <div class="panel panel-default">
             <form role="search" @submit.prevent="buscar" method="GET">
@@ -47,7 +175,7 @@
                         <td v-text="'$' + item.Total"></td>
                         <td v-text="item.Estado"></td>
                         <td>
-                            <button class="btn btn-default btn-sm btn-block" @click="editar(item, index)">Editar</button>
+                            <button class="btn btn-default btn-sm btn-block" @click="editar(item)">Editar</button>
                         </td>
                         <td>
                             <button class="btn btn-danger btn-sm btn-block" @click="anular(item, index)">Anular</button>
@@ -98,8 +226,15 @@ export default {
     },
     data() {
         return {
+
+            // Detalles - Código Duplicado. Necesario para edición
+            // Agregar
+            detalles: [],
+            detalle: { Factura_Id: '', Descripcion: '', Precio_Unitario: '', Cantidad: '', Subtotal: 0.00, Estado: '' },
+
             // Facturas
             facturas: [],
+            factura: { Caja_Id: '', Tipo: '', Fecha: '', Estado: '', Total: 0.00, Descripcion: '' }, // Código duplicado - Necesario para edición
             // Total por página
             totalVentas: 0.00,
             totalVentasFormateado: '',
@@ -122,6 +257,17 @@ export default {
                 'to': 0
             },
             offset: 3,
+
+            // Editar - Código Duplicado. Eliminar al refactorizar sistema
+            editarDetalles: [],
+            editarActivo: false,
+
+            // Edición de Ordenes
+            selected: 'REGISTRADA',
+            estadosOrden: [
+                { text: 'REGISTRAR', value: 'REGISTRADA' },
+                { text: 'ANULAR', value: 'ANULADA' }
+            ]
         }
     },
     // EL FILTRADO SE REALIZA LLAMANDO AL MÉTODO BUSCAR
@@ -209,7 +355,102 @@ export default {
             this.pagination.current_page = page;
             this.buscar(page);
         },
-        // EDICIÓN
+        // EDICIÓN - Código Duplicado. Eliminar al refactorizar
+        editar(item) {
+            this.editarActivo = true;
+            this.factura.id = item.id;
+            this.factura.Caja_Id = item.Caja_Id;
+            this.factura.Tipo = item.Tipo;
+            this.factura.Fecha = item.Fecha;
+            this.factura.Estado = item.Estado;
+            this.factura.Total = item.Total;
+            this.factura.Descripcion = item.Descripcion;
+            this.totalFormateado = 'Total: $' + this.factura.Total;
+            console.log(this.factura.id);
+            axios.get(`/ventas/showDetails/${this.factura.id}`)
+            .then(res => {
+                this.detalles = res.data;
+                console.log(this.detalles);
+            })
+        },
+        modificarEstado(item) {
+            this.factura.Estado = item.Estado;
+            this.calcularTotalFinalFacturas(item);
+        },
+        cancelarEdicion() {
+            this.factura.Descripcion = '';
+            this.factura.Total = 0.00;
+            this.totalFormateado = '';
+            this.detalles = [];
+            this.editarActivo = false;
+        },
+        actualizar(item){
+            const params = {
+                id: item.id,
+                Tipo: item.Tipo,
+                Estado: item.Estado,
+                Total: item.Total,
+                Descripcion: item.Descripcion
+            }
+
+            axios.put(`/ventas/update/${item.id}`, params)
+               .then(res =>{
+                    const index = this.facturas.findIndex(factura => factura.id === res.data.id);
+                    console.log(res);
+                    this.facturas[index].Tipo = res.data.Tipo;
+                    this.facturas[index].Estado = res.data.Estado;
+                    this.facturas[index].Descripcion = res.data.Descripcion;
+                    this.facturas[index].Total = res.data.Total;
+
+                    this.detalles.forEach(element => {
+                        if(element.id === undefined){
+                            element.Factura_Id = item.id;
+                            axios.post('/ventas/storeDetail', element);
+                        }
+                        else{
+                            axios.put(`/ventas/updateDetail/${element.id}`, element)
+                        }
+                    });
+                })
+                .then( res => {
+                    this.factura.Descripcion = '';
+                    this.factura.Total = 0.00;
+                    this.totalFormateado = '';
+                    this.detalles = [];
+                    this.calcularTotalVentasDelDia();
+                    // this.calcularTotalFinalFacturas(params); // Se llama desde el evento @change en la edición de la factura
+                });
+            this.editarActivo = false;
+        },
+        cambiarEstadoOrden(item, index){
+
+            if (item.Estado === 'ANULADA'){
+                this.factura.Total -= item.Subtotal;
+            }
+            else{
+                this.factura.Total += item.Subtotal;
+            }
+            this.totalFormateado = 'Total: $' + this.factura.Total;
+        },
+        calcularTotalVentasDelDia(){
+            this.totalVentas = 0.00;
+            this.facturas.forEach(element => {
+                if(element.Estado != 'ANULADA'){
+                    this.totalVentas += element.Total;
+                }
+                this.totalVentasFormateado = 'Total ventas del día: $' + this.totalVentas;
+            });
+        },
+        calcularTotalFinalFacturas(item){
+            console.log(item);
+            if(item.Estado === 'ANULADA'){
+                this.totalFinalFacturas -= item.Total;
+            }
+            else{
+                this.totalFinalFacturas += item.Total;
+            }
+            this.totalFinalFacturasFormateado = 'Total final: $' + this.totalFinalFacturas;
+        }
     }
 }
 </script>

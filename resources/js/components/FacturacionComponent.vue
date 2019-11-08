@@ -287,7 +287,7 @@ export default {
         return {
             // Agregar
             detalles: [],
-            detalle: { Factura_Id: '', Descripcion: '', Precio_Unitario: '', Cantidad: '', Subtotal: 0.00, Estado: '' }, // Agregar campo Estado
+            detalle: { Factura_Id: '', Descripcion: '', Precio_Unitario: '', Cantidad: '', Subtotal: 0.00, Estado: '' },
 
             // Mostrar
             // Colección de facturas registradas en el día
