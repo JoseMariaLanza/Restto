@@ -67,6 +67,17 @@ class SalesManagementFacade
         return $this->manageCash->update($request, $id);
     }
 
+    public function updateBill(Request $request, $id)
+    {
+        return $this->manageBill->update($request, $id);
+    }
+
+    public function updateDetail(Request $request, $id)
+    {
+        // $this->manageBill->updateDetail($request, $id);
+        return $this->manageBill->updateDetail($request, $id);
+    }
+
     public function updateState(Request $request, $id)
     {
         $this->manageCash->updateState($request, $id);
@@ -130,6 +141,11 @@ class SalesManagementFacade
     public function crearDetalleFactura(Request $request)
     {
         $this->manageBill->createDetail($request);
+    }
+
+    public function obtenerDetallesFactura($facturaId)
+    {
+        return $this->manageBill->getDetails($facturaId);
     }
 
     public function anularFactura($id)

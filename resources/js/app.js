@@ -21,6 +21,7 @@ window.Vue = require('vue');
 
 Vue.component('ventas-facturacion', require('./components/FacturacionComponent.vue').default);
 Vue.component('ventas', require('./components/FacturasComponent.vue').default);
+Vue.component('factura-edicion', require('./components/EdicionFacturaComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

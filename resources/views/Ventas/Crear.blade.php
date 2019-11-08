@@ -12,7 +12,7 @@
                     </div>
                 @endif
             @can('ventas.updateState')
-            <div class="row justify-content-center" style="margin-bottom:30px">
+            <div class="row justify-content-center">
                 <div class="col-md-12">
                     @include('Ventas.Caja.partials.formCerrar')
                     @yield('formularioCerrar')

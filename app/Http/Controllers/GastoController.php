@@ -26,10 +26,12 @@ class GastoController extends Controller
 
     public function index(Request $request)
     {
-        $gastos = $this->expensesManagement->obtenerGastos($request)->paginate(5);
+        $queryResult = $this->expensesManagement->obtenerGastos($request);
         $periodos = $this->expensesManagement->obtenerEnums();
-        // dd($gastos);
-        return view('Gasto.Index', compact('gastos', 'periodos'));
+        $gastos = $this->expensesManagement->separarGastos($queryResult)->paginate();
+        $totalGastos = $this->expensesManagement->separaryObtenerTotal($queryResult);
+
+        return view('Gasto.Index', compact('gastos', 'periodos', 'totalGastos'));
     }
 
     /**

@@ -83,24 +83,44 @@ class ManageBill implements IBillRepository
         $nuevoDetalle->Cantidad = $request->Cantidad;
         $nuevoDetalle->Subtotal = $request->Subtotal;
         $nuevoDetalle->Descripcion = $request->Descripcion;
+        $nuevoDetalle->Estado = 'REGISTRADA';
         $nuevoDetalle->save();
+    }
+
+    public function getDetails($facturaId)
+    {
+        return $this->modeloDetalleFactura->buscardetalles($facturaId);
     }
 
     public function update(Request $request, $id)
     {
         // Quitar comentarios para implementar los campos
-        $cajaUpdate = $this->getById($id);
+        $actualizarFactura = $this->modeloFactura->findOrFail($id);
         // $nuevaFactura->Caja_Id = $request->Caja_Id; // nullable - No se muestra para el ingreso
         // $nuevaFactura->Usuario_Id = $request->User_Id;  // nullable - No se muestra para el ingreso
         // $nuevaFactura->Serie = $request->Serie; // nullable - No se muestra para el ingreso
         // $nuevaFactura->Numero = $request->Numero; // nullable - No se muestra para el ingreso
-        $nuevaFactura->Tipo = $request->Tipo;
+        $actualizarFactura->Tipo = $request->Tipo;
         // $nuevaFactura->Cliente_Id = $request->Cliente_Id; // nullable - No se muestra para el ingreso
-        $nuevaFactura->Fecha_Emision = $request->Fecha_Emision;
-        $nuevaFactura->Estado = $request->Estado;
-        $nuevaFactura->Total = $request->Total;
-        $nuevaFactura->Descripcion = $request->Descripcion; // nullable pero si se muestra
-        $cajaUpdate->save();
+        // $actualizarFactura->Fecha_Emision = $request->Fecha_Emision;
+        $actualizarFactura->Estado = $request->Estado;
+        $actualizarFactura->Total = $request->Total;
+        $actualizarFactura->Descripcion = $request->Descripcion; // nullable pero si se muestra
+        $actualizarFactura->save();
+
+        return $actualizarFactura;
+    }
+
+    public function updateDetail(Request $request, $id)
+    {
+        $actualizarDetalle = $this->modeloDetalleFactura->findOrFail($id);
+        $actualizarDetalle->Precio_Unitario = $request->Precio_Unitario;
+        $actualizarDetalle->Cantidad = $request->Cantidad;
+        $actualizarDetalle->Descripcion = $request->Descripcion;
+        $actualizarDetalle->Subtotal = $request->Subtotal;
+        $actualizarDetalle->Estado = $request->Estado;
+        $actualizarDetalle->save();
+        return $actualizarDetalle;
     }
 
     public function delete($id)

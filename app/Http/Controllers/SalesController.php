@@ -154,6 +154,10 @@ class SalesController extends Controller
         $this->salesManagement->crearDetalleFactura($request);
     }
 
+    public function showDetails($facturaId){
+        return $this->salesManagement->obtenerDetallesFactura($facturaId);
+    }
+
     /**
      * Display the specified resource.
      *
@@ -185,7 +189,14 @@ class SalesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return $this->salesManagement->updateBill($request, $id);
+    }
+
+    public function updateDetail(Request $request, $id)
+    {
+        // return $request;
+        // $this->salesManagement->updateDetail($request, $id);
+        return $this->salesManagement->updateDetail($request, $id);
     }
 
     public function updateState(Request $request, $id)

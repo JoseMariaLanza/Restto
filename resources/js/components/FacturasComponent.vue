@@ -47,6 +47,9 @@
                         <td v-text="'$' + item.Total"></td>
                         <td v-text="item.Estado"></td>
                         <td>
+                            <button class="btn btn-default btn-sm btn-block" @click="editar(item, index)">Editar</button>
+                        </td>
+                        <td>
                             <button class="btn btn-danger btn-sm btn-block" @click="anular(item, index)">Anular</button>
                         </td>
                     </tr>
@@ -205,7 +208,8 @@ export default {
         changePage: function(page){
             this.pagination.current_page = page;
             this.buscar(page);
-        }
+        },
+        // EDICIÓN
     }
 }
 </script>

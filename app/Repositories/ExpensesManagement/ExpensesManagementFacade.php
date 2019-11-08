@@ -22,7 +22,32 @@ class ExpensesManagementFacade
 
     public function obtenerGastos(Request $request)
     {
-        return $this->manageExpense->getAll($request);
+        // return $this->manageExpense->getAll($request);
+        $gastos = $this->manageExpense->getAll($request);
+        $queryResult = [];
+        $queryResult['gastos'] = $gastos;
+        $totalQueryGastos = $this->calcularTotalGastos($gastos->get()); // con get() abtengo el array para poder recorrerlo
+        $queryResult['totalQueryGastos'] = $totalQueryGastos;
+        return $queryResult;
+    }
+
+    public function separarGastos($queryResult)
+    {
+        return $queryResult['gastos'];
+    }
+
+    public function separaryObtenerTotal($queryResult)
+    {
+        return $queryResult['totalQueryGastos'];
+    }
+
+    public function calcularTotalGastos($gastos)
+    {
+        $total = 0.00;
+        foreach($gastos as $gasto){
+            $total += $gasto->Monto;
+        }
+        return $total;
     }
 
     public function obtenerEnums()

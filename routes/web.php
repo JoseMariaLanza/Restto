@@ -94,9 +94,18 @@ Route::middleware(['auth'])->group(function(){
         
     Route::post('ventas/storeDetail', 'SalesController@storeDetail')->name('ventas.storeDetail')
         ->middleware('has.permission:ventas.create');
+
+    Route::get('ventas/showDetails/{facturaId}', 'SalesController@showDetails')->name('ventas.showDetails')
+        ->middleware('has.permission:ventas.create');
+    
+    Route::put('ventas/update/{id}', 'SalesController@update')->name('ventas.update')
+        ->middleware('has.permission:ventas.update');
         
     Route::put('ventas/{id}/updateState', 'SalesController@updateState')->name('ventas.updateState')
         ->middleware('has.permission:ventas.updateState');
+
+    Route::put('ventas/updateDetail/{id}', 'SalesController@updateDetail')->name('ventas.updateDetail')
+        ->middleware('has.permission:ventas.update');
 
     Route::put('ventas/destroy/{id}', 'SalesController@destroy')->name('ventas.destroy')
         ->middleware('has.permission:ventas.destroy');

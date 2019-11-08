@@ -8,6 +8,11 @@ class FacturaDetalle extends Model
 {
     protected $table = 'facturas_detalles';
     protected $fillable = [
-        'Factura_Id', 'Orden_Id', 'Precio_Unitario', 'Cantidad', 'Descripcion', 'Subtotal'
+        'Factura_Id', 'Orden_Id', 'Precio_Unitario', 'Cantidad', 'Descripcion', 'Subtotal', 'Estado'
     ];
+
+    public function scopeBuscarDetalles($query, $facturaId)
+    {
+        return $query->where('Factura_Id', $facturaId)->get();
+    }
 }

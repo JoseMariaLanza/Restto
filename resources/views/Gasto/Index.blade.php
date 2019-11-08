@@ -40,11 +40,11 @@
                     <h1>Gastos</h1>
                     <form role="search" class="navban-form navbar-left pull-right" method='GET'>
                         <div class="row justify-content-end" style="margin-bottom:30px">
-                            <div class="col-md-2">Buscar entre</div>
+                            <div class="col-md-2">Desde: </div>
                             <div class="form-goup">
                                 {{ Form::date('fechaInicio', Carbon\Carbon::now(), [ 'class' => 'form-control mb-2', 'value' => "old('fechaInicio')" ]) }}
                             </div>
-                            <div class="col-md-1">y</div>
+                            <div class="col-md-1">Hasta: </div>
                             <div class="form-goup">
                                 {{ Form::date('fechaFin', Carbon\Carbon::now(), [ 'class' => 'form-control mb-2', 'value' => "old('fechaFin')" ]) }}
                             </div>
@@ -56,31 +56,41 @@
         </div>
 
         <div class="row justify-content-center">
-            <div class="col-md-12">
-                @foreach($gastos as $item)
-                    <div class="col-md-50">
-                        <div class="card" style="margin-bottom:30px">
-                            <div class="card-header d-flex justify-content-between align-items-center">
-                                <h1>{{ $item->Concepto }}</h1>
-                                @can('gastos.destroy')
+            <div class="table-responsive">
+                <!-- Gastos -->
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Concepto</th>
+                            <th>Descripción</th>
+                            <th>Fecha</th>
+                            <th>Monto</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($gastos as $item)
+                        <tr>
+                            <td>{{ $item->Concepto }}</td>
+                            <td>{{ $item->Descripcion }}</td>
+                            <td>{{ $item->Fecha }}</td>
+                            <td>${{ $item->Monto }}</td>
+                            <td>
+                            @can('gastos.destroy')
                                 {!! Form::open(['route' => ['gastos.destroy', $item->id], 'method' => 'DELETE', 'class' => 'd-inline']) !!}
                                     @csrf
                                     <button class="btn btn-danger btn-sm" type="submit">Eliminar...</button>
                                 {!! Form::close() !!}
-                                @endcan
-                            </div>
-                            <div class="card-body">
-                                <h4>Id: {{ $item->id }}</h4>
-                                <h4>Concepto: {{ $item->Concepto }}</h4>
-                                <h4>Monto del gasto: {{ $item->Monto }}</h4>
-                                <h4>Período: {{ $item->Periodo }}</h4>
-                                <h4>Fecha del gasto: {{ $item->Fecha }}</h4>
-                                <h4>Descripción: {{ $item->Descripcion }}</h4>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
+                            @endcan
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
                 {{$gastos->links()}}
+            </div>
+            <div class="panel-heading d-flex justify-content-between align-items-center">
+                <h1 class="d-flex">Total: ${{ $totalGastos }}</h1>
             </div>
         </div>
     </div>
