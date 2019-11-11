@@ -11,6 +11,7 @@ use App\Repositories\SalesManagement\CashManagement\ManageCash;
 // Validaciones
 // use Illuminate\Validation\Rule;
 // use Illuminate\Support\Facades\Validator;
+use App\Caja;
 
 class CajaController extends Controller
 {

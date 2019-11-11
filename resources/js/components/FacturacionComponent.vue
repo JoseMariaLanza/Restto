@@ -21,6 +21,19 @@
                                     <form @submit.prevent="agregar">
                                         
                                         <div class="form-row">
+                                            <div class="col-md-6">
+                                                <input class="form-control mb-2" type="text" @keydown="llenarCombobox" v-model="buscar" placeholder="Buscar...">
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <select class="custom-select" @change="establecerItem" v-model="platoArticuloMenu">
+                                                    <option value="" selected>Seleccionar...</option>
+                                                    <option v-for="(platoArticuloMenu, index) in menu" :key="index" :value="platoArticuloMenu">{{ platoArticuloMenu.Nombre_Plato }}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
                                             <div class="form-group col-md-8">
                                                 <div class="input-group">
                                                     <div class="input-group-prepend">
@@ -65,6 +78,7 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="row">
                                         <div class="col-md-12">
                                             <textarea placeholder="Mesa/Mozo/Otras descripciones" class="form-control mb-2" rows="2" v-model="factura.Descripcion"></textarea>
@@ -76,7 +90,7 @@
                                             <button class="btn btn-success btn-block">Guardar</button>
                                         </div>
                                         <div class="col">
-                                            <button class="btn btn-default btn-block" @click="cancelarEdicion">Cancelar</button>
+                                            <button class="btn btn-default btn-block" @click="limpiar">Cancelar</button>
                                         </div>
                                     </div>
                                 </div>      
@@ -148,6 +162,18 @@
                                     <form @submit.prevent="agregar">
                                         
                                         <div class="form-row">
+                                            <div class="col-md-6">
+                                                <input class="form-control mb-2" type="text" @keydown="llenarCombobox" v-model="buscar" placeholder="Buscar...">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <select class="custom-select" @change="establecerItem" v-model="platoArticuloMenu">
+                                                    <option value="" selected>Seleccionar...</option>
+                                                    <option v-for="(platoArticuloMenu, index) in menu" :key="index" :value="platoArticuloMenu">{{ platoArticuloMenu.Nombre_Plato }}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
                                             <div class="form-group col-md-8">
                                                 <div class="input-group">
                                                     <div class="input-group-prepend">
@@ -179,6 +205,28 @@
                                     <div class="card-header d-flex justify-content-between align-items-center">
                                         <h4>Información de la venta</h4>
                                     </div>
+
+                                    <div class="form-group row">
+                                        <label for="mesas" class="col-md-4 col-form-label">Mesas</label>
+                                        <div class="col">
+                                            <select class="custom-select" id="mesas" v-model="mesa">
+                                                <option value="" selected>Seleccionar...</option>
+                                                <option v-for="(mesa, index) in mesas" :key="index" :value="mesa.Descripcion" :id="mesa.id" >{{ mesa.Descripcion }}</option>
+                                            </select>
+                                            <input placeholder="Sector" class="form-control mb-2" v-model="sector">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <label for="mozos" class="col-md-4 col-form-label">Mozo</label>
+                                        <div class="col">
+                                            <select class="custom-select" id="mozos" v-model="mozo">
+                                                <option value="" selected>Seleccionar...</option>
+                                                <option v-for="(mozo, index) in empleados" :key="index" :value="mozo.Nombre + ' ' + mozo.Apellido" :id="mozo.id">{{ mozo.Nombre + ", " + mozo.Apellido }}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
                                     <div class="row">
                                         <div class="col-md-12">
                                             <textarea placeholder="Mesa/Mozo/Otras descripciones" class="form-control mb-2" rows="2" v-model="factura.Descripcion"></textarea>
@@ -257,8 +305,8 @@
                                 <th>Acción</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr v-for="(item, index) in facturas" :key="index">
+                        <tbody id="tableDataFacturas">
+                            <tr v-for="(item, index) in facturas" :key="index" :id="index">
                                 <td v-text="item.id"></td>
                                 <td v-text="item.Descripcion"></td>
                                 <td v-text="item.Fecha_Emision"></td>
@@ -267,8 +315,9 @@
                                 <td>
                                     <button class="btn btn-default btn-sm btn-block" @click="editar(item)">Editar</button>
                                 </td>
-                                <td>
-                                    <button class="btn btn-danger btn-sm btn-block" @click="anular(item, index)">Anular</button>
+                                <td v-if="item.Estado === 'EN EMISIÓN'">
+                                    <!-- <button class="btn btn-danger btn-sm btn-block" @click="anular(item, index)">Anular</button> -->
+                                    <button class="btn btn-success btn-sm btn-block" @click="checkIn(item, index)">Cobrar</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -302,6 +351,9 @@ export default {
             factura: { Caja_Id: '', Tipo: '', Fecha: '', Estado: '', Total: 0.00, Descripcion: '' },
             totalFormateado: '',
 
+            // Ventas facturadas
+            esconder: false,
+
             // Editar
             editarDetalles: [],
             editarActivo: false,
@@ -311,7 +363,21 @@ export default {
             estadosOrden: [
                 { text: 'REGISTRAR', value: 'REGISTRADA' },
                 { text: 'ANULAR', value: 'ANULADA' }
-            ]
+            ],
+
+            // MENU
+            menu: [],
+            buscar: '',
+            platoArticuloMenu: { Nombre_Plato: '', Precio_Venta: 0.00,  },
+
+            // EMPLEADOS
+            empleados: [],
+            mozo: '',
+
+            // MESAS
+            mesas: [],
+            mesa: '',
+            sector: ''
         }
     },
     created() {
@@ -320,17 +386,42 @@ export default {
         this.factura.Caja_Id = caja_id.value;
         // Listado de ventas del día
         axios.get('/ventas/create')
-            .then(res => {
-                this.facturas = res.data;
-                this.facturas.forEach(element => {
-                if(element.Estado != 'ANULADA'){
+        .then(res => {
+            this.facturas = res.data;
+            this.facturas.forEach(element => {
+                if(element.Estado === 'FACTURADA'){
                     this.totalVentas += element.Total;
                 }
-                })
-                this.totalVentasFormateado = 'Total ventas del día: $' + this.totalVentas;
             })
+            this.totalVentasFormateado = 'Total ventas del día: $' + this.totalVentas;
+        })
+        // OCULTANDO FACTURAS CON EL ESTADO = FACTURADA
+        .then(res => {
+            var tableFacturas = document.getElementById('tableDataFacturas');
+            for (var i = 0, row; row = tableFacturas.rows[i]; i++){
+                for (var j = 0, col; col = row.cells[j]; j++) {
+                    if(row.cells[j].innerText === 'FACTURADA'){
+                        tableFacturas.rows[i].style.display = "none";
+                    }
+                }
+            }
+        })
+
+        axios.post('/ventas/getEmpleados')
+        .then(res => {
+            this.empleados = res.data;
+        })
+
+        axios.post('/ventas/getMesas')
+        .then(res => {
+            this.mesas = res.data;
+        })
     },
     methods: {
+        establecerItem() {
+            this.detalle.Descripcion = this.platoArticuloMenu.Nombre_Plato;
+            this.detalle.Precio_Unitario = this.platoArticuloMenu.Precio_Venta;
+        },
         agregar() {
             if (this.detalle.Descripcion.trim() === '' || 
             this.detalle.Precio_Unitario === '0' || this.detalle.Cantidad === '0' ||
@@ -368,8 +459,14 @@ export default {
                 alert('Ingrese los detalles de la venta');
                 return;
             }
+            if (this.mesa == '' || this.sector == '' || this.mozo == '' ||
+            this.mesa == undefined || this.sector == undefined || this.mozo == undefined)
+            {
+                alert('Seleccione una mesa, su sector y el mozo encargado de la atención');
+                return;
+            }
             const params = {
-                Descripcion: this.factura.Descripcion,
+                Descripcion: this.mesa + ' // ' + this.sector + ' // ' + this.mozo + ' // ' + this.factura.Descripcion,
                 Total: this.factura.Total,
                 Caja_Id: this.factura.Caja_Id
             }
@@ -379,8 +476,9 @@ export default {
             axios.post('/ventas/store', params)
                .then(res =>{
                     this.facturas.unshift(res.data);
-                    this.totalVentas += params.Total;
-                    this.totalVentasFormateado = 'Total ventas del día: $' + this.totalVentas;
+                    // SE QUITA la funcionalidad de realizar el cálculo ya que éste se realizará al momento de hacer el cobro
+                    // this.totalVentas += params.Total;
+                    // this.totalVentasFormateado = 'Total ventas del día: $' + this.totalVentas;
                     this.detalles.forEach(element => {
                         element.Factura_Id = res.data.id;
                         axios.post('/ventas/storeDetail', element);
@@ -389,19 +487,43 @@ export default {
                 })
             
         },
+        llenarCombobox() {
+            var buscarItemMenu = this.buscar;
+            axios.post(`/ventas/getMenu`, buscarItemMenu)
+            .then(res => {
+                this.menu = res.data;
+            })
+        },
         quitar(item, index) {
             this.factura.Total = this.factura.Total - item.Subtotal;
             this.totalFormateado = 'Total: $' + this.factura.Total;
             this.detalles.splice(index, 1);
         },
-        anular(item, index) {
-            axios.put(`/ventas/destroy/${item.id}`)
+        // Función sin uso, porque la acción de anular la factura ya está implementada a la hora de
+        // editar ésta
+        // anular(item, index) {
+        //     axios.put(`/ventas/destroy/${item.id}`)
+        //     .then(res => {
+        //         if (this.facturas[index].Estado == 'EMITIDA'){
+        //             this.facturas[index].Estado = res.data.Estado;
+        //             this.totalVentas -= this.facturas[index].Total;
+        //             this.totalVentasFormateado = 'Total ventas del día: $' + this.totalVentas;
+        //         }
+        //     })
+        // },
+        checkIn(item, index) {
+            // var boleta = document.getElementById(index);
+            // boleta.style.display = "none";
+            // SOLO ACTUALIZA EL ESTADO
+            axios.put(`/ventas/cobrar/${item.id}`)
             .then(res => {
-                if (this.facturas[index].Estado == 'EMITIDA'){
-                    this.facturas[index].Estado = res.data.Estado;
-                    this.totalVentas -= this.facturas[index].Total;
-                    this.totalVentasFormateado = 'Total ventas del día: $' + this.totalVentas;
-                }
+                this.facturas[index].Estado = res.data.Estado;
+            })
+            .then(res => {
+                var boleta = document.getElementById(index);
+                boleta.style.display = "none";
+                this.calcularTotalVentasDelDia();
+                this.limpiar();
             })
         },
         // EDICIÓN
@@ -418,28 +540,28 @@ export default {
             console.log(this.factura.id);
             axios.get(`/ventas/showDetails/${this.factura.id}`)
             .then(res => {
-                // this.detalles = [];
                 this.detalles = res.data;
                 console.log(this.detalles);
-                // res.data.forEach(element => {
-                //     this.detalles.push(element);
-                // });
             })
         },
         modificarEstado(estado) {
             if (estado === 'EMITIR'){
-                this.factura.Estado = 'EMITIDA';
+                this.factura.Estado = 'EN EMISIÓN';
             }
             else{
                 this.factura.Estado = 'ANULADA';
             }
         },
-        cancelarEdicion() {
+        limpiar() {
             this.factura.Descripcion = '';
             this.factura.Total = 0.00;
             this.totalFormateado = '';
             this.detalles = [];
             this.editarActivo = false;
+
+            //LIMPIAR CMBX
+            this.mesa = '';
+            this.mozo = '';
         },
         actualizar(item){
             const params = {
@@ -447,16 +569,8 @@ export default {
                 Tipo: item.Tipo,
                 Estado: item.Estado,
                 Total: item.Total,
-                Descripcion: item.Descripcion
+                Descripcion: item.Descripcion //this.mesa + ' // ' + this.sector + ' // ' + this.mozo + ' // ' + item.Descripcion
             }
-            // this.factura.id = item.id;
-            // this.factura.Caja_Id = item.Caja_Id;
-            // this.factura.Tipo = item.Tipo;
-            // this.factura.Fecha = item.Fecha;
-            // this.factura.Estado = item.Estado;
-            // this.factura.Total = item.Total;
-            // this.factura.Descripcion = item.Descripcion;
-            // this.totalFormateado = 'Total: $' + this.factura.Total;
 
             axios.put(`/ventas/update/${item.id}`, params)
                .then(res =>{
@@ -483,23 +597,24 @@ export default {
                     this.totalFormateado = '';
                     this.detalles = [];
                     this.calcularTotalVentasDelDia();
+                    this.limpiar();
                 });
             this.editarActivo = false;
         },
         cambiarEstadoOrden(item, index){
 
-            if (item.Estado === 'ANULADA'){
-                this.factura.Total -= item.Subtotal;
+            if (item.Estado === 'FACTURADA'){
+                this.factura.Total += item.Subtotal;
             }
             else{
-                this.factura.Total += item.Subtotal;
+                this.factura.Total -= item.Subtotal;
             }
             this.totalFormateado = 'Total: $' + this.factura.Total;
         },
         calcularTotalVentasDelDia(){
             this.totalVentas = 0.00;
             this.facturas.forEach(element => {
-                if(element.Estado != 'ANULADA'){
+                if(element.Estado === 'FACTURADA'){
                     this.totalVentas += element.Total;
                 }
                 this.totalVentasFormateado = 'Total ventas del día: $' + this.totalVentas;

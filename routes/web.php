@@ -110,6 +110,20 @@ Route::middleware(['auth'])->group(function(){
     Route::put('ventas/destroy/{id}', 'SalesController@destroy')->name('ventas.destroy')
         ->middleware('has.permission:ventas.destroy');
 
+    Route::put('ventas/cobrar/{id}', 'SalesController@cobrar')->name('ventas.update')
+        ->middleware('has.permission:ventas.update');
+
+    // Búsqueda de menu
+    Route::post('ventas/getMenu', 'SalesController@getMenu')->name('ventas.getMenu')
+        ->middleware('has.permission:ventas.create');
+        
+    Route::post('ventas/getEmpleados', 'SalesController@getEmpleados')->name('ventas.getEmpleados')
+        ->middleware('has.permission:ventas.create');
+
+    Route::post('ventas/getMesas', 'SalesController@getMesas')->name('ventas.getMesas')
+        ->middleware('has.permission:ventas.create');
+    
+
     // Facturas subsystem
     
 

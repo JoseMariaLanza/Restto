@@ -23,6 +23,10 @@ use App\Repositories\SalesManagement\InvoiceManagement\ManageBill;
 use App\Repositories\ExpensesManagement\IExpenseRepository;
 use App\Repositories\ExpensesManagement\ManageExpense;
 
+// Stocking
+use App\Repositories\StockManagement\IMenuRepository;
+use App\Repositories\StockManagement\ManageMenu;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -38,6 +42,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ICashRepository::class, ManageCash::class);
         $this->app->bind(IBillRepository::class, ManageBill::class);
         $this->app->bind(IExpenseRepository::class, ManageExpense::class);
+        $this->app->bind(IMenuRepository::class, ManageMenu::class);
         // $this->app->singleton(IEmpleadoRepository::class, ManageUser::class);
     }
 

@@ -12,36 +12,7 @@
                 <div class="card-body-mb-2">
                     <div class="row">
                         <div class="col">
-                            <div class="card" style="margin-bottom:20px">
-                                <div class="card-header d-flex">
-                                    <h4>Modificar orden</h4>
-                                </div>
-                                <!-- Editar detalles de la factura (formulario) -->
-                                <form @submit.prevent="agregar">
-                                    
-                                    <div class="form-row">
-                                        <div class="form-group col-md-8">
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">$</span>
-                                                </div>
-                                                <input type="number" step="0.01" min="0.01" placeholder="Precio por unidad" class="form-control" v-model="detalle.Precio_Unitario">
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <input type="number" step="0.001" min="0.001" placeholder="Cantidad" class="form-control" v-model="detalle.Cantidad">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <textarea placeholder="Descripción de la orden" class="form-control mb-2" rows="2" v-model="detalle.Descripcion"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <button type="submit" class="btn btn-primary btn-block">Agregar</button>
-                                    </div>
-                                </form>
-                            </div>
+                            
                             <!-- Factura -->
                             <form @submit.prevent="actualizar(factura)">
                             <div class="card">
@@ -52,8 +23,10 @@
                                     <div class="col-md-12">
                                         <div class="input-group mb-2">
                                             <div class="input-group-prepend">
-                                                <select class="custom-select btn btn-outline-secondary dropdown-toggle" type="button" aria-haspopup="true" aria-expanded="false" @change="modificarEstado(factura)" v-model="factura.Estado">
-                                                    <option value="EMITIDA">EMITIR</option>
+                                                <select class="custom-select btn btn-outline-secondary dropdown-toggle" 
+                                                type="button" aria-haspopup="true" aria-expanded="false" @change="modificarEstado(factura)" 
+                                                v-model="factura.Estado">
+                                                    <option value="EN EMISIÓN">EMITIR</option>
                                                     <option value="ANULADA">ANULAR</option>
                                                 </select>    
                                                 <fieldset disabled>
@@ -308,7 +281,7 @@ export default {
         anular(item, index) {
             axios.put(`/ventas/destroy/${item.id}`) // se llama a la función destroy pero ésta no elimina nada, sino que cambia el estado a ANULADA
             .then(res => {
-                if (this.facturas[index].Estado == 'EMITIDA'){
+                if (this.facturas[index].Estado == 'FACTURADA'){
                     this.facturas[index].Estado = res.data.Estado;
                     this.totalVentas -= this.facturas[index].Total;
                     this.totalVentasFormateado = 'Total de la página: $' + this.totalVentas;
@@ -336,7 +309,7 @@ export default {
                 // Paginación
                 this.pagination = res.data.pagination;
                 this.facturas.forEach(element => {
-                if(element.Estado != 'ANULADA'){
+                if(element.Estado === 'FACTURADA'){
                     this.totalVentas += element.Total;
                 }
                 })
@@ -375,7 +348,7 @@ export default {
         },
         modificarEstado(item) {
             this.factura.Estado = item.Estado;
-            this.calcularTotalFinalFacturas(item);
+            // this.calcularTotalFinalFacturas(item);
         },
         cancelarEdicion() {
             this.factura.Descripcion = '';
@@ -417,38 +390,49 @@ export default {
                     this.factura.Total = 0.00;
                     this.totalFormateado = '';
                     this.detalles = [];
-                    this.calcularTotalVentasDelDia();
+                    this.calcularTotalVentasDeLaPagina();
                     // this.calcularTotalFinalFacturas(params); // Se llama desde el evento @change en la edición de la factura
+                    console.log('ejecutado');
+                    this.calcularTotalFinalFacturas();
                 });
             this.editarActivo = false;
         },
         cambiarEstadoOrden(item, index){
 
-            if (item.Estado === 'ANULADA'){
-                this.factura.Total -= item.Subtotal;
+            if (item.Estado === 'FACTURADA'){
+                this.factura.Total += item.Subtotal;
             }
             else{
-                this.factura.Total += item.Subtotal;
+                this.factura.Total -= item.Subtotal;
             }
             this.totalFormateado = 'Total: $' + this.factura.Total;
         },
-        calcularTotalVentasDelDia(){
+        calcularTotalVentasDeLaPagina(){
             this.totalVentas = 0.00;
             this.facturas.forEach(element => {
-                if(element.Estado != 'ANULADA'){
+                if(element.Estado === 'FACTURADA'){
                     this.totalVentas += element.Total;
                 }
                 this.totalVentasFormateado = 'Total ventas del día: $' + this.totalVentas;
             });
         },
-        calcularTotalFinalFacturas(item){
-            console.log(item);
-            if(item.Estado === 'ANULADA'){
-                this.totalFinalFacturas -= item.Total;
-            }
-            else{
-                this.totalFinalFacturas += item.Total;
-            }
+        calcularTotalFinalFacturas(){
+            // console.log(item);
+            // if(item.Estado === 'FACTURADA'){
+            //     this.totalFinalFacturas += item.Total;
+            // }
+            // else if (item.Estado === 'ANULADA'){
+            //     this.totalFinalFacturas -= item.Total;
+            // }
+            // else if (item.Estado === 'EN EMISIÓN'){
+            //     this.totalFinalFacturas += item.Total;
+            // }
+            this.totalFinalFacturas = 0.00;
+            this.facturas.forEach(element => {
+                if (element.Estado === 'FACTURADA'){
+                    this.totalFinalFacturas += element.Total;
+                }
+            });
             this.totalFinalFacturasFormateado = 'Total final: $' + this.totalFinalFacturas;
         }
     }

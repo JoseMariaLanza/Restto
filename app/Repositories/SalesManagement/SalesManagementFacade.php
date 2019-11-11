@@ -6,12 +6,17 @@ use Illuminate\Http\Request;
 
 use App\Repositories\SalesManagement\CashManagement\ICashRepository;
 use App\Repositories\SalesManagement\InvoiceManagement\IBillRepository;
+use App\Repositories\StockManagement\IMenuRepository;
 use App\CajaDetalle;
 use App\Apertura;
 use App\AperturaDetalle;
 use App\Cierre;
 use App\CierreDetalle;
 use App\AperturaCierre;
+use App\Menu;
+use App\Empleado;
+
+use App\Mesa;
 
 use Illuminate\Support\Collection;
 
@@ -22,14 +27,19 @@ class SalesManagementFacade
     * 
     * @var ICashRepository
     * @var IBillRepository
+    * @var IMenuRepository
+    * @var IEmployeeRepository
     */
     private $manageCash;
     private $manageBill;
+    private $manageMenu;
+    private $manageEmployee;
 
-    public function __construct(ICashRepository $manageCash, IBillRepository $manageBill)
+    public function __construct(ICashRepository $manageCash, IBillRepository $manageBill, IMenuRepository $manageMenu)
     {
         $this->manageCash = $manageCash;
         $this->manageBill = $manageBill;
+        $this->manageMenu = $manageMenu;
     }
 
     public function obtenerCajas(Request $request)
@@ -121,7 +131,7 @@ class SalesManagementFacade
     {
         $total = 0.00;
         foreach($facturas as $factura){
-            if($factura->Estado == 'EMITIDA'){
+            if($factura->Estado == 'FACTURADA'){
                 $total += $factura->Total;
             }
         }
@@ -151,5 +161,25 @@ class SalesManagementFacade
     public function anularFactura($id)
     {
         return $this->manageBill->delete($id);
+    }
+
+    public function cobrarFactura($id)
+    {
+        return $this->manageBill->cobrarFactura($id);
+    }
+
+    public function buscarMenu(Request $request)
+    {
+        return $this->manageMenu->getMenu($request);
+    }
+
+    public function obtenerEmpleados()
+    {
+        return Empleado::all();
+    }
+
+    public function obtenerMesas()
+    {
+        return Mesa::all();
     }
 }

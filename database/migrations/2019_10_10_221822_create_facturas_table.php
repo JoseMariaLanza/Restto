@@ -25,7 +25,7 @@ class CreateFacturasTable extends Migration
             $table->unsignedBigInteger('Cliente_Id')->nullable();
             $table->foreign('Cliente_Id')->references('id')->on('clientes');
             $table->dateTime('Fecha_Emision');
-            $table->enum('Estado', ['EMITIDA', 'ANULADA']);
+            $table->enum('Estado', ['EN EMISIÓN', 'FACTURADA', 'ANULADA']);
             $table->decimal('Total', 20, 2);
             $table->text('Descripcion')->nullable();
             $table->string('Campo_Extra_1')->nullable();

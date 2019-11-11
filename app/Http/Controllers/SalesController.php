@@ -230,4 +230,24 @@ class SalesController extends Controller
     {
         return $this->salesManagement->anularFactura($id);
     }
+
+    public function cobrar($id)
+    {
+        return $this->salesManagement->cobrarFactura($id);
+    }
+
+    public function getMenu(Request $request)
+    {
+        return $this->salesManagement->buscarMenu($request);
+    }
+
+    public function getEmpleados()
+    {
+        return $this->salesManagement->obtenerEmpleados();
+    }
+
+    public function getMesas()
+    {
+        return $this->salesManagement->obtenerMesas();
+    }
 }

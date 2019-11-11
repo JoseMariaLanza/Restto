@@ -25,4 +25,6 @@ interface IBillRepository
     public function updateDetail(Request $request, $id);
 
     public function delete($id);
+
+    public function cobrarFactura($id);
 }

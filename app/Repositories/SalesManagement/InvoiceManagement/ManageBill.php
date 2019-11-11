@@ -66,7 +66,7 @@ class ManageBill implements IBillRepository
         // mediante $request->Tipo
         // $nuevaFactura->Cliente_Id = $request->Cliente_Id; // nullable - No se muestra para el ingreso
         $nuevaFactura->Fecha_Emision = Carbon::now('America/Argentina/Buenos_Aires'); // $request->Fecha_Emision;
-        $nuevaFactura->Estado = 'EMITIDA'; // $request->Estado;
+        $nuevaFactura->Estado = 'EN EMISIÓN'; // $request->Estado;
         $nuevaFactura->Total = $request->Total;
         $nuevaFactura->Descripcion = $request->Descripcion;
         $nuevaFactura->save();
@@ -131,5 +131,13 @@ class ManageBill implements IBillRepository
         $anularFactura->save();
 
         return $anularFactura;
+    }
+
+    public function cobrarFactura($id)
+    {
+        $actualizarFactura = $this->modeloFactura->findOrFail($id);
+        $actualizarFactura->Estado = 'FACTURADA';
+        $actualizarFactura->save();
+        return $actualizarFactura;
     }
 }
