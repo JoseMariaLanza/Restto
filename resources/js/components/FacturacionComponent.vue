@@ -21,36 +21,53 @@
                                     <form @submit.prevent="agregar">
                                         
                                         <div class="form-row">
-                                            <div class="col-md-6">
-                                                <input class="form-control mb-2" type="text" @keydown="llenarCombobox" v-model="buscar" placeholder="Buscar...">
+                                            <div class="form-group col-md-12">
+                                                <div class="col">
+                                                    <label for="busq" class="col col-form-label">Búsqueda</label>
+                                                    <input class="form-control mb-2" type="text" @keyup="llenarCombobox" v-model="buscar" placeholder="Buscar..." id="busq">
+                                                    <!-- <input type="number" step="0.001" min="0.001" placeholder="Cantidad" class="form-control" v-model="detalle.Cantidad"> -->
+                                                </div>
                                             </div>
-
-                                            <div class="col-md-6">
-                                                <select class="custom-select" @change="establecerItem" v-model="platoArticuloMenu">
-                                                    <option value="" selected>Seleccionar...</option>
-                                                    <option v-for="(platoArticuloMenu, index) in menu" :key="index" :value="platoArticuloMenu">{{ platoArticuloMenu.Nombre_Plato }}</option>
+                                            <!-- <div class="col-md-6">
+                                                <label for="menus" class="col col-form-label">Menú:</label>
+                                                <select class="custom-select mb-2" @change="establecerItem" v-model="platoArticuloMenu" id="menus" size="4">
+                                                    <option :value="platoArticuloMenu" id="selectedItemDefaultId" selected>Seleccionar...</option>s
+                                                    <option v-for="(platoArticuloMenu, index) in menu" :key="index" :value="platoArticuloMenu" 
+                                                    :id="platoArticuloMenu.id + platoArticuloMenu.Nombre_Plato">{{ platoArticuloMenu.Nombre_Plato }}</option>
                                                 </select>
-                                            </div>
+                                            </div> -->
                                         </div>
 
                                         <div class="form-row">
-                                            <div class="form-group col-md-8">
+                                            <div class="col-md-12">
+                                                <label for="menus" class="col col-form-label">Menú:</label>
+                                                <select class="custom-select mb-2" @change="establecerItem" v-model="platoArticuloMenu" id="menus" size="4">
+                                                    <!-- <option :value="platoArticuloMenu" id="selectedItemDefaultId" selected>Seleccionar...</option>s -->
+                                                    <option v-for="(platoArticuloMenu, index) in menu" :key="index" :value="platoArticuloMenu" 
+                                                    :id="platoArticuloMenu.id + platoArticuloMenu.Nombre_Plato">{{ platoArticuloMenu.Nombre_Plato }}</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="cant" class="col col-form-label">Cantidad</label>
+                                                <input type="number" step="0.001" min="0.001" placeholder="Cantidad" class="form-control" v-model="detalle.Cantidad" id="cant">
+                                            </div>
+                                            <div class="form-group col-md-6 mb-2">
+                                                <label for="prec" class="col col-form-label">Precio</label>
                                                 <div class="input-group">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">$</span>
                                                     </div>
-                                                    <input type="number" step="0.01" min="0.01" placeholder="Precio por unidad" class="form-control" v-model="detalle.Precio_Unitario">
+                                                    <input type="number" step="0.01" min="0.01" placeholder="Precio" class="form-control" v-model="detalle.Precio_Unitario" id="prec">
                                                 </div>
                                             </div>
-                                            <div class="form-group col-md-4">
-                                                <input type="number" step="0.001" min="0.001" placeholder="Cantidad" class="form-control" v-model="detalle.Cantidad">
-                                            </div>
                                         </div>
+
                                         <div class="row">
                                             <div class="col">
                                                 <textarea placeholder="Descripción de la orden" class="form-control mb-2" rows="2" v-model="detalle.Descripcion"></textarea>
                                             </div>
                                         </div>
+
                                         <div class="form-group col-md-12">
                                             <button type="submit" class="btn btn-primary btn-block">Agregar</button>
                                         </div>
@@ -81,7 +98,7 @@
 
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <textarea placeholder="Mesa/Mozo/Otras descripciones" class="form-control mb-2" rows="2" v-model="factura.Descripcion"></textarea>
+                                            <textarea disabled placeholder="Mesa/Mozo/Otras descripciones" class="form-control mb-2" rows="2" v-model="factura.Descripcion"></textarea>
                                         </div>
                                         <input type="hidden" v-model="factura.Caja_Id">
                                     </div>
@@ -162,28 +179,44 @@
                                     <form @submit.prevent="agregar">
                                         
                                         <div class="form-row">
-                                            <div class="col-md-6">
-                                                <input class="form-control mb-2" type="text" @keydown="llenarCombobox" v-model="buscar" placeholder="Buscar...">
+                                            <div class="form-group col-md-12">
+                                                <div class="col">
+                                                    <label for="busq" class="col col-form-label">Búsqueda</label>
+                                                    <input class="form-control mb-2" type="text" @keyup="llenarCombobox" v-model="buscar" placeholder="Buscar..." id="busq">
+                                                    <!-- <input type="number" step="0.001" min="0.001" placeholder="Cantidad" class="form-control" v-model="detalle.Cantidad"> -->
+                                                </div>
                                             </div>
-                                            <div class="col-md-6">
-                                                <select class="custom-select" @change="establecerItem" v-model="platoArticuloMenu">
-                                                    <option value="" selected>Seleccionar...</option>
-                                                    <option v-for="(platoArticuloMenu, index) in menu" :key="index" :value="platoArticuloMenu">{{ platoArticuloMenu.Nombre_Plato }}</option>
+                                            <!-- <div class="col-md-6">
+                                                <label for="menus" class="col col-form-label">Menú:</label>
+                                                <select class="custom-select mb-2" @change="establecerItem" v-model="platoArticuloMenu" id="menus" size="4">
+                                                    <option :value="platoArticuloMenu" id="selectedItemDefaultId" selected>Seleccionar...</option>s
+                                                    <option v-for="(platoArticuloMenu, index) in menu" :key="index" :value="platoArticuloMenu" 
+                                                    :id="platoArticuloMenu.id + platoArticuloMenu.Nombre_Plato">{{ platoArticuloMenu.Nombre_Plato }}</option>
                                                 </select>
-                                            </div>
+                                            </div> -->
                                         </div>
 
                                         <div class="form-row">
-                                            <div class="form-group col-md-8">
+                                            <div class="col-md-12">
+                                                <label for="menus" class="col col-form-label">Menú:</label>
+                                                <select class="custom-select mb-2" @change="establecerItem" v-model="platoArticuloMenu" id="menus" size="4">
+                                                    <option id="selectedItemDefaultId" selected>Seleccione un item...</option>s
+                                                    <option v-for="(platoArticuloMenu, index) in menu" :key="index" :value="platoArticuloMenu" 
+                                                    :id="platoArticuloMenu.id + platoArticuloMenu.Nombre_Plato">{{ platoArticuloMenu.Nombre_Plato }}</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="cant" class="col col-form-label">Cantidad</label>
+                                                <input type="number" step="0.001" min="0.001" placeholder="Cantidad" class="form-control" v-model="detalle.Cantidad" id="cant">
+                                            </div>
+                                            <div class="form-group col-md-6 mb-2">
+                                                <label for="prec" class="col col-form-label">Precio</label>
                                                 <div class="input-group">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">$</span>
                                                     </div>
-                                                    <input type="number" step="0.01" min="0.01" placeholder="Precio por unidad" class="form-control" v-model="detalle.Precio_Unitario">
+                                                    <input type="number" step="0.01" min="0.01" placeholder="Precio" class="form-control" v-model="detalle.Precio_Unitario" id="prec">
                                                 </div>
-                                            </div>
-                                            <div class="form-group col-md-4">
-                                                <input type="number" step="0.001" min="0.001" placeholder="Cantidad" class="form-control" v-model="detalle.Cantidad">
                                             </div>
                                         </div>
 
@@ -206,33 +239,49 @@
                                         <h4>Información de la venta</h4>
                                     </div>
 
-                                    <div class="form-group row">
-                                        <label for="mesas" class="col-md-4 col-form-label">Mesas</label>
+                                    <div class="form-group">
+                                        <!-- <div class="form-row">
+                                            <label for="mesas" class="col-md-3 col-form-label">Mesas</label>
+                                            
+                                            <div class="col">
+                                                <form @submit.prevent="crearNuevaMesa">
+                                                    <button class="btn btn-success form-control mb-2">Agregar una nueva mesa</button>
+                                                </form>
+                                            </div>
+                                            
+                                        </div> -->
+                                        <label for="mesas" class="col-md-3 col-form-label">Mesas</label>
                                         <div class="col">
                                             <select class="custom-select" id="mesas" v-model="mesa">
-                                                <option value="" selected>Seleccionar...</option>
-                                                <option v-for="(mesa, index) in mesas" :key="index" :value="mesa.Descripcion" :id="mesa.id" >{{ mesa.Descripcion }}</option>
-                                            </select>
-                                            <input placeholder="Sector" class="form-control mb-2" v-model="sector">
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="form-group row">
-                                        <label for="mozos" class="col-md-4 col-form-label">Mozo</label>
-                                        <div class="col">
-                                            <select class="custom-select" id="mozos" v-model="mozo">
-                                                <option value="" selected>Seleccionar...</option>
-                                                <option v-for="(mozo, index) in empleados" :key="index" :value="mozo.Nombre + ' ' + mozo.Apellido" :id="mozo.id">{{ mozo.Nombre + ", " + mozo.Apellido }}</option>
+                                                <!-- <option :value="mesa" selected>Seleccionar...</option> -->
+                                                <option v-for="(mesa, index) in mesas" :key="index" :value="mesa" :id="mesa.id">{{ mesa.Descripcion }}</option>
                                             </select>
                                         </div>
                                     </div>
 
-                                    <div class="row">
+                                    <div class="form-group">
+                                        <label for="sector" class="col-md-12 col-form-label">Ingrese el sector</label>
+                                        <div class="col">
+                                            <input placeholder="Sector" class="form-control" v-model="sector">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="mozos" class="col-md-4 col-form-label">Mozo</label>
+                                        <div class="col">
+                                            <select class="custom-select" id="mozos" v-model="mozo">
+                                                <option value="" selected>Seleccionar...</option>
+                                                <option v-for="(mozo, index) in empleados" :key="index" :value="mozo.Nombre + ' ' + mozo.Apellido" :id="mozo.id">{{ mozo.Nombre + " " + mozo.Apellido }}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- <div class="row">
                                         <div class="col-md-12">
                                             <textarea placeholder="Mesa/Mozo/Otras descripciones" class="form-control mb-2" rows="2" v-model="factura.Descripcion"></textarea>
                                         </div>
                                         <input type="hidden" v-model="factura.Caja_Id">
-                                    </div>
+                                    </div> -->
                                     <div class="form-row">
                                         <div class="col">
                                             <button class="btn btn-success btn-block">Guardar</button>
@@ -336,7 +385,7 @@ export default {
         return {
             // Agregar
             detalles: [],
-            detalle: { Factura_Id: '', Descripcion: '', Precio_Unitario: '', Cantidad: '', Subtotal: 0.00, Estado: '' },
+            detalle: { Factura_Id: '', Descripcion: '', Precio_Unitario: '', Cantidad: 1, Subtotal: 0.00, Estado: '' },
 
             // Mostrar
             // Colección de facturas registradas en el día
@@ -376,7 +425,7 @@ export default {
 
             // MESAS
             mesas: [],
-            mesa: '',
+            mesa: { Numero: '', Estado: '', Descripcion: '' },
             sector: ''
         }
     },
@@ -416,11 +465,17 @@ export default {
         .then(res => {
             this.mesas = res.data;
         })
+
+        axios.post('/ventas/getMenu')
+        .then(res => {
+            this.menu = res.data;
+        })
     },
     methods: {
         establecerItem() {
             this.detalle.Descripcion = this.platoArticuloMenu.Nombre_Plato;
             this.detalle.Precio_Unitario = this.platoArticuloMenu.Precio_Venta;
+            this.detalle.Cantidad = 1;
         },
         agregar() {
             if (this.detalle.Descripcion.trim() === '' || 
@@ -450,12 +505,33 @@ export default {
             this.factura.Total = this.factura.Total + params.Subtotal;
             this.totalFormateado = 'Total: $' + this.factura.Total;
 
-            this.detalle.Descripcion = '';
-            this.detalle.Precio_Unitario = '';
-            this.detalle.Cantidad = '';
+            // this.detalle.Descripcion = '';
+            // this.detalle.Precio_Unitario = '';
+            // this.detalle.Cantidad = '';
+        },
+        crearNuevaMesa() {
+            axios.post('/ventas/createMesa')
+            .then(res => {
+                var desc = 'Mesa ' + res.data.id;
+                const params = {
+                    Numero: res.data.id,
+                    Descripcion: desc,
+                    Estado: 'LIBRE'
+                }
+                axios.put(`/ventas/updateMesa/${res.data.id}`, params)
+                .then(res => {
+                    this.mesas.push(res.data);
+                })
+            })
         },
         guardar() {
-            if (this.detalles.length <= 0 || this.factura.Descripcion === '') {
+            // Esta se llenará sí o sí al Seleccionar las Descripciones
+            // if (this.detalles.length <= 0 || this.factura.Descripcion === '') {
+            //     alert('Ingrese los detalles de la venta');
+            //     return;
+            // }
+            if (this.detalles.length <= 0)
+            {
                 alert('Ingrese los detalles de la venta');
                 return;
             }
@@ -465,33 +541,79 @@ export default {
                 alert('Seleccione una mesa, su sector y el mozo encargado de la atención');
                 return;
             }
+            this.factura.Descripcion = this.mesa.Descripcion + ' // Sector: ' + this.sector + ' // Mozo: ' + this.mozo;
             const params = {
-                Descripcion: this.mesa + ' // ' + this.sector + ' // ' + this.mozo + ' // ' + this.factura.Descripcion,
+                Descripcion: this.factura.Descripcion,
                 Total: this.factura.Total,
                 Caja_Id: this.factura.Caja_Id
             }
+            this.factura.Estado = '';
             this.factura.Descripcion = '';
             this.factura.Total = 0.00;
             this.totalFormateado = '';
             axios.post('/ventas/store', params)
-               .then(res =>{
-                    this.facturas.unshift(res.data);
-                    // SE QUITA la funcionalidad de realizar el cálculo ya que éste se realizará al momento de hacer el cobro
-                    // this.totalVentas += params.Total;
-                    // this.totalVentasFormateado = 'Total ventas del día: $' + this.totalVentas;
-                    this.detalles.forEach(element => {
-                        element.Factura_Id = res.data.id;
-                        axios.post('/ventas/storeDetail', element);
-                        this.detalles = [];
-                   });
-                })
-            
+            .then(res =>{
+                this.facturas.unshift(res.data);
+                // SE QUITA la funcionalidad de realizar el cálculo ya que éste se realizará al momento de hacer el cobro
+                // this.totalVentas += params.Total;
+                // this.totalVentasFormateado = 'Total ventas del día: $' + this.totalVentas;
+                this.detalles.forEach(element => {
+                    element.Factura_Id = res.data.id;
+                    axios.post('/ventas/storeDetail', element);
+                    this.detalles = [];
+               });
+            })
+
+            this.ocuparMesa(this.mesa);
+            // this.mesa.Estado = 'OCUPADA';
+            // axios.put(`/ventas/updateEstadoMesa/${this.mesa.id}`, this.mesa)
+            // .then(res => {
+            //     const index = this.mesas.findIndex(mesa => mesa.id === res.data.id);
+            //     this.mesas.splice(index, 1);
+            // })
+        },
+        ocuparMesa(mesa) {
+            mesa.Estado = 'OCUPADA';
+            axios.put(`/ventas/updateEstadoMesa/${mesa.id}`, mesa)
+            .then(res => {
+                const index = this.mesas.findIndex(mesa => mesa.id === res.data.id);
+                this.mesas.splice(index, 1);
+            })
         },
         llenarCombobox() {
-            var buscarItemMenu = this.buscar;
-            axios.post(`/ventas/getMenu`, buscarItemMenu)
+            this.menu = [];
+            const params = {
+                texto: this.buscar
+            }
+            axios.post('/ventas/searchMenuItem', params)
             .then(res => {
                 this.menu = res.data;
+                // document.getElementById('menus').selectedIndex = 1;
+                
+                // const index = this.menu.findIndex(item => res.data[1].Nombre_Plato.toLowerCase().includes(params.texto));
+                // var menuItems = document.getElementById(this.menu[index].id + this.menu[index].Nombre_Plato);
+                // menuItems.selected = true;
+
+                var menuItems = document.getElementById('menus'); // this.menu[index]);
+                // document.getElementById('selectedItemDefaultId').selected = false;
+                // console.log(menuItems);
+
+                // var menuItemId = '';
+
+                for (var i = 0; i < menuItems.options.length; i++) {
+                    if (menuItems.options[0].text.toLowerCase().includes(params.texto)) {
+                        // menuItemId = menuItems.options[i].id;
+                        console.log(menuItems.options[0]);
+                        menuItems.options[i].selected = true;
+                        // console.log(menuItemId);
+                        // document.getElementById(menuItemId).selected = true;
+                        return;
+                    }
+                }
+
+                // console.log(menuItemId);
+                // document.getElementById(menuItemId).selected = true;
+
             })
         },
         quitar(item, index) {
@@ -524,6 +646,49 @@ export default {
                 boleta.style.display = "none";
                 this.calcularTotalVentasDelDia();
                 this.limpiar();
+            })
+
+            this.restaurarMesa(index, 'LIBRE');
+            
+            // // this.mesa.Estado = 'LIBRE';
+            // console.log(this.facturas[index].Descripcion);
+
+            // const table = {
+            //     Estado: 'LIBRE',
+            //     texto: this.facturas[index].Descripcion
+            // }
+
+            // axios.post('/ventas/restoreMesa', table)
+            // .then(res => {
+            //     this.mesas.push(res.data[0]);
+            //     axios.put(`/ventas/updateEstadoMesa/${res.data[0].id}`, table)
+            // })
+        },
+        // RESTAURAR MESA
+        restaurarMesa(index, estado) {
+            var est = estado;
+            const table = {
+                Estado: est, //'LIBRE', --> CONTINUAR AQUÍ, pasa Estado como undefinied
+                texto: this.facturas[index].Descripcion
+            }
+            console.log(table);
+            axios.post('/ventas/restoreMesa', table)
+            .then(res => {
+                if (this.facturas[index].Estado ==='ANULADA' || this.facturas[index].Estado === 'FACTURADA'){
+                        console.log('en if anulada');
+                        // this.restaurarMesa(index, 'LIBRE');
+                        this.mesas.push(res.data[0]);
+                    }
+                    else{
+                        console.log('en if en emisión');
+                        // this.restaurarMesa(index, 'OCUPADA');
+                        this.mesas.splice(res.data[0], 1);
+                    }
+                // this.mesas.push(res.data[0]);
+                axios.put(`/ventas/updateEstadoMesa/${res.data[0].id}`, table)
+                .then(res => {
+                    console.log(res);
+                })
             })
         },
         // EDICIÓN
@@ -590,6 +755,18 @@ export default {
                             axios.put(`/ventas/updateDetail/${element.id}`, element)
                         }
                     });
+
+                    this.restaurarMesa(index);
+
+                    // if (params.Estado ==='ANULADA'){
+                    //     console.log('en if anulada');
+                    //     this.restaurarMesa(index, 'LIBRE');
+                    // }
+                    // else{
+                    //     console.log('en if en emisión');
+                    //     this.restaurarMesa(index, 'OCUPADA');
+                    //     // this.ocuparMesa(this.mesa);
+                    // }
                 })
                 .then( res => {
                     this.factura.Descripcion = '';

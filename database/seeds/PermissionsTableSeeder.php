@@ -110,5 +110,10 @@ class PermissionsTableSeeder extends Seeder
             'slug'          => 'ventas.destroy',
             'description'   => 'Creación de facturas y detalles',
         ]);
+
+        Permission::create([
+            'name'          => 'Creación de mesas',
+            'slug'          => 'mesas.create',
+        ]);
     }
 }

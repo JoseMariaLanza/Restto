@@ -24,8 +24,8 @@ use App\Repositories\ExpensesManagement\IExpenseRepository;
 use App\Repositories\ExpensesManagement\ManageExpense;
 
 // Stocking
-use App\Repositories\StockManagement\IMenuRepository;
-use App\Repositories\StockManagement\ManageMenu;
+use App\Repositories\StockingManagement\IMenuRepository;
+use App\Repositories\StockingManagement\ManageMenu;
 
 class AppServiceProvider extends ServiceProvider
 {

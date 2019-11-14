@@ -116,16 +116,65 @@ Route::middleware(['auth'])->group(function(){
     // Búsqueda de menu
     Route::post('ventas/getMenu', 'SalesController@getMenu')->name('ventas.getMenu')
         ->middleware('has.permission:ventas.create');
+
+    Route::post('ventas/searchMenuItem', 'SalesController@searchMenuItem')->name('ventas.searchMenuItem')
+        ->middleware('has.permission:ventas.create');
         
     Route::post('ventas/getEmpleados', 'SalesController@getEmpleados')->name('ventas.getEmpleados')
         ->middleware('has.permission:ventas.create');
 
     Route::post('ventas/getMesas', 'SalesController@getMesas')->name('ventas.getMesas')
         ->middleware('has.permission:ventas.create');
-    
 
-    // Facturas subsystem
+    Route::post('ventas/createMesa', 'SalesController@createMesa')->name('ventas.createMesa')
+        ->middleware('has.permission:mesas.create');
+
+    Route::put('ventas/updateMesa/{id}', 'SalesController@updateMesa')->name('ventas.updateMesa')
+        ->middleware('has.permission:ventas.update');
     
+    Route::put('ventas/updateEstadoMesa/{id}', 'SalesController@updateEstadoMesa')->name('ventas.updateEstadoMesa')
+        ->middleware('has.permission:ventas.update');
+    
+    Route::post('ventas/restoreMesa', 'SalesController@restoreMesa')->name('ventas.restoreMesa')
+        ->middleware('has.permission:ventas.update');
+
+    // Mesas subsystem
+    Route::get('mesas', 'MesaController@index')->name('mesas.index')
+        ->middleware('has.permission:mesas.index');
+    
+    Route::post('mesas/store', 'MesaController@store')->name('mesas.store')
+        ->middleware('has.permission:mesas.store');
+
+    Route::get('mesas/edit/{id}', 'MesaController@edit')->name('mesas.edit')
+        ->middleware('has.permission:mesas.edit');
+
+    Route::put('mesas/update/{id}', 'MesaController@update')->name('mesas.update')
+        ->middleware('has.permission:mesas.edit');
+
+    Route::delete('mesas/destroy/{id}', 'MesaController@destroy')->name('mesas.destroy')
+        ->middleware('has.permission:mesas.destroy');
+
+    // MENU
+    Route::get('menu', 'MenuController@index')->name('menu.index')
+        ->middleware('has.permission:menu.index');
+
+    Route::post('menu/store', 'MenuController@store')->name('menu.store')
+        ->middleware('has.permission:menu.create');
+        
+    Route::get('menu/create', 'MenuController@create')->name('menu.create')
+        ->middleware('has.permission:menu.create');
+
+    Route::put('menu/update/{id}', 'MenuController@update')->name('menu.update')
+        ->middleware('has.permission:menu.edit');
+
+    Route::get('menu/show/{id}', 'MenuController@show')->name('menu.show')
+        ->middleware('has.permission:menu.show');
+
+    Route::delete('menu/destroy/{id}', 'MenuController@destroy')->name('menu.destroy')
+        ->middleware('has.permission:menu.destroy');
+
+    Route::get('menu/edit/{id}', 'MenuController@edit')->name('menu.edit')
+        ->middleware('has.permission:menu.edit');
 
     // Cajas subsystem
     Route::post('cajas/store', 'CajaController@store')->name('cajas.store')

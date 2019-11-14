@@ -7,14 +7,12 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <span>Detalles</span>
-                        <a href="/editar/ {{ $caja->id }}" class="btn btn-primary btn-sm">Editar Caja...</a>
+                        <a href="/editar/ {{ $menuItem->id }}" class="btn btn-primary btn-sm">Editar Item...</a>
                     </div>
                     <div class="card-body">
-                        <h1>{{ $caja->Nombre_Caja }}</h1>
-                        <h4>Forma de Cobro: {{ $caja->Forma_Cobro }}</h4>
-                        <h4>Estado: {{ $caja->Estado }}</h4>
-                        <h4>Terminal: {{ $caja->Terminal }}</h4>
-                        <h4>Descripción: {{ $caja->Descripcion }}</h4>
+                        <h1>{{ $menuItem->Nombre_Plato }}</h1>
+                        <h4>Precio: {{ $menuItem->Precio_Venta }}</h4>
+                        <h4>Descripción: {{ $menuItem->Descripcion }}</h4>
                     </div>
                     <!-- <div class="card-header d-flex justify-content-between align-items-center">
                             <span>Datos de la cuenta</span>

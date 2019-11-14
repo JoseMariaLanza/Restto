@@ -21,7 +21,8 @@ class Menu extends Model
             $palabras = explode(" ", $textoFormateado);
             
             foreach ($palabras as $palabra){
-                $query->where(\DB::raw("CONCAT(menus.Nombre_Plato, ' ', menus.Descripcion)"), 'LIKE', "%$palabra%");
+                // $query->where(\DB::raw("CONCAT(menus.Nombre_Plato, ' ', menus.Descripcion)"), 'LIKE', "%$palabra%");
+                $query->where('Nombre_Plato', 'LIKE', "%$palabra%");
             }
         }
     }

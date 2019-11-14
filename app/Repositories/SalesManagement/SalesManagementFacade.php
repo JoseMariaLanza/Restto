@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Repositories\SalesManagement\CashManagement\ICashRepository;
 use App\Repositories\SalesManagement\InvoiceManagement\IBillRepository;
-use App\Repositories\StockManagement\IMenuRepository;
+use App\Repositories\StockingManagement\IMenuRepository;
 use App\CajaDetalle;
 use App\Apertura;
 use App\AperturaDetalle;
@@ -168,9 +168,14 @@ class SalesManagementFacade
         return $this->manageBill->cobrarFactura($id);
     }
 
-    public function buscarMenu(Request $request)
+    public function getMenu()
     {
-        return $this->manageMenu->getMenu($request);
+        return $this->manageMenu->getAll();
+    }
+
+    public function buscarMenuItem(Request $request)
+    {
+        return $this->manageMenu->searchMenuItem($request)->get();
     }
 
     public function obtenerEmpleados()
@@ -180,6 +185,48 @@ class SalesManagementFacade
 
     public function obtenerMesas()
     {
-        return Mesa::all();
+        return Mesa::buscar();
+    }
+
+    public function actualizarEstadoMesa(Request $request, $id)
+    {
+        return $request;
+        $actualizarEstado = Mesa::findOrFail($id);
+        $actualizarEstado->Estado = $request->Estado;
+        $actualizarEstado->save();
+        return $actualizarEstado;
+    }
+
+    public function restaurarMesa(Request $request)
+    {
+        return Mesa::buscarpornombre($request->get('texto'))->get();
+    }
+
+    public function crearMesa()
+    {
+        $crearMesa = new Mesa();
+        $crearMesa->save();
+        return $crearMesa;
+        // $crearMesa->Numero = $crearMesa->id;
+        // $crearMesa->Descripcion = 'Mesa ' + $crearMesa->id;
+        // $crearMesa->save();
+        // return $crearMesa;
+        // $idNuevaMesa = $crearMesa->id;
+        // return $actualizarMesa = Mesa::findOrFail($idNuevaMesa);
+        // $actualizarMesa->Numero = $idNuevaMesa;
+        // $actualizarMesa->Descripcion = 'Mesa ' + $idNuevaMesa;
+        // $actualizarMesa->Estado = 'LIBRE';
+        // $actualizarMesa->save();
+        // return $actualizarMesa;
+    }
+
+    public function actualizarMesa(Request $request, $id)
+    {
+        $actualizarMesa = Mesa::findOrFail($id);
+        $actualizarMesa->Numero = $request->Numero;
+        $actualizarMesa->Descripcion = $request->Descripcion;
+        $actualizarMesa->Estado = $request->Estado;
+        $actualizarMesa->save();
+        return $actualizarMesa;
     }
 }

@@ -16,11 +16,11 @@ class CreateMesasTable extends Migration
         Schema::create('mesas', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('Sector_Id')->nullable();
-            $table->bigInteger('Numero');
-            $table->enum('Estado', ['OCUPADA', 'RESERVADA']);
-            $table->text('Descripcion');
-            $table->string('Campo_Extra_1');
-            $table->string('Campo_Extra_2');
+            $table->bigInteger('Numero')->nullable();
+            $table->enum('Estado', ['OCUPADA', 'RESERVADA', 'LIBRE']);
+            $table->text('Descripcion')->nullable();
+            $table->string('Campo_Extra_1')->nullable();
+            $table->string('Campo_Extra_2')->nullable();
             $table->timestamps();
         });
     }

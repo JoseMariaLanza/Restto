@@ -236,9 +236,14 @@ class SalesController extends Controller
         return $this->salesManagement->cobrarFactura($id);
     }
 
-    public function getMenu(Request $request)
+    public function getMenu()
     {
-        return $this->salesManagement->buscarMenu($request);
+        return $this->salesManagement->getMenu();
+    }
+
+    public function searchMenuItem(Request $request)
+    {
+        return $this->salesManagement->buscarMenuItem($request);
     }
 
     public function getEmpleados()
@@ -248,6 +253,26 @@ class SalesController extends Controller
 
     public function getMesas()
     {
-        return $this->salesManagement->obtenerMesas();
+        return $this->salesManagement->obtenerMesas()->get();
+    }
+
+    public function updateEstadoMesa(Request $request, $id)
+    {
+        return $this->salesManagement->actualizarEstadoMesa($request, $id)->get();
+    }
+
+    public function restoreMesa(Request $request)
+    {
+        return $this->salesManagement->restaurarMesa($request);
+    }
+
+    public function createMesa()
+    {
+        return $this->salesManagement->crearMesa();
+    }
+
+    public function updateMesa(Request $request, $id)
+    {
+        return $this->salesManagement->actualizarMesa($request, $id);
     }
 }

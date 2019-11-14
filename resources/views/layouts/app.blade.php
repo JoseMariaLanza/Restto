@@ -33,6 +33,12 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
+                    @can('menu.index')
+                        <a class="navbar-brand" href="{{ route('menu.index') }}">Menú</a>
+                    @endcan
+                    @can('mesas.index')
+                        <a class="navbar-brand" href="{{ route('mesas.index') }}">Mesas</a>
+                    @endcan
                     @can('cajas.index')
                         <a class="navbar-brand" href="{{ route('cajas.index') }}">Caja</a>
                     @endcan

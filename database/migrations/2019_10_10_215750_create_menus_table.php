@@ -19,9 +19,9 @@ class CreateMenusTable extends Migration
             $table->foreign('Categoria_Id')->references('id')->on('categorias')->nullable();
             $table->string('Nombre_Plato');
             $table->decimal('Precio_Venta', 20, 2);
-            $table->text('Descripcion');
-            $table->string('Campo_Extra_1');
-            $table->string('Campo_Extra_2');
+            $table->text('Descripcion')->nullable();
+            $table->string('Campo_Extra_1')->nullable();
+            $table->string('Campo_Extra_2')->nullable();
             $table->timestamps();
         });
     }
