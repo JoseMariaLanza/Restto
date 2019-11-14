@@ -190,7 +190,6 @@ class SalesManagementFacade
 
     public function actualizarEstadoMesa(Request $request, $id)
     {
-        return $request;
         $actualizarEstado = Mesa::findOrFail($id);
         $actualizarEstado->Estado = $request->Estado;
         $actualizarEstado->save();

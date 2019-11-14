@@ -250,7 +250,7 @@
                                             </div>
                                             
                                         </div> -->
-                                        <label for="mesas" class="col-md-3 col-form-label">Mesas</label>
+                                        <label for="mesas" class="col-md-12 col-form-label">Mesas</label>
                                         <div class="col">
                                             <select class="custom-select" id="mesas" v-model="mesa">
                                                 <!-- <option :value="mesa" selected>Seleccionar...</option> -->
@@ -267,7 +267,7 @@
                                     </div>
                                     
                                     <div class="form-group">
-                                        <label for="mozos" class="col-md-4 col-form-label">Mozo</label>
+                                        <label for="mozos" class="col-md-12 col-form-label">Mozo</label>
                                         <div class="col">
                                             <select class="custom-select" id="mozos" v-model="mozo">
                                                 <option value="" selected>Seleccionar...</option>
@@ -366,7 +366,7 @@
                                 </td>
                                 <td v-if="item.Estado === 'EN EMISIÓN'">
                                     <!-- <button class="btn btn-danger btn-sm btn-block" @click="anular(item, index)">Anular</button> -->
-                                    <button class="btn btn-success btn-sm btn-block" @click="checkIn(item, index)">Cobrar</button>
+                                    <button class="btn btn-success btn-sm btn-block" @click="cobrar(item, index)">Cobrar</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -564,21 +564,10 @@ export default {
                });
             })
 
-            this.ocuparMesa(this.mesa);
-            // this.mesa.Estado = 'OCUPADA';
-            // axios.put(`/ventas/updateEstadoMesa/${this.mesa.id}`, this.mesa)
-            // .then(res => {
-            //     const index = this.mesas.findIndex(mesa => mesa.id === res.data.id);
-            //     this.mesas.splice(index, 1);
-            // })
-        },
-        ocuparMesa(mesa) {
-            mesa.Estado = 'OCUPADA';
-            axios.put(`/ventas/updateEstadoMesa/${mesa.id}`, mesa)
-            .then(res => {
-                const index = this.mesas.findIndex(mesa => mesa.id === res.data.id);
-                this.mesas.splice(index, 1);
-            })
+            this.mesa.Estado = 'OCUPADA';
+            const index = this.mesas.findIndex(mesa => mesa.id === this.mesa.id);
+            this.mesas.splice(index, 1);
+            axios.put(`/ventas/updateEstadoMesa/${this.mesa.id}`, this.mesa)
         },
         llenarCombobox() {
             this.menu = [];
@@ -633,10 +622,7 @@ export default {
         //         }
         //     })
         // },
-        checkIn(item, index) {
-            // var boleta = document.getElementById(index);
-            // boleta.style.display = "none";
-            // SOLO ACTUALIZA EL ESTADO
+        cobrar(item, index) {
             axios.put(`/ventas/cobrar/${item.id}`)
             .then(res => {
                 this.facturas[index].Estado = res.data.Estado;
@@ -648,47 +634,44 @@ export default {
                 this.limpiar();
             })
 
-            this.restaurarMesa(index, 'LIBRE');
-            
-            // // this.mesa.Estado = 'LIBRE';
-            // console.log(this.facturas[index].Descripcion);
-
-            // const table = {
-            //     Estado: 'LIBRE',
-            //     texto: this.facturas[index].Descripcion
-            // }
-
-            // axios.post('/ventas/restoreMesa', table)
-            // .then(res => {
-            //     this.mesas.push(res.data[0]);
-            //     axios.put(`/ventas/updateEstadoMesa/${res.data[0].id}`, table)
-            // })
+            this.actualizarEstadoMesa(index, 'LIBRE');
         },
-        // RESTAURAR MESA
-        restaurarMesa(index, estado) {
-            var est = estado;
+        // ACTUALIZAR EL ESTADO DE LA MESA
+        actualizarEstadoMesa(index, estado) {
+            this.mesa.Estado = estado;
             const table = {
-                Estado: est, //'LIBRE', --> CONTINUAR AQUÍ, pasa Estado como undefinied
+                Estado: this.mesa.Estado,
                 texto: this.facturas[index].Descripcion
             }
-            console.log(table);
+            
             axios.post('/ventas/restoreMesa', table)
             .then(res => {
                 if (this.facturas[index].Estado ==='ANULADA' || this.facturas[index].Estado === 'FACTURADA'){
-                        console.log('en if anulada');
-                        // this.restaurarMesa(index, 'LIBRE');
-                        this.mesas.push(res.data[0]);
-                    }
-                    else{
-                        console.log('en if en emisión');
-                        // this.restaurarMesa(index, 'OCUPADA');
-                        this.mesas.splice(res.data[0], 1);
-                    }
-                // this.mesas.push(res.data[0]);
-                axios.put(`/ventas/updateEstadoMesa/${res.data[0].id}`, table)
-                .then(res => {
                     console.log(res);
-                })
+                    var containMesa = false;
+                    this.mesas.forEach(element => {
+                        if (element.id === res.data[0].id){
+                            containMesa = true;
+                        }
+                    });
+                    if (containMesa === false){
+                        this.mesas.push(res.data[0]);
+                        axios.put(`/ventas/updateEstadoMesa/${res.data[0].id}`, table)
+                    }
+                }
+                else{
+                    var containMesa = false;
+                    this.mesas.forEach(element => {
+                        if (element.id === res.data[0].id){
+                            containMesa = true;
+                        }
+                    });
+                    if (containMesa === true){
+                        const index = this.mesas.findIndex(mesa => mesa.id === res.data[0].id);
+                        this.mesas.splice(index, 1);
+                        axios.put(`/ventas/updateEstadoMesa/${res.data[0].id}`, table)
+                    }
+                }
             })
         },
         // EDICIÓN
@@ -706,15 +689,24 @@ export default {
             axios.get(`/ventas/showDetails/${this.factura.id}`)
             .then(res => {
                 this.detalles = res.data;
-                console.log(this.detalles);
+                // console.log(this.detalles);
             })
+            if (this.factura.Estado === 'EN EMISIÓN'){
+                this.mesa.Estado = 'OCUPADA';
+            }
+            else{
+                this.mesa.Estado = 'LIBRE';
+            }
+            console.log(this.mesa);
         },
         modificarEstado(estado) {
             if (estado === 'EMITIR'){
                 this.factura.Estado = 'EN EMISIÓN';
+                this.mesa.Estado = 'OCUPADA';
             }
             else{
                 this.factura.Estado = 'ANULADA';
+                this.mesa.Estado = 'LIBRE';
             }
         },
         limpiar() {
@@ -725,8 +717,8 @@ export default {
             this.editarActivo = false;
 
             //LIMPIAR CMBX
-            this.mesa = '';
-            this.mozo = '';
+            // this.mesa = '';
+            // this.mozo = '';
         },
         actualizar(item){
             const params = {
@@ -756,7 +748,7 @@ export default {
                         }
                     });
 
-                    this.restaurarMesa(index);
+                    this.actualizarEstadoMesa(index, this.mesa.Estado);
 
                     // if (params.Estado ==='ANULADA'){
                     //     console.log('en if anulada');

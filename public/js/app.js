@@ -2580,34 +2580,22 @@ __webpack_require__.r(__webpack_exports__);
           _this3.detalles = [];
         });
       });
-      this.ocuparMesa(this.mesa); // this.mesa.Estado = 'OCUPADA';
-      // axios.put(`/ventas/updateEstadoMesa/${this.mesa.id}`, this.mesa)
-      // .then(res => {
-      //     const index = this.mesas.findIndex(mesa => mesa.id === res.data.id);
-      //     this.mesas.splice(index, 1);
-      // })
-    },
-    ocuparMesa: function ocuparMesa(mesa) {
-      var _this4 = this;
-
-      mesa.Estado = 'OCUPADA';
-      axios.put("/ventas/updateEstadoMesa/".concat(mesa.id), mesa).then(function (res) {
-        var index = _this4.mesas.findIndex(function (mesa) {
-          return mesa.id === res.data.id;
-        });
-
-        _this4.mesas.splice(index, 1);
+      this.mesa.Estado = 'OCUPADA';
+      var index = this.mesas.findIndex(function (mesa) {
+        return mesa.id === _this3.mesa.id;
       });
+      this.mesas.splice(index, 1);
+      axios.put("/ventas/updateEstadoMesa/".concat(this.mesa.id), this.mesa);
     },
     llenarCombobox: function llenarCombobox() {
-      var _this5 = this;
+      var _this4 = this;
 
       this.menu = [];
       var params = {
         texto: this.buscar
       };
       axios.post('/ventas/searchMenuItem', params).then(function (res) {
-        _this5.menu = res.data; // document.getElementById('menus').selectedIndex = 1;
+        _this4.menu = res.data; // document.getElementById('menus').selectedIndex = 1;
         // const index = this.menu.findIndex(item => res.data[1].Nombre_Plato.toLowerCase().includes(params.texto));
         // var menuItems = document.getElementById(this.menu[index].id + this.menu[index].Nombre_Plato);
         // menuItems.selected = true;
@@ -2648,65 +2636,70 @@ __webpack_require__.r(__webpack_exports__);
     //         }
     //     })
     // },
-    checkIn: function checkIn(item, index) {
-      var _this6 = this;
+    cobrar: function cobrar(item, index) {
+      var _this5 = this;
 
-      // var boleta = document.getElementById(index);
-      // boleta.style.display = "none";
-      // SOLO ACTUALIZA EL ESTADO
       axios.put("/ventas/cobrar/".concat(item.id)).then(function (res) {
-        _this6.facturas[index].Estado = res.data.Estado;
+        _this5.facturas[index].Estado = res.data.Estado;
       }).then(function (res) {
         var boleta = document.getElementById(index);
         boleta.style.display = "none";
 
-        _this6.calcularTotalVentasDelDia();
+        _this5.calcularTotalVentasDelDia();
 
-        _this6.limpiar();
+        _this5.limpiar();
       });
-      this.restaurarMesa(index, 'LIBRE'); // // this.mesa.Estado = 'LIBRE';
-      // console.log(this.facturas[index].Descripcion);
-      // const table = {
-      //     Estado: 'LIBRE',
-      //     texto: this.facturas[index].Descripcion
-      // }
-      // axios.post('/ventas/restoreMesa', table)
-      // .then(res => {
-      //     this.mesas.push(res.data[0]);
-      //     axios.put(`/ventas/updateEstadoMesa/${res.data[0].id}`, table)
-      // })
+      this.actualizarEstadoMesa(index, 'LIBRE');
     },
-    // RESTAURAR MESA
-    restaurarMesa: function restaurarMesa(index, estado) {
-      var _this7 = this;
+    // ACTUALIZAR EL ESTADO DE LA MESA
+    actualizarEstadoMesa: function actualizarEstadoMesa(index, estado) {
+      var _this6 = this;
 
-      var est = estado;
+      this.mesa.Estado = estado;
       var table = {
-        Estado: est,
-        //'LIBRE', --> CONTINUAR AQUÍ, pasa Estado como undefinied
+        Estado: this.mesa.Estado,
         texto: this.facturas[index].Descripcion
       };
-      console.log(table);
       axios.post('/ventas/restoreMesa', table).then(function (res) {
-        if (_this7.facturas[index].Estado === 'ANULADA' || _this7.facturas[index].Estado === 'FACTURADA') {
-          console.log('en if anulada'); // this.restaurarMesa(index, 'LIBRE');
-
-          _this7.mesas.push(res.data[0]);
-        } else {
-          console.log('en if en emisión'); // this.restaurarMesa(index, 'OCUPADA');
-
-          _this7.mesas.splice(res.data[0], 1);
-        } // this.mesas.push(res.data[0]);
-
-
-        axios.put("/ventas/updateEstadoMesa/".concat(res.data[0].id), table).then(function (res) {
+        if (_this6.facturas[index].Estado === 'ANULADA' || _this6.facturas[index].Estado === 'FACTURADA') {
           console.log(res);
-        });
+          var containMesa = false;
+
+          _this6.mesas.forEach(function (element) {
+            if (element.id === res.data[0].id) {
+              containMesa = true;
+            }
+          });
+
+          if (containMesa === false) {
+            _this6.mesas.push(res.data[0]);
+
+            axios.put("/ventas/updateEstadoMesa/".concat(res.data[0].id), table);
+          }
+        } else {
+          var containMesa = false;
+
+          _this6.mesas.forEach(function (element) {
+            if (element.id === res.data[0].id) {
+              containMesa = true;
+            }
+          });
+
+          if (containMesa === true) {
+            var _index = _this6.mesas.findIndex(function (mesa) {
+              return mesa.id === res.data[0].id;
+            });
+
+            _this6.mesas.splice(_index, 1);
+
+            axios.put("/ventas/updateEstadoMesa/".concat(res.data[0].id), table);
+          }
+        }
       });
     },
     // EDICIÓN
     editar: function editar(item) {
-      var _this8 = this;
+      var _this7 = this;
 
       this.editarActivo = true;
       this.factura.id = item.id;
@@ -2719,15 +2712,24 @@ __webpack_require__.r(__webpack_exports__);
       this.totalFormateado = 'Total: $' + this.factura.Total;
       console.log(this.factura.id);
       axios.get("/ventas/showDetails/".concat(this.factura.id)).then(function (res) {
-        _this8.detalles = res.data;
-        console.log(_this8.detalles);
+        _this7.detalles = res.data; // console.log(this.detalles);
       });
+
+      if (this.factura.Estado === 'EN EMISIÓN') {
+        this.mesa.Estado = 'OCUPADA';
+      } else {
+        this.mesa.Estado = 'LIBRE';
+      }
+
+      console.log(this.mesa);
     },
     modificarEstado: function modificarEstado(estado) {
       if (estado === 'EMITIR') {
         this.factura.Estado = 'EN EMISIÓN';
+        this.mesa.Estado = 'OCUPADA';
       } else {
         this.factura.Estado = 'ANULADA';
+        this.mesa.Estado = 'LIBRE';
       }
     },
     limpiar: function limpiar() {
@@ -2736,12 +2738,11 @@ __webpack_require__.r(__webpack_exports__);
       this.totalFormateado = '';
       this.detalles = [];
       this.editarActivo = false; //LIMPIAR CMBX
-
-      this.mesa = '';
-      this.mozo = '';
+      // this.mesa = '';
+      // this.mozo = '';
     },
     actualizar: function actualizar(item) {
-      var _this9 = this;
+      var _this8 = this;
 
       var params = {
         id: item.id,
@@ -2752,16 +2753,16 @@ __webpack_require__.r(__webpack_exports__);
 
       };
       axios.put("/ventas/update/".concat(item.id), params).then(function (res) {
-        var index = _this9.facturas.findIndex(function (factura) {
+        var index = _this8.facturas.findIndex(function (factura) {
           return factura.id === res.data.id;
         });
 
-        _this9.facturas[index].Tipo = res.data.Tipo;
-        _this9.facturas[index].Estado = res.data.Estado;
-        _this9.facturas[index].Descripcion = res.data.Descripcion;
-        _this9.facturas[index].Total = res.data.Total;
+        _this8.facturas[index].Tipo = res.data.Tipo;
+        _this8.facturas[index].Estado = res.data.Estado;
+        _this8.facturas[index].Descripcion = res.data.Descripcion;
+        _this8.facturas[index].Total = res.data.Total;
 
-        _this9.detalles.forEach(function (element) {
+        _this8.detalles.forEach(function (element) {
           if (element.id === undefined) {
             element.Factura_Id = item.id;
             axios.post('/ventas/storeDetail', element);
@@ -2770,7 +2771,7 @@ __webpack_require__.r(__webpack_exports__);
           }
         });
 
-        _this9.restaurarMesa(index); // if (params.Estado ==='ANULADA'){
+        _this8.actualizarEstadoMesa(index, _this8.mesa.Estado); // if (params.Estado ==='ANULADA'){
         //     console.log('en if anulada');
         //     this.restaurarMesa(index, 'LIBRE');
         // }
@@ -2781,14 +2782,14 @@ __webpack_require__.r(__webpack_exports__);
         // }
 
       }).then(function (res) {
-        _this9.factura.Descripcion = '';
-        _this9.factura.Total = 0.00;
-        _this9.totalFormateado = '';
-        _this9.detalles = [];
+        _this8.factura.Descripcion = '';
+        _this8.factura.Total = 0.00;
+        _this8.totalFormateado = '';
+        _this8.detalles = [];
 
-        _this9.calcularTotalVentasDelDia();
+        _this8.calcularTotalVentasDelDia();
 
-        _this9.limpiar();
+        _this8.limpiar();
       });
       this.editarActivo = false;
     },
@@ -2802,15 +2803,15 @@ __webpack_require__.r(__webpack_exports__);
       this.totalFormateado = 'Total: $' + this.factura.Total;
     },
     calcularTotalVentasDelDia: function calcularTotalVentasDelDia() {
-      var _this10 = this;
+      var _this9 = this;
 
       this.totalVentas = 0.00;
       this.facturas.forEach(function (element) {
         if (element.Estado === 'FACTURADA') {
-          _this10.totalVentas += element.Total;
+          _this9.totalVentas += element.Total;
         }
 
-        _this10.totalVentasFormateado = 'Total ventas del día: $' + _this10.totalVentas;
+        _this9.totalVentasFormateado = 'Total ventas del día: $' + _this9.totalVentas;
       });
     }
   }
@@ -57711,7 +57712,7 @@ var render = function() {
                               _c(
                                 "label",
                                 {
-                                  staticClass: "col-md-3 col-form-label",
+                                  staticClass: "col-md-12 col-form-label",
                                   attrs: { for: "mesas" }
                                 },
                                 [_vm._v("Mesas")]
@@ -57805,7 +57806,7 @@ var render = function() {
                               _c(
                                 "label",
                                 {
-                                  staticClass: "col-md-4 col-form-label",
+                                  staticClass: "col-md-12 col-form-label",
                                   attrs: { for: "mozos" }
                                 },
                                 [_vm._v("Mozo")]
@@ -58031,7 +58032,7 @@ var render = function() {
                             staticClass: "btn btn-success btn-sm btn-block",
                             on: {
                               click: function($event) {
-                                return _vm.checkIn(item, index)
+                                return _vm.cobrar(item, index)
                               }
                             }
                           },
