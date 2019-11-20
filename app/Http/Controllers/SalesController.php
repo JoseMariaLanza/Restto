@@ -108,7 +108,7 @@ class SalesController extends Controller
                 // $fechaFin = $now->format('d/m/Y H:i:s');
                 // $request->fechaFin = $fechaFin;
 
-                if ($request->ajax())
+                if ($request->ajax()) //$request->ajax()) // ($request->isMethod('get') && $request->ajax())
                 {
                     $facturas = $this->salesManagement->obtenerFacturasDelDia($fechaInicio)->get();
                     // return[

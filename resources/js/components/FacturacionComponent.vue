@@ -166,163 +166,109 @@
                 <div class="card" style="margin-bottom:30px">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h1>Venta</h1>
-                        <h1 class="d-flex" v-text="totalFormateado"></h1>
                     </div>
-                    <div class="card-body-mb-2">
-                        <div class="row">
-                            <div class="col">
-                                <div class="card" style="margin-bottom:20px">
-                                    <div class="card-header d-flex">
-                                        <h4>Agregar orden</h4>
-                                    </div>
-                                    <!-- Agregar detalles de la factura (formulario) -->
-                                    <form @submit.prevent="agregar">
-                                        
-                                        <div class="form-row">
-                                            <div class="form-group col-md-12">
-                                                <div class="col">
-                                                    <label for="busq" class="col col-form-label">Búsqueda</label>
-                                                    <input class="form-control mb-2" type="text" @keyup="llenarCombobox" v-model="buscar" placeholder="Buscar..." id="busq">
-                                                    <!-- <input type="number" step="0.001" min="0.001" placeholder="Cantidad" class="form-control" v-model="detalle.Cantidad"> -->
-                                                </div>
-                                            </div>
-                                            <!-- <div class="col-md-6">
-                                                <label for="menus" class="col col-form-label">Menú:</label>
-                                                <select class="custom-select mb-2" @change="establecerItem" v-model="platoArticuloMenu" id="menus" size="4">
-                                                    <option :value="platoArticuloMenu" id="selectedItemDefaultId" selected>Seleccionar...</option>s
-                                                    <option v-for="(platoArticuloMenu, index) in menu" :key="index" :value="platoArticuloMenu" 
-                                                    :id="platoArticuloMenu.id + platoArticuloMenu.Nombre_Plato">{{ platoArticuloMenu.Nombre_Plato }}</option>
-                                                </select>
-                                            </div> -->
-                                        </div>
-
-                                        <div class="form-row">
-                                            <div class="col-md-12">
-                                                <label for="menus" class="col col-form-label">Menú:</label>
-                                                <select class="custom-select mb-2" @change="establecerItem" v-model="platoArticuloMenu" id="menus" size="4">
-                                                    <option id="selectedItemDefaultId" selected>Seleccione un item...</option>s
-                                                    <option v-for="(platoArticuloMenu, index) in menu" :key="index" :value="platoArticuloMenu" 
-                                                    :id="platoArticuloMenu.id + platoArticuloMenu.Nombre_Plato">{{ platoArticuloMenu.Nombre_Plato }}</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label for="cant" class="col col-form-label">Cantidad</label>
-                                                <input type="number" step="0.001" min="0.001" placeholder="Cantidad" class="form-control" v-model="detalle.Cantidad" id="cant">
-                                            </div>
-                                            <div class="form-group col-md-6 mb-2">
-                                                <label for="prec" class="col col-form-label">Precio</label>
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text">$</span>
-                                                    </div>
-                                                    <input type="number" step="0.01" min="0.01" placeholder="Precio" class="form-control" v-model="detalle.Precio_Unitario" id="prec">
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col">
-                                                <textarea placeholder="Descripción de la orden" class="form-control mb-2" rows="2" v-model="detalle.Descripcion"></textarea>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-md-12">
-                                            <button type="submit" class="btn btn-primary btn-block">Agregar</button>
-                                        </div>
-                                    </form>
-                                </div>
-
-                                <!-- Factura -->
-                                <form @submit.prevent="guardar">
-                                <div class="card">
-                                    <div class="card-header d-flex justify-content-between align-items-center">
-                                        <h4>Información de la venta</h4>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <!-- <div class="form-row">
-                                            <label for="mesas" class="col-md-3 col-form-label">Mesas</label>
-                                            
-                                            <div class="col">
-                                                <form @submit.prevent="crearNuevaMesa">
-                                                    <button class="btn btn-success form-control mb-2">Agregar una nueva mesa</button>
-                                                </form>
-                                            </div>
-                                            
-                                        </div> -->
-                                        <label for="mesas" class="col-md-12 col-form-label">Mesas</label>
-                                        <div class="col">
-                                            <select class="custom-select" id="mesas" v-model="mesa">
-                                                <!-- <option :value="mesa" selected>Seleccionar...</option> -->
-                                                <option v-for="(mesa, index) in mesas" :key="index" :value="mesa" :id="mesa.id">{{ mesa.Descripcion }}</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="sector" class="col-md-12 col-form-label">Ingrese el sector</label>
-                                        <div class="col">
-                                            <input placeholder="Sector" class="form-control" v-model="sector">
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label for="mozos" class="col-md-12 col-form-label">Mozo</label>
-                                        <div class="col">
-                                            <select class="custom-select" id="mozos" v-model="mozo">
-                                                <option value="" selected>Seleccionar...</option>
-                                                <option v-for="(mozo, index) in empleados" :key="index" :value="mozo.Nombre + ' ' + mozo.Apellido" :id="mozo.id">{{ mozo.Nombre + " " + mozo.Apellido }}</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <!-- <div class="row">
-                                        <div class="col-md-12">
-                                            <textarea placeholder="Mesa/Mozo/Otras descripciones" class="form-control mb-2" rows="2" v-model="factura.Descripcion"></textarea>
-                                        </div>
-                                        <input type="hidden" v-model="factura.Caja_Id">
-                                    </div> -->
-                                    <div class="form-row">
-                                        <div class="col">
-                                            <button class="btn btn-success btn-block">Guardar</button>
-                                        </div>
-                                    </div>
-                                </div>      
-                                </form>                          
+                    <!-- Factura -->
+                    <!-- <form> @submit.prevent="guardar"> -->
+                    <form @submit.prevent="guardar">
+                        <div class="form-inline p-2">
+                            <div class="form-group">
+                                <label for="mesas" class="my-1 mr-2">Mesas</label>
+                                <select class="custom-select my-1 mr-sm-2" id="mesas" v-model="mesa">
+                                    <!-- <option :value="mesa" selected>Seleccione una mesa</option> -->
+                                    <option v-for="(mesa, index) in mesas" :key="index" :value="mesa" :id="mesa.id">{{ mesa.Descripcion }}</option>
+                                </select>
                             </div>
 
-                            <div class="col-md-8">
-                                <div class="card" style="margin-bottom:30px">
-                                    <div class="card-header">
-                                        <h4>Detalles de la orden</h4>
-                                    </div>
-                                    <div class="table-responsive">
-                                        <!-- Detalles de la factura -->
-                                        <table class="table table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th class="col-ms-4">Descripción del pedido</th>
-                                                    <th>Precio Unitario</th>
-                                                    <th>Cantidad</th>
-                                                    <th>Subtotal</th>
-                                                    <th>Acción</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr v-for="(item, index) in detalles" :key="index">
-                                                    <td v-text="item.Descripcion"></td>
-                                                    <td v-text="item.Precio_Unitario"></td>
-                                                    <td v-text="item.Cantidad"></td>
-                                                    <td v-text="'$' + item.Subtotal"></td>
-                                                    <td>
-                                                        <button class="btn btn-danger btn-sm btn-block" @click="quitar(item, index)">Quitar</button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
+                            <div class="form-group">
+                                <label for="sector" class="my-1 mr-2">Ingrese el sector</label>
+                                <input placeholder="Sector" class="form-control my-1 mr-sm-2" v-model="sector">
                             </div>
+                            
+                            <div class="form-group">
+                                <label for="mozos" class="my-1 mr-2">Mozo</label>
+                                <select class="custom-select my-1 mr-sm-2" id="mozos" v-model="mozo">
+                                    <option value="" selected>Seleccione al mozo</option>
+                                    <option v-for="(mozo, index) in empleados" :key="index" :value="mozo.Nombre + ' ' + mozo.Apellido" :id="mozo.id">{{ mozo.Nombre + " " + mozo.Apellido }}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                                            
+                    <form @submit.prevent="agregar">
+                        <div class="form-inline p-2">
+                            <div class="form-group">
+                                <label for="busq" class="my-1 mr-2">Buscar</label>
+                                <input class="form-control my-1 mr-sm-2" type="text" @keyup="llenarCombobox" v-model="buscar" placeholder="Buscar..." id="busq">
+                            </div>
+                        </div>
+                        
+                        <div class="form-inline p-2">
+                            <div class="form-group">
+                                <label for="menus" class="my-1 mr-2">Menú:</label>
+                                <select class="custom-select my-1 mr-sm-2" @change="establecerItem" v-model="platoArticuloMenu" id="menus">
+                                    <option id="selectedItemDefaultId" selected>Seleccione un item...</option>s
+                                    <option v-for="(platoArticuloMenu, index) in menu" :key="index" :value="platoArticuloMenu" 
+                                    :id="platoArticuloMenu.id + platoArticuloMenu.Nombre_Plato">{{ platoArticuloMenu.Nombre_Plato }}</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="cant" class="my-1 mr-2">Cantidad</label>
+                                <input type="number" step="0.001" min="0.001" placeholder="Cantidad" class="form-control my-1 mr-sm-2"
+                                 v-model="detalle.Cantidad" id="cant">
+                            </div>
+
+                            <input type="hidden" step="0.01" min="0.01" placeholder="Precio" class="form-control my-1 mr-sm-2" 
+                            v-model="detalle.Precio_Unitario" id="prec">
+
+                            <input type="hidden" placeholder="Descripción de la orden" class="form-control my-1 mr-sm-2"
+                            rows="2" v-model="detalle.Descripcion">
+
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary btn-block">Agregar</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>{{ mesa.Descripcion }}</h4>
+                            </div>
+                            <div class="table-responsive">
+                                <!-- Detalles de la factura -->
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th class="col-ms-4">Descripción del pedido</th>
+                                            <th>$ por Unidad</th>
+                                            <th>Cantidad</th>
+                                            <th>Subtotal</th>
+                                            <th>Acción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(item, index) in detalles" :key="index">
+                                            <td v-text="item.Descripcion"></td>
+                                            <td v-text="item.Precio_Unitario"></td>
+                                            <td v-text="item.Cantidad"></td>
+                                            <td v-text="'$' + item.Subtotal"></td>
+                                            <td>
+                                                <button class="btn btn-danger btn-sm btn-block" @click="quitar(item, index)">Quitar</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    
+                    <p class="h1 text-right" v-text="totalFormateado"></p>
+
+                    <div class="form-inline">
+                        <div class="form-inline p-2">
+                            <button type="button" @click.prevent="limpiar" class="btn btn-danger btn-flex">Borrar todo</button>
+                        </div>
+                        <div class="form-inline p-2">
+                            <button type="button" @click.prevent="guardar" class="btn btn-success btn-flex">Guardar</button>
                         </div>
                     </div>
                 </div>
@@ -362,7 +308,7 @@
                                 <td v-text="'$' + item.Total"></td>
                                 <td v-text="item.Estado"></td>
                                 <td>
-                                    <button class="btn btn-default btn-sm btn-block" @click="editar(item)">Editar</button>
+                                    <button class="btn btn-default btn-sm btn-block" @click="editar(item)">Agregar</button>
                                 </td>
                                 <td v-if="item.Estado === 'EN EMISIÓN'">
                                     <!-- <button class="btn btn-danger btn-sm btn-block" @click="anular(item, index)">Anular</button> -->
@@ -430,6 +376,7 @@ export default {
         }
     },
     created() {
+
         // Obteniendo el id de la caja abierta para definir la foreign key
         var caja_id = document.getElementById('cajaId');
         this.factura.Caja_Id = caja_id.value;
@@ -437,6 +384,7 @@ export default {
         axios.get('/ventas/create')
         .then(res => {
             this.facturas = res.data;
+            console.log(this.facturas);
             this.facturas.forEach(element => {
                 if(element.Estado === 'FACTURADA'){
                     this.totalVentas += element.Total;
@@ -455,17 +403,14 @@ export default {
                 }
             }
         })
-
         axios.post('/ventas/getEmpleados')
         .then(res => {
             this.empleados = res.data;
         })
-
         axios.post('/ventas/getMesas')
         .then(res => {
             this.mesas = res.data;
         })
-
         axios.post('/ventas/getMenu')
         .then(res => {
             this.menu = res.data;
@@ -499,8 +444,8 @@ export default {
                 alert('El valor del subtotal es muy elevado');
                 return;
             }
+            
             this.detalles.unshift(params);
-            console.log(this.detalles);
             
             this.factura.Total = this.factura.Total + params.Subtotal;
             this.totalFormateado = 'Total: $' + this.factura.Total;

@@ -112,8 +112,49 @@ class PermissionsTableSeeder extends Seeder
         ]);
 
         Permission::create([
+            'name'          => 'Visualizar mesas',
+            'slug'          => 'mesas.index',
+        ]);
+
+        Permission::create([
             'name'          => 'Creación de mesas',
             'slug'          => 'mesas.create',
+        ]);
+
+        Permission::create([
+            'name'          => 'Edición de mesa',
+            'slug'          => 'mesa.edit',
+            'description'   => 'Puede editar la descripción de la mesa',
+        ]);
+
+        Permission::create([
+            'name'          => 'Eliminar mesa',
+            'slug'          => 'mesa.destroy',
+            'description'   => 'Puede eliminar una mesa',
+        ]);
+
+        Permission::create([
+            'name'          => 'Visualizar menu',
+            'slug'          => 'menu.index',
+            'description'   => 'Puede ver los items que conforman el menú',
+        ]);
+
+        Permission::create([
+            'name'          => 'Creación de item',
+            'slug'          => 'menu.create',
+            'description'   => 'Puede crear un item el cual forma parte de un menú',
+        ]);
+
+        Permission::create([
+            'name'          => 'Eliminación de item',
+            'slug'          => 'menu.destroy',
+            'description'   => 'Puede eliminar un item el cual forma parte de un menú',
+        ]);
+
+        Permission::create([
+            'name'          => 'Edición de item',
+            'slug'          => 'menu.edit',
+            'description'   => 'Puede editar un item el cual forma parte de un menú',
         ]);
     }
 }
