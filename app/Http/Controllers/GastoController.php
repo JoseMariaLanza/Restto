@@ -9,6 +9,11 @@ use App\Repositories\ExpensesManagement\ExpensesManagementFacade;
 
 use Carbon\Carbon;
 
+// REPORTING
+use Barryvdh\DomPDF\Facade as PDF;
+
+use App\Gasto;
+
 class GastoController extends Controller
 {
     /**
@@ -31,7 +36,11 @@ class GastoController extends Controller
         $gastos = $this->expensesManagement->separarGastos($queryResult)->paginate();
         $totalGastos = $this->expensesManagement->separaryObtenerTotal($queryResult);
 
-        return view('Gasto.Index', compact('gastos', 'periodos', 'totalGastos'));
+        // fechas
+        $fechaInicio = $request->fechaInicio;
+        $fechaFin = $request->fechaFin;
+
+        return view('Gasto.Index', compact('gastos', 'periodos', 'totalGastos', 'fechaInicio', 'fechaFin'));
     }
 
     /**
@@ -66,5 +75,30 @@ class GastoController extends Controller
     {
         $this->expensesManagement->eliminarGasto($id);
         return back()->with('mensaje', 'Gasto eliminado correctamente');
+    }
+
+    public function showReport($fechaInicio, $fechaFin)
+    {
+        $queryGastos = Gasto::buscar($fechaInicio, $fechaFin)->orderBy('id', 'DESC');
+
+        $queryResult = [];
+        $queryResult['gastos'] = $queryGastos;
+        $totalQueryGastos = $this->expensesManagement->calcularTotalGastos($queryGastos->get());
+        $queryResult['totalQueryGastos'] = $totalQueryGastos;
+        $gastos = $this->expensesManagement->separarGastos($queryResult)->get();
+        $totalGastos = $this->expensesManagement->separaryObtenerTotal($queryResult);
+        
+        // Visualización del pdf
+        $view = view('Reporting.PDF.Gastos', compact('gastos', 'totalGastos'));
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->loadHTML($view);
+        return $pdf->stream('gastos', 'totalGastos');
+
+        // Visualización en vista
+        // return view('Reporting.PDF.Gastos', compact('gastos', 'totalGastos'));
+
+        // Descarga
+        // $pdf = PDF::loadView('Reporting.PDF.Gastos', compact('gastos', 'totalGastos'));
+        // return $pdf->download('gastos-list.pdf');
     }
 }

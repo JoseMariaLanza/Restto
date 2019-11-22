@@ -133,10 +133,11 @@ class ManageBill implements IBillRepository
         return $anularFactura;
     }
 
-    public function cobrarFactura($id)
+    public function cobrarFactura(Request $request, $id)
     {
         $actualizarFactura = $this->modeloFactura->findOrFail($id);
         $actualizarFactura->Estado = 'FACTURADA';
+        $actualizarFactura->Forma_Pago = $request->Forma_Pago;
         $actualizarFactura->save();
         return $actualizarFactura;
     }

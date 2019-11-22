@@ -223,4 +223,8 @@ Route::middleware(['auth'])->group(function(){
 
     Route::get('users/{id}/edit', 'UserController@edit')->name('users.edit');
         // ->middleware('has.permission:users.edit');
+
+    // REPORTING
+    // Route::get('gastos-list-pdf', 'GastoController@showReport')->name('gastos.pdf');
+    Route::get('gastos/showReport/{fechaInicio}/{fechaFin}', 'GastoController@showReport')->name('gastos.pdf');
 });

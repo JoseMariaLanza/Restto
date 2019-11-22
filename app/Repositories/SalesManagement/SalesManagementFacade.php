@@ -163,9 +163,9 @@ class SalesManagementFacade
         return $this->manageBill->delete($id);
     }
 
-    public function cobrarFactura($id)
+    public function cobrarFactura(Request $request, $id)
     {
-        return $this->manageBill->cobrarFactura($id);
+        return $this->manageBill->cobrarFactura($request, $id);
     }
 
     public function getMenu()

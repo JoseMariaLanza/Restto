@@ -35,7 +35,7 @@
                                 @can('roles.destroy')
                                 {!! Form::open(['route' => ['roles.destroy', $item->id], 'method' => 'DELETE', 'class' => 'd-inline']) !!}
                                     @csrf
-                                    <button class="btn btn-danger btn-sm" type="submit">Eliminar...</button>
+                                    <button class="btn btn-danger btn-sm" type="submit" onclick="return confirm('¿Está seguro que desea eliminar el item?.')">Eliminar...</button>
                                 {!! Form::close() !!}
                                 @endcan
                             </div>

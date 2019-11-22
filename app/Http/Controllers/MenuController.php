@@ -99,7 +99,11 @@ class MenuController extends Controller
 
         $this->stockingManagement->updateMenuItem($request, $id);
 
-        return back()->with('mensaje', 'Item actualizado correctamente');
+        // return back()->with('mensaje', 'Item actualizado correctamente');
+        
+        // Volver a Menú
+        $menu = $this->stockingManagement->buscarMenuItem($request)->orderBy('id', 'DESC')->paginate(10);
+        return view('Stocking.Menu.Index', compact('menu'));
     }
 
     /**

@@ -108,11 +108,15 @@
                     <div class="row">
                         <div class="row-md-2">Desde: </div>
                         <div class="col">
-                            <datepicker v-model="date1" :language="es" :format="dateFormat"></datepicker>
+                            <!-- <datepicker v-model="date1" :language="es" :format="dateFormat"></datepicker> -->
+                            <!-- <datetime v-model="date1" :language="es" :format="dateFormat"></datetime> -->
+                            <VueCtkDateTimePickerStart v-model="date1" :format="dateFormat" />
                         </div>
                         <div class="row-md-2">Hasta: </div>
                         <div class="col">
-                            <datepicker v-model="date2" :language="es" :format="dateFormat"></datepicker>
+                            <!-- <datepicker v-model="date2" :language="es" :format="dateFormat"></datepicker> -->
+                            <!-- <datetime v-model="date2" :language="es" :format="dateFormat"></datetime> -->
+                            <VueCtkDateTimePickerEnd v-model="date2" :format="dateFormat" />
                         </div>
                         <button class="btn btn-default" type="submit">Buscar</button>
                     </div>
@@ -137,6 +141,7 @@
                         <th>Fecha y Hora de la venta</th>
                         <th>Total</th>
                         <th>Estado</th>
+                        <th>Forma de Pago</th>
                         <th>Acción</th>
                     </tr>
                 </thead>
@@ -147,6 +152,7 @@
                         <td v-text="item.Fecha_Emision"></td>
                         <td v-text="'$' + item.Total"></td>
                         <td v-text="item.Estado"></td>
+                        <td v-text="item.Forma_Pago"></td>
                         <td>
                             <button class="btn btn-default btn-sm btn-block" @click="editar(item)">Editar</button>
                         </td>
@@ -158,11 +164,13 @@
             </table>
         </div>
         
-        <div class="panel-heading d-flex justify-content-between align-items-center">
+        <!-- <div class="panel-heading d-flex justify-content-between align-items-center">
             <h1 class="d-flex" v-text="totalFinalFacturasFormateado"></h1>
-        </div>
+        </div> -->
 
     </div>
+
+    <p class="h1 text-right" v-text="totalFinalFacturasFormateado"></p>
 
     <div class="row justify-content-center">
         <nav class="d-flex">
@@ -190,16 +198,25 @@
 </template>
 
 <script>
-import Datepicker from 'vuejs-datepicker';
+// import Datepicker from 'vuejs-datepicker';
+import datetime from 'vuejs-datetimepicker';
 import { es } from 'vuejs-datepicker/dist/locale';
+// import { Settings } from 'luxon';
+
+import VueCtkDateTimePickerStart from 'vue-ctk-date-time-picker';
+import VueCtkDateTimePickerEnd from 'vue-ctk-date-time-picker';
+import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css';
+
+Vue.component('VueCtkDateTimePickerStart', VueCtkDateTimePickerStart);
+Vue.component('VueCtkDateTimePickerEnd', VueCtkDateTimePickerEnd);
 
 export default {
     components: {
-        Datepicker
+        // Datepicker,
+        datetime
     },
     data() {
         return {
-
             // Detalles - Código Duplicado. Necesario para edición
             // Agregar
             detalles: [],
@@ -207,7 +224,7 @@ export default {
 
             // Facturas
             facturas: [],
-            factura: { Caja_Id: '', Tipo: '', Fecha: '', Estado: '', Total: 0.00, Descripcion: '' }, // Código duplicado - Necesario para edición
+            factura: { Caja_Id: '', Tipo: '', Fecha: '', Estado: '', Total: 0.00, Descripcion: '', Forma_Pago: '' }, // Código duplicado - Necesario para edición
             // Total por página
             totalVentas: 0.00,
             totalVentasFormateado: '',
@@ -216,9 +233,9 @@ export default {
             totalFinalFacturasFormateado: '',
             // Fechas
             es: es,
-            date1: new Date(),
-            date2: new Date(),
-            dateFormat: 'dd/MM/yyyy',
+            date1: '',
+            date2: '',
+            dateFormat: 'YYYY-MM-DD h:mm:ss',
 
             // Paginación
             pagination: {
@@ -243,6 +260,9 @@ export default {
             ]
         }
     },
+    // created() { // Para luxon
+    //     Settings.defaultLocale = 'es'
+    // },
     // EL FILTRADO SE REALIZA LLAMANDO AL MÉTODO BUSCAR
     // created() {
     //     // Listado de ventas del día
@@ -279,10 +299,15 @@ export default {
     },
     methods: {
         anular(item, index) {
+            if (confirm('¿Está seguro que desea anular esta venta?.') == false)
+            {
+                return;
+            }
             axios.put(`/ventas/destroy/${item.id}`) // se llama a la función destroy pero ésta no elimina nada, sino que cambia el estado a ANULADA
             .then(res => {
+                this.facturas[index].Estado = res.data.Estado;
                 if (this.facturas[index].Estado == 'FACTURADA'){
-                    this.facturas[index].Estado = res.data.Estado;
+                    // this.facturas[index].Estado = res.data.Estado;
                     this.totalVentas -= this.facturas[index].Total;
                     this.totalVentasFormateado = 'Total de la página: $' + this.totalVentas;
 
@@ -294,15 +319,13 @@ export default {
         buscar(page) {
             this.totalVentas = 0.00;
             const params = {
-                fechaInicio: this.backEndDateFormatFrom(this.date1),
-                fechaFin: this.backEndDateFormatTo(this.date2),
+                fechaInicio: this.date1, // this.backEndDateFormatFrom(this.date1),
+                fechaFin: this.date2, // this.backEndDateFormatTo(this.date2),
                 page: page
             }
             axios.post('/ventas/buscar', params)
             .then(res => {
                 this.facturas = res.data.facturas.data;
-                console.log(res.data.facturas.data);
-                console.log(res.data.TotalFinalFacturas);
                 this.totalFinalFacturas = res.data.TotalFinalFacturas;
                 this.totalFinalFacturasFormateado = 'Total final: $' + this.totalFinalFacturas;
 
@@ -316,14 +339,16 @@ export default {
                 this.totalVentasFormateado = 'Total de la página: $' + this.totalVentas;
             })
         },
-        backEndDateFormatFrom: function(date) {
-            var moment = require('moment');
-            return moment(date).format('Y-MM-DD 00:00:00'); // 'DD/MM/Y H:mm:ss');
-        },
-        backEndDateFormatTo: function(date) {
-            var moment = require('moment');
-            return moment(date).format('Y-MM-DD 23:23:59'); // 'DD/MM/Y H:mm:ss');
-        },
+        // NO NECESARIO PORQUE SE USA EL PAQUETE vue-ctk-date-time-picker
+        // EL FORMATO SE HACE MEDIANTE LA VARIABLE dateFormat
+        // backEndDateFormatFrom: function(date) {
+        //     var moment = require('moment');
+        //     return moment(date).format();
+        // },
+        // backEndDateFormatTo: function(date) {
+        //     var moment = require('moment');
+        //     return moment(date).format();
+        // },
         changePage: function(page){
             this.pagination.current_page = page;
             this.buscar(page);
@@ -336,6 +361,7 @@ export default {
             this.factura.Tipo = item.Tipo;
             this.factura.Fecha = item.Fecha;
             this.factura.Estado = item.Estado;
+            this.factura.Forma_Pago = item.Forma_Pago;
             this.factura.Total = item.Total;
             this.factura.Descripcion = item.Descripcion;
             this.totalFormateado = 'Total: $' + this.factura.Total;
@@ -350,6 +376,9 @@ export default {
             this.factura.Estado = item.Estado;
             // this.calcularTotalFinalFacturas(item);
         },
+        modificarFormaPago(item) {
+            // Agregar funcionalidad
+        },
         cancelarEdicion() {
             this.factura.Descripcion = '';
             this.factura.Total = 0.00;
@@ -362,6 +391,7 @@ export default {
                 id: item.id,
                 Tipo: item.Tipo,
                 Estado: item.Estado,
+                Forma_Pago: item.Forma_Pago,
                 Total: item.Total,
                 Descripcion: item.Descripcion
             }
@@ -372,6 +402,7 @@ export default {
                     console.log(res);
                     this.facturas[index].Tipo = res.data.Tipo;
                     this.facturas[index].Estado = res.data.Estado;
+                    this.facturas[index].Forma_Pago = res.data.Forma_Pago;
                     this.facturas[index].Descripcion = res.data.Descripcion;
                     this.facturas[index].Total = res.data.Total;
 

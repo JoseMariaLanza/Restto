@@ -26,6 +26,7 @@ class CreateFacturasTable extends Migration
             $table->foreign('Cliente_Id')->references('id')->on('clientes');
             $table->dateTime('Fecha_Emision');
             $table->enum('Estado', ['EN EMISIÓN', 'FACTURADA', 'ANULADA']);
+            $table->enum('Estado', ['EFECTIVO', 'TARJETA']);
             $table->decimal('Total', 20, 2);
             $table->text('Descripcion')->nullable();
             $table->string('Campo_Extra_1')->nullable();

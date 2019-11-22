@@ -1,161 +1,121 @@
 <template>
     <div>
-
-        <!-- <factura-edicion v-if="editarActivo"></factura-edicion> -->
         <!-- Editar la factura -->
         <div class="row justify-content-center" v-if="editarActivo">
             <div class="col-md-12">
                 <div class="card" style="margin-bottom:30px">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h1>Venta</h1>
-                        <h1 class="d-flex" v-text="totalFormateado"></h1>
                     </div>
-                    <div class="card-body-mb-2">
-                        <div class="row">
-                            <div class="col">
-                                <div class="card" style="margin-bottom:20px">
-                                    <div class="card-header d-flex">
-                                        <h4>Modificar orden</h4>
+                    <form @submit.prevent="actualizar(factura)">
+                        <div class="form-row p-2">
+                            <div class="col-auto">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Estado</button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="#" v-on:click.prevent="modificarEstado('EMITIR')">EMITIR</a>
+                                                <a class="dropdown-item" href="#" v-on:click.prevent="modificarEstado('ANULAR')">ANULAR</a>
+                                            </div>
+                                        </div>
+                                        <fieldset disabled>
+                                            <input type="text" class="form-control" aria-label="Text input with dropdown button" v-model="factura.Estado">
+                                        </fieldset>
                                     </div>
-                                    <!-- Editar detalles de la factura (formulario) -->
-                                    <form @submit.prevent="agregar">
-                                        
-                                        <div class="form-row">
-                                            <div class="form-group col-md-12">
-                                                <div class="col">
-                                                    <label for="busq" class="col col-form-label">Búsqueda</label>
-                                                    <input class="form-control mb-2" type="text" @keyup="llenarCombobox" v-model="buscar" placeholder="Buscar..." id="busq">
-                                                    <!-- <input type="number" step="0.001" min="0.001" placeholder="Cantidad" class="form-control" v-model="detalle.Cantidad"> -->
-                                                </div>
-                                            </div>
-                                            <!-- <div class="col-md-6">
-                                                <label for="menus" class="col col-form-label">Menú:</label>
-                                                <select class="custom-select mb-2" @change="establecerItem" v-model="platoArticuloMenu" id="menus" size="4">
-                                                    <option :value="platoArticuloMenu" id="selectedItemDefaultId" selected>Seleccionar...</option>s
-                                                    <option v-for="(platoArticuloMenu, index) in menu" :key="index" :value="platoArticuloMenu" 
-                                                    :id="platoArticuloMenu.id + platoArticuloMenu.Nombre_Plato">{{ platoArticuloMenu.Nombre_Plato }}</option>
-                                                </select>
-                                            </div> -->
-                                        </div>
-
-                                        <div class="form-row">
-                                            <div class="col-md-12">
-                                                <label for="menus" class="col col-form-label">Menú:</label>
-                                                <select class="custom-select mb-2" @change="establecerItem" v-model="platoArticuloMenu" id="menus" size="4">
-                                                    <!-- <option :value="platoArticuloMenu" id="selectedItemDefaultId" selected>Seleccionar...</option>s -->
-                                                    <option v-for="(platoArticuloMenu, index) in menu" :key="index" :value="platoArticuloMenu" 
-                                                    :id="platoArticuloMenu.id + platoArticuloMenu.Nombre_Plato">{{ platoArticuloMenu.Nombre_Plato }}</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label for="cant" class="col col-form-label">Cantidad</label>
-                                                <input type="number" step="0.001" min="0.001" placeholder="Cantidad" class="form-control" v-model="detalle.Cantidad" id="cant">
-                                            </div>
-                                            <div class="form-group col-md-6 mb-2">
-                                                <label for="prec" class="col col-form-label">Precio</label>
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text">$</span>
-                                                    </div>
-                                                    <input type="number" step="0.01" min="0.01" placeholder="Precio" class="form-control" v-model="detalle.Precio_Unitario" id="prec">
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col">
-                                                <textarea placeholder="Descripción de la orden" class="form-control mb-2" rows="2" v-model="detalle.Descripcion"></textarea>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-md-12">
-                                            <button type="submit" class="btn btn-primary btn-block">Agregar</button>
-                                        </div>
-                                    </form>
                                 </div>
-                                <!-- Factura -->
-                                <form @submit.prevent="actualizar(factura)">
-                                <div class="card">
-                                    <div class="card-header d-flex justify-content-between align-items-center">
-                                        <h4>Información de la venta</h4>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="input-group mb-2">
-                                                <div class="input-group-prepend">
-                                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Estado</button>
-                                                    <div class="dropdown-menu">
-                                                        <a class="dropdown-item" href="#" v-on:click.prevent="modificarEstado('EMITIR')">EMITIR</a>
-                                                        <a class="dropdown-item" href="#" v-on:click.prevent="modificarEstado('ANULAR')">ANULAR</a>
-                                                    </div>
-                                                </div>
-                                                <fieldset disabled>
-                                                    <input type="text" class="form-control" aria-label="Text input with dropdown button" v-model="factura.Estado">
-                                                </fieldset>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <textarea disabled placeholder="Mesa/Mozo/Otras descripciones" class="form-control mb-2" rows="2" v-model="factura.Descripcion"></textarea>
-                                        </div>
-                                        <input type="hidden" v-model="factura.Caja_Id">
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="col">
-                                            <button class="btn btn-success btn-block">Guardar</button>
-                                        </div>
-                                        <div class="col">
-                                            <button class="btn btn-default btn-block" @click="limpiar">Cancelar</button>
-                                        </div>
-                                    </div>
-                                </div>      
-                                </form>                          
                             </div>
-                            <div class="col-md-8">
-                                <div class="card" style="margin-bottom:30px">
-                                    <div class="card-header">
-                                        <h4>Detalles de la orden</h4>
-                                    </div>
-                                    <div class="table-responsive">
-                                        <!-- Detalles de la factura -->
-                                        <table class="table table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th class="col-ms-4">Descripción del pedido</th>
-                                                    <th>Precio Unitario</th>
-                                                    <th>Cantidad</th>
-                                                    <th>Subtotal</th>
-                                                    <th>Estado</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr v-for="(item, index) in detalles" :key="index">
-                                                    <td v-text="item.Descripcion"></td>
-                                                    <td v-text="item.Precio_Unitario"></td>
-                                                    <td v-text="item.Cantidad"></td>
-                                                    <td v-text="'$' + item.Subtotal"></td>
-                                                    <td v-if="item.id > 0">
-                                                        <div class="input-group mb-2">
-                                                            <select class="custom-select" @change="cambiarEstadoOrden(item, index)" v-model="item.Estado">
-                                                                <option value="REGISTRADA">REGISTRADA</option>
-                                                                <option value="ANULADA">ANULADA</option>
-                                                            </select>
-                                                        </div>
-                                                    </td>
-                                                    <td v-else>
-                                                        <!-- <button class="btn btn-danger btn-sm btn-block" @click="anularOrden(item, index)">Anular</button> -->
-                                                        <button class="btn btn-danger btn-sm btn-block" @click="quitar(item, index)">Quitar</button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <input disabled placeholder="Mesa/Mozo/Otras descripciones" class="form-control mb-2" rows="2" v-model="factura.Descripcion">
+                                    <input type="hidden" v-model="factura.Caja_Id">
                                 </div>
                             </div>
                         </div>
+                    </form>
+                    <!-- Editar detalles de la factura (formulario) -->
+                    <form @submit.prevent="agregar">
+                        <div class="form-inline p-2">
+                            <div class="form-group">
+                                <label for="busq" class="my-1 mr-2">Buscar</label>
+                                <input class="form-control my-1 mr-sm-2" type="text" @keyup="llenarCombobox" v-model="buscar" placeholder="Buscar..." id="busq">
+                            </div>
+                        </div>
+                        <div class="form-inline p-2">
+                            <div class="form-group">
+                                <label for="menus" class="my-1 mr-2">Menú:</label>
+                                <select class="custom-select my-1 mr-sm-2" @change="establecerItem" v-model="platoArticuloMenu" id="menus">
+                                    <option id="selectedItemDefaultId" selected>Seleccione un item...</option>s
+                                    <option v-for="(platoArticuloMenu, index) in menu" :key="index" :value="platoArticuloMenu" 
+                                    :id="platoArticuloMenu.id + platoArticuloMenu.Nombre_Plato">{{ platoArticuloMenu.Nombre_Plato }}</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="cant" class="my-1 mr-2">Cantidad</label>
+                                <input type="number" step="0.001" min="0.001" placeholder="Cantidad" class="form-control my-1 mr-sm-2"
+                                v-model="detalle.Cantidad" id="cant">
+                            </div>
+                            <input type="hidden" step="0.01" min="0.01" placeholder="Precio" class="form-control my-1 mr-sm-2" 
+                            v-model="detalle.Precio_Unitario" id="prec">
+                            <input type="hidden" placeholder="Descripción de la orden" class="form-control my-1 mr-sm-2"
+                            rows="2" v-model="detalle.Descripcion">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary btn-block">Agregar</button>
+                            </div>
+                        </div>
+                    </form>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>{{ mesa.Descripcion }}</h4>
+                        </div>
+                        <div class="table-responsive">
+                            <!-- Detalles de la factura -->
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="col-ms-4">Descripción del pedido</th>
+                                        <th>$ por Unidad</th>
+                                        <th>Cantidad</th>
+                                        <th>Subtotal</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(item, index) in detalles" :key="index">
+                                        <td v-text="item.Descripcion"></td>
+                                        <td v-text="item.Precio_Unitario"></td>
+                                        <td v-text="item.Cantidad"></td>
+                                        <td v-text="'$' + item.Subtotal"></td>
+                                        <td v-if="item.id > 0">
+                                            <div class="input-group mb-2">
+                                                <select class="custom-select" @change="cambiarEstadoOrden(item, index)" v-model="item.Estado">
+                                                    <option value="REGISTRADA">REGISTRADA</option>
+                                                    <option value="ANULADA">ANULADA</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td v-else>
+                                            <!-- <button class="btn btn-danger btn-sm btn-block" @click="anularOrden(item, index)">Anular</button> -->
+                                            <button class="btn btn-danger btn-sm btn-block" @click="quitar(item, index)">Quitar</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
+
+                    <p class="h1 text-right" v-text="totalFormateado"></p>
+
+                    <div class="form-inline">
+                        <div class="form-inline p-2">
+                            <button type="button" @click.prevent="limpiar" class="btn btn-danger btn-flex">Cancelar</button>
+                        </div>
+                        <div class="form-inline p-2">
+                            <button type="button" @click.prevent="actualizar(factura)" class="btn btn-success btn-flex">Guardar</button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -281,7 +241,8 @@
                 <div class="panel panel-default">
                     <div class="panel-heading d-flex justify-content-between align-items-center">
                         <h1>Ventas del día</h1>
-                        <h1 class="d-flex" v-text="totalVentasFormateado"></h1>
+                        <!-- NO MOSTRAR -->
+                        <!-- <h1 class="d-flex" v-text="totalVentasFormateado"></h1> -->
                     </div>
                 </div>
             </div>
@@ -308,11 +269,14 @@
                                 <td v-text="'$' + item.Total"></td>
                                 <td v-text="item.Estado"></td>
                                 <td>
-                                    <button class="btn btn-default btn-sm btn-block" @click="editar(item)">Agregar</button>
+                                    <button class="btn btn-default btn-sm btn-inline" @click="editar(item)">Modificar</button>
                                 </td>
                                 <td v-if="item.Estado === 'EN EMISIÓN'">
-                                    <!-- <button class="btn btn-danger btn-sm btn-block" @click="anular(item, index)">Anular</button> -->
-                                    <button class="btn btn-success btn-sm btn-block" @click="cobrar(item, index)">Cobrar</button>
+                                    <button class="btn btn-danger btn-sm btn-inline mb-2" @click="anular(item, index)">Anular</button>
+                                    <!-- Original sin modal -->
+                                    <!-- <button class="btn btn-success btn-sm btn-inline mb-2" @click="cobrar(item, index)">Cobrar</button> -->
+                                    <button class="btn btn-success btn-sm btn-inline mb-2" data-toggle="modal" data-target="#modalFormaPago"
+                                    @click="cobrarModal(item, index)">Cobrar</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -320,6 +284,42 @@
                 </div>
                 
             </div>
+        </div>
+
+        <!-- POPUP MODAL BOOTSTRAP -->
+        <!-- Establecer forma de cobro -->
+
+        <!-- Ejemplo de boton Mostrar Modal -->
+        <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Open modal for @mdo</button> -->
+
+        <div class="modal fade" id="modalFormaPago" tabindex="-1" role="dialog" aria-labelledby="modalFormaPagoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalFormaPagoLabel">Forma de Pago</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                <div class="form-group">
+                    <!-- <label for="recipient-name" class="col-form-label">Seleccione la forma de pago:</label>
+                    <input type="text" class="form-control" id="recipient-name"> -->
+                    <select class="custom-select my-1 mr-sm-2" v-model="formaPago" id="facturaFormaPago">
+                        <option value="" selected>Seleccione una opción</option>
+                        <option value="EFECTIVO">EFECTIVO</option>
+                        <option value="TARJETA">TARJETA</option>
+                    </select>
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" @click="cobrar(cobrarItem, cobrarIndex)" data-dismiss="modal">Aceptar</button>
+            </div>
+            </div>
+        </div>
         </div>
 
     </div>
@@ -343,8 +343,12 @@ export default {
 
             // Guardar
             // Factura
-            factura: { Caja_Id: '', Tipo: '', Fecha: '', Estado: '', Total: 0.00, Descripcion: '' },
+            factura: { Caja_Id: '', Tipo: '', Fecha: '', Estado: '', Total: 0.00, Descripcion: '', Forma_Pago: '' },
             totalFormateado: '',
+            // Variables para que el modal funcione correctamente
+            cobrarItem: '',
+            cobrarIndex: '',
+            formaPago: '',
 
             // Ventas facturadas
             esconder: false,
@@ -394,14 +398,7 @@ export default {
         })
         // OCULTANDO FACTURAS CON EL ESTADO = FACTURADA
         .then(res => {
-            var tableFacturas = document.getElementById('tableDataFacturas');
-            for (var i = 0, row; row = tableFacturas.rows[i]; i++){
-                for (var j = 0, col; col = row.cells[j]; j++) {
-                    if(row.cells[j].innerText === 'FACTURADA'){
-                        tableFacturas.rows[i].style.display = "none";
-                    }
-                }
-            }
+            this.ocultarFacturadas();
         })
         axios.post('/ventas/getEmpleados')
         .then(res => {
@@ -417,6 +414,16 @@ export default {
         })
     },
     methods: {
+        ocultarFacturadas() {
+            var tableFacturas = document.getElementById('tableDataFacturas');
+            for (var i = 0, row; row = tableFacturas.rows[i]; i++){
+                for (var j = 0, col; col = row.cells[j]; j++) {
+                    if(row.cells[j].innerText === 'FACTURADA'){
+                        tableFacturas.rows[i].style.display = "none";
+                    }
+                }
+            }
+        },
         establecerItem() {
             this.detalle.Descripcion = this.platoArticuloMenu.Nombre_Plato;
             this.detalle.Precio_Unitario = this.platoArticuloMenu.Precio_Venta;
@@ -508,6 +515,9 @@ export default {
                     this.detalles = [];
                });
             })
+            .then(res => {
+                this.ocultarFacturadas();
+            })
 
             this.mesa.Estado = 'OCUPADA';
             const index = this.mesas.findIndex(mesa => mesa.id === this.mesa.id);
@@ -555,22 +565,49 @@ export default {
             this.totalFormateado = 'Total: $' + this.factura.Total;
             this.detalles.splice(index, 1);
         },
-        // Función sin uso, porque la acción de anular la factura ya está implementada a la hora de
-        // editar ésta
-        // anular(item, index) {
-        //     axios.put(`/ventas/destroy/${item.id}`)
-        //     .then(res => {
-        //         if (this.facturas[index].Estado == 'EMITIDA'){
-        //             this.facturas[index].Estado = res.data.Estado;
-        //             this.totalVentas -= this.facturas[index].Total;
-        //             this.totalVentasFormateado = 'Total ventas del día: $' + this.totalVentas;
-        //         }
-        //     })
-        // },
-        cobrar(item, index) {
-            axios.put(`/ventas/cobrar/${item.id}`)
+        anular(item, index) {
+            if (confirm('¿Está seguro que desea anular esta venta?.') == false)
+            {
+                return;
+            }
+            axios.put(`/ventas/destroy/${item.id}`)
+            .then(res => {
+                if (this.facturas[index].Estado == 'EMITIDA'){
+                    this.facturas[index].Estado = res.data.Estado;
+                    this.totalVentas -= this.facturas[index].Total;
+                    this.totalVentasFormateado = 'Total ventas del día: $' + this.totalVentas;
+                }
+            })
+        },
+        cobrar(item, index) { // se pasan las variables cobrarItem y cobrarIndex
+            // SE DESACTIVA PORQUE YA SE CONFIRMA CON EL MODAL
+            // if (confirm('¿Está seguro que desea realizar el cobro?.') == false)
+            // {
+            //     return;
+            // }
+
+            // var opcionFormaPago = document.getElementById('facturaFormaPago');
+            // var opcionFormaPagoSeleccionada = '';
+
+            // for (var i = 0; i < opcionFormaPago.options.length; i++) {
+            //     if (opcionFormaPago.options[i].selected === true) {
+            //         opcionFormaPagoSeleccionada = opcionFormaPago.options[i]
+            //         return;
+            //     }
+            // }
+
+            if (this.formaPago === '')
+            {
+                alert('Debe especificar la forma de pago');
+                return;
+            }
+            const params = {
+                Forma_Pago: this.formaPago
+            }
+            axios.put(`/ventas/cobrar/${item.id}`, params)
             .then(res => {
                 this.facturas[index].Estado = res.data.Estado;
+                this.facturas[index].Forma_Pago = res.data.Forma_Pago;
             })
             .then(res => {
                 var boleta = document.getElementById(index);
@@ -578,8 +615,17 @@ export default {
                 this.calcularTotalVentasDelDia();
                 this.limpiar();
             })
+            .then(res => {
+                this.ocultarFacturadas();
+            })
 
             this.actualizarEstadoMesa(index, 'LIBRE');
+            this.cobrarItem = '';
+            this.cobrarIndex = '';
+        },
+        cobrarModal(item, index) {
+            this.cobrarItem = item;
+            this.cobrarIndex = index;
         },
         // ACTUALIZAR EL ESTADO DE LA MESA
         actualizarEstadoMesa(index, estado) {
@@ -655,6 +701,13 @@ export default {
             }
         },
         limpiar() {
+            if (this.detalles.length > 0)
+            {
+                if (confirm('¿Está seguro que desea cancelar la operación?.') == false)
+                {
+                    return;
+                }
+            }
             this.factura.Descripcion = '';
             this.factura.Total = 0.00;
             this.totalFormateado = '';
@@ -717,7 +770,7 @@ export default {
         },
         cambiarEstadoOrden(item, index){
 
-            if (item.Estado === 'FACTURADA'){
+            if (item.Estado === 'REGISTRADA'){
                 this.factura.Total += item.Subtotal;
             }
             else{

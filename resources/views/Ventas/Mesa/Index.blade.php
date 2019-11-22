@@ -63,7 +63,7 @@
                         @can('mesas.destroy')
                             {!! Form::open(['route' => ['mesas.destroy', $item->id], 'method' => 'DELETE', 'class' => 'd-inline']) !!}
                                 @csrf
-                                <button class="btn btn-danger btn-sm" type="submit">Eliminar...</button>
+                                <button class="btn btn-danger btn-sm" type="submit" onclick="return confirm('¿Está seguro que desea eliminar esta mesa?.')">Eliminar...</button>
                             {!! Form::close() !!}
                         @endcan
                         </td>

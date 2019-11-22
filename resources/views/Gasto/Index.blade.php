@@ -79,7 +79,7 @@
                             @can('gastos.destroy')
                                 {!! Form::open(['route' => ['gastos.destroy', $item->id], 'method' => 'DELETE', 'class' => 'd-inline']) !!}
                                     @csrf
-                                    <button class="btn btn-danger btn-sm" type="submit">Eliminar...</button>
+                                    <button class="btn btn-danger btn-sm" type="submit" onclick="return confirm('¿Está seguro que desea eliminar el item?.')">Eliminar...</button>
                                 {!! Form::close() !!}
                             @endcan
                             </td>
@@ -89,9 +89,19 @@
                 </table>
                 {{$gastos->links()}}
             </div>
-            <div class="panel-heading d-flex justify-content-between align-items-center">
+            <!-- <div class="panel-heading d-flex justify-content-between align-items-center">
                 <h1 class="d-flex">Total: ${{ $totalGastos }}</h1>
-            </div>
+            </div> -->
         </div>
+        <p class="h1 text-right">Total: ${{ $totalGastos }}</p>
+        
+        {!! Form::open(['route' => ['gastos.pdf', $fechaInicio, $fechaFin], 'method' => 'GET', 'class' => 'd-inline']) !!}
+            <button type="submit" class="btn btn-primary btn-md">Imprimir</button>
+        {!! Form::close() !!}
+
+        <!-- {!! Form::open(['route' => ['gastos.pdf', $fechaInicio, $fechaFin], 'method' => 'GET', 'class' => 'd-inline']) !!}
+            <button type="submit" class="btn btn-primary btn-md">Imprimir</button>
+        {!! Form::close() !!} -->
+
     </div>
 @endsection
