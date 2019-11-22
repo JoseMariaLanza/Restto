@@ -477,11 +477,6 @@ export default {
             })
         },
         guardar() {
-            // Esta se llenará sí o sí al Seleccionar las Descripciones
-            // if (this.detalles.length <= 0 || this.factura.Descripcion === '') {
-            //     alert('Ingrese los detalles de la venta');
-            //     return;
-            // }
             if (this.detalles.length <= 0)
             {
                 alert('Ingrese los detalles de la venta');
@@ -496,6 +491,7 @@ export default {
             this.factura.Descripcion = this.mesa.Descripcion + ' // Sector: ' + this.sector + ' // Mozo: ' + this.mozo;
             const params = {
                 Descripcion: this.factura.Descripcion,
+                Estado: this.factura.Estado,
                 Total: this.factura.Total,
                 Caja_Id: this.factura.Caja_Id
             }
@@ -511,8 +507,10 @@ export default {
                 // this.totalVentasFormateado = 'Total ventas del día: $' + this.totalVentas;
                 this.detalles.forEach(element => {
                     element.Factura_Id = res.data.id;
-                    axios.post('/ventas/storeDetail', element);
-                    this.detalles = [];
+                    axios.post('/ventas/storeDetail', element)
+                    .then(res=> {
+                        this.detalles = [];
+                    })
                });
             })
             .then(res => {
@@ -572,11 +570,13 @@ export default {
             }
             axios.put(`/ventas/destroy/${item.id}`)
             .then(res => {
-                if (this.facturas[index].Estado == 'EMITIDA'){
+                console.log(res);
+                if (this.facturas[index].Estado == 'EN EMISIÓN'){
                     this.facturas[index].Estado = res.data.Estado;
                     this.totalVentas -= this.facturas[index].Total;
                     this.totalVentasFormateado = 'Total ventas del día: $' + this.totalVentas;
                 }
+                this.actualizarEstadoMesa(index, 'LIBRE');
             })
         },
         cobrar(item, index) { // se pasan las variables cobrarItem y cobrarIndex
@@ -584,16 +584,6 @@ export default {
             // if (confirm('¿Está seguro que desea realizar el cobro?.') == false)
             // {
             //     return;
-            // }
-
-            // var opcionFormaPago = document.getElementById('facturaFormaPago');
-            // var opcionFormaPagoSeleccionada = '';
-
-            // for (var i = 0; i < opcionFormaPago.options.length; i++) {
-            //     if (opcionFormaPago.options[i].selected === true) {
-            //         opcionFormaPagoSeleccionada = opcionFormaPago.options[i]
-            //         return;
-            //     }
             // }
 
             if (this.formaPago === '')
@@ -604,12 +594,14 @@ export default {
             const params = {
                 Forma_Pago: this.formaPago
             }
+
             axios.put(`/ventas/cobrar/${item.id}`, params)
             .then(res => {
                 this.facturas[index].Estado = res.data.Estado;
                 this.facturas[index].Forma_Pago = res.data.Forma_Pago;
             })
             .then(res => {
+                this.actualizarEstadoMesa(index, 'LIBRE');
                 var boleta = document.getElementById(index);
                 boleta.style.display = "none";
                 this.calcularTotalVentasDelDia();
@@ -619,7 +611,6 @@ export default {
                 this.ocultarFacturadas();
             })
 
-            this.actualizarEstadoMesa(index, 'LIBRE');
             this.cobrarItem = '';
             this.cobrarIndex = '';
         },
@@ -632,13 +623,19 @@ export default {
             this.mesa.Estado = estado;
             const table = {
                 Estado: this.mesa.Estado,
-                texto: this.facturas[index].Descripcion
+                texto: this.facturas[index].Descripcion,
+                EstadoFactura: this.facturas[index].Estado
             }
             
+            // console.log('estado Factura ' + this.facturas[index].Estado); // si devuelve el estado
+
             axios.post('/ventas/restoreMesa', table)
             .then(res => {
+                // console.log('Resultado restoreMesa ' + res.data[0]); // devuelve un object
+                // console.log('Estado restoreMesa: ' + this.facturas[index].Estado); // no devuelve el estado
+
                 if (this.facturas[index].Estado ==='ANULADA' || this.facturas[index].Estado === 'FACTURADA'){
-                    console.log(res);
+                    console.log('entrada al if restoreMesa');
                     var containMesa = false;
                     this.mesas.forEach(element => {
                         if (element.id === res.data[0].id){
@@ -648,6 +645,10 @@ export default {
                     if (containMesa === false){
                         this.mesas.push(res.data[0]);
                         axios.put(`/ventas/updateEstadoMesa/${res.data[0].id}`, table)
+                        .then(res=> {
+                            console.log('entrada al if anulada facturada');
+                            console.log(res);
+                        })
                     }
                 }
                 else{
@@ -658,9 +659,14 @@ export default {
                         }
                     });
                     if (containMesa === true){
+                        console.log('mesa en else ' + res.data[0]);
                         const index = this.mesas.findIndex(mesa => mesa.id === res.data[0].id);
                         this.mesas.splice(index, 1);
                         axios.put(`/ventas/updateEstadoMesa/${res.data[0].id}`, table)
+                        .then(res=> {
+                            console.log('entrada al else anulada facturada');
+                            console.log(res);
+                        })
                     }
                 }
             })

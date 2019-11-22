@@ -17,7 +17,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-// Administración de Usuarios
+// Empleados
 Route::resource('/Empleado', 'EmpleadoController');
 
 Route::get('Empleado/Detalles/{id}', 'EmpleadoController@show')->name('Empleado.Detalles');
@@ -25,35 +25,6 @@ Route::get('Empleado/Detalles/{id}', 'EmpleadoController@show')->name('Empleado.
 Route::get('/Empleado/Editar/{id}', 'EmpleadoController@edit')->name('Empleado.Editar');
 
 Route::put('Empleado/Editar/{id}', 'EmpleadoController@update')->name('Empleado.Actualizar');
-
-// Route::resource('/Usuario', 'UsuarioController');
-
-// Route::get('/Usuario/Editar/{id}', 'UsuarioController@edit')->name('Usuario.Editar');
-
-// Route::put('/Usuario/Editar/{id}', 'UsuarioController@update')->name('Usuario.Actualizar');
-
-// // Administración de Cajas
-// Route::resource('/Caja', 'CajaController');
-
-// Route::get('/Caja/index', 'CajaController@index')->name('Caja.Index');
-
-// Route::get('/Caja/management', 'CajaController@manage')->name('Caja.Administrar');
-
-// // agregar route ->name('Caja.Administrar');
-
-// Route::get('Caja/Detalles/{id}', 'CajaController@show')->name('Caja.Detalles');
-
-// Route::post('/Caja/Crear/', 'CajaController@create')->name('Caja.Crear');
-
-// Route::get('/Caja/Editar/{id}', 'CajaController@edit')->name('Caja.Editar');
-
-// Route::put('/Caja/Editar/{id}', 'CajaController@update')->name('Caja.Actualizar');
-
-// Route::delete('/Caja/Eliminar/{id}', 'CajaController@destroy')->name('Caja.Eliminar');
-
-
-
-
 
 Route::get('/home', 'HomeController@index')->name('home');
 
@@ -99,19 +70,19 @@ Route::middleware(['auth'])->group(function(){
         ->middleware('has.permission:ventas.create');
     
     Route::put('ventas/update/{id}', 'SalesController@update')->name('ventas.update')
-        ->middleware('has.permission:ventas.update');
+        ->middleware('has.permission:ventas.edit');
         
     Route::put('ventas/{id}/updateState', 'SalesController@updateState')->name('ventas.updateState')
-        ->middleware('has.permission:ventas.updateState');
+        ->middleware('has.permission:ventas.edit');
 
     Route::put('ventas/updateDetail/{id}', 'SalesController@updateDetail')->name('ventas.updateDetail')
-        ->middleware('has.permission:ventas.update');
+        ->middleware('has.permission:ventas.edit');
 
     Route::put('ventas/destroy/{id}', 'SalesController@destroy')->name('ventas.destroy')
         ->middleware('has.permission:ventas.destroy');
 
     Route::put('ventas/cobrar/{id}', 'SalesController@cobrar')->name('ventas.update')
-        ->middleware('has.permission:ventas.update');
+        ->middleware('has.permission:ventas.edit');
 
     // Búsqueda de menu
     Route::post('ventas/getMenu', 'SalesController@getMenu')->name('ventas.getMenu')
@@ -130,13 +101,13 @@ Route::middleware(['auth'])->group(function(){
         ->middleware('has.permission:mesas.create');
 
     Route::put('ventas/updateMesa/{id}', 'SalesController@updateMesa')->name('ventas.updateMesa')
-        ->middleware('has.permission:ventas.update');
+        ->middleware('has.permission:mesas.edit');
     
     Route::put('ventas/updateEstadoMesa/{id}', 'SalesController@updateEstadoMesa')->name('ventas.updateEstadoMesa')
-        ->middleware('has.permission:ventas.update');
+        ->middleware('has.permission:mesas.edit');
     
     Route::post('ventas/restoreMesa', 'SalesController@restoreMesa')->name('ventas.restoreMesa')
-        ->middleware('has.permission:ventas.update');
+        ->middleware('has.permission:mesas.edit');
 
     // Mesas subsystem
     Route::get('mesas', 'MesaController@index')->name('mesas.index')
@@ -225,6 +196,5 @@ Route::middleware(['auth'])->group(function(){
         // ->middleware('has.permission:users.edit');
 
     // REPORTING
-    // Route::get('gastos-list-pdf', 'GastoController@showReport')->name('gastos.pdf');
     Route::get('gastos/showReport/{fechaInicio}/{fechaFin}', 'GastoController@showReport')->name('gastos.pdf');
 });

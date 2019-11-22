@@ -2497,11 +2497,6 @@ __webpack_require__.r(__webpack_exports__);
     guardar: function guardar() {
       var _this3 = this;
 
-      // Esta se llenará sí o sí al Seleccionar las Descripciones
-      // if (this.detalles.length <= 0 || this.factura.Descripcion === '') {
-      //     alert('Ingrese los detalles de la venta');
-      //     return;
-      // }
       if (this.detalles.length <= 0) {
         alert('Ingrese los detalles de la venta');
         return;
@@ -2515,6 +2510,7 @@ __webpack_require__.r(__webpack_exports__);
       this.factura.Descripcion = this.mesa.Descripcion + ' // Sector: ' + this.sector + ' // Mozo: ' + this.mozo;
       var params = {
         Descripcion: this.factura.Descripcion,
+        Estado: this.factura.Estado,
         Total: this.factura.Total,
         Caja_Id: this.factura.Caja_Id
       };
@@ -2530,8 +2526,9 @@ __webpack_require__.r(__webpack_exports__);
 
         _this3.detalles.forEach(function (element) {
           element.Factura_Id = res.data.id;
-          axios.post('/ventas/storeDetail', element);
-          _this3.detalles = [];
+          axios.post('/ventas/storeDetail', element).then(function (res) {
+            _this3.detalles = [];
+          });
         });
       }).then(function (res) {
         _this3.ocultarFacturadas();
@@ -2588,11 +2585,15 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       axios.put("/ventas/destroy/".concat(item.id)).then(function (res) {
-        if (_this5.facturas[index].Estado == 'EMITIDA') {
+        console.log(res);
+
+        if (_this5.facturas[index].Estado == 'EN EMISIÓN') {
           _this5.facturas[index].Estado = res.data.Estado;
           _this5.totalVentas -= _this5.facturas[index].Total;
           _this5.totalVentasFormateado = 'Total ventas del día: $' + _this5.totalVentas;
         }
+
+        _this5.actualizarEstadoMesa(index, 'LIBRE');
       });
     },
     cobrar: function cobrar(item, index) {
@@ -2603,14 +2604,6 @@ __webpack_require__.r(__webpack_exports__);
       // if (confirm('¿Está seguro que desea realizar el cobro?.') == false)
       // {
       //     return;
-      // }
-      // var opcionFormaPago = document.getElementById('facturaFormaPago');
-      // var opcionFormaPagoSeleccionada = '';
-      // for (var i = 0; i < opcionFormaPago.options.length; i++) {
-      //     if (opcionFormaPago.options[i].selected === true) {
-      //         opcionFormaPagoSeleccionada = opcionFormaPago.options[i]
-      //         return;
-      //     }
       // }
       if (this.formaPago === '') {
         alert('Debe especificar la forma de pago');
@@ -2624,6 +2617,8 @@ __webpack_require__.r(__webpack_exports__);
         _this6.facturas[index].Estado = res.data.Estado;
         _this6.facturas[index].Forma_Pago = res.data.Forma_Pago;
       }).then(function (res) {
+        _this6.actualizarEstadoMesa(index, 'LIBRE');
+
         var boleta = document.getElementById(index);
         boleta.style.display = "none";
 
@@ -2633,7 +2628,6 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (res) {
         _this6.ocultarFacturadas();
       });
-      this.actualizarEstadoMesa(index, 'LIBRE');
       this.cobrarItem = '';
       this.cobrarIndex = '';
     },
@@ -2648,11 +2642,15 @@ __webpack_require__.r(__webpack_exports__);
       this.mesa.Estado = estado;
       var table = {
         Estado: this.mesa.Estado,
-        texto: this.facturas[index].Descripcion
-      };
+        texto: this.facturas[index].Descripcion,
+        EstadoFactura: this.facturas[index].Estado
+      }; // console.log('estado Factura ' + this.facturas[index].Estado); // si devuelve el estado
+
       axios.post('/ventas/restoreMesa', table).then(function (res) {
+        // console.log('Resultado restoreMesa ' + res.data[0]); // devuelve un object
+        // console.log('Estado restoreMesa: ' + this.facturas[index].Estado); // no devuelve el estado
         if (_this7.facturas[index].Estado === 'ANULADA' || _this7.facturas[index].Estado === 'FACTURADA') {
-          console.log(res);
+          console.log('entrada al if restoreMesa');
           var containMesa = false;
 
           _this7.mesas.forEach(function (element) {
@@ -2664,7 +2662,10 @@ __webpack_require__.r(__webpack_exports__);
           if (containMesa === false) {
             _this7.mesas.push(res.data[0]);
 
-            axios.put("/ventas/updateEstadoMesa/".concat(res.data[0].id), table);
+            axios.put("/ventas/updateEstadoMesa/".concat(res.data[0].id), table).then(function (res) {
+              console.log('entrada al if anulada facturada');
+              console.log(res);
+            });
           }
         } else {
           var containMesa = false;
@@ -2676,13 +2677,18 @@ __webpack_require__.r(__webpack_exports__);
           });
 
           if (containMesa === true) {
+            console.log('mesa en else ' + res.data[0]);
+
             var _index = _this7.mesas.findIndex(function (mesa) {
               return mesa.id === res.data[0].id;
             });
 
             _this7.mesas.splice(_index, 1);
 
-            axios.put("/ventas/updateEstadoMesa/".concat(res.data[0].id), table);
+            axios.put("/ventas/updateEstadoMesa/".concat(res.data[0].id), table).then(function (res) {
+              console.log('entrada al else anulada facturada');
+              console.log(res);
+            });
           }
         }
       });
@@ -3181,6 +3187,7 @@ Vue.component('VueCtkDateTimePickerEnd', vue_ctk_date_time_picker__WEBPACK_IMPOR
         page: page
       };
       axios.post('/ventas/buscar', params).then(function (res) {
+        console.log(res);
         _this2.facturas = res.data.facturas.data;
         _this2.totalFinalFacturas = res.data.TotalFinalFacturas;
         _this2.totalFinalFacturasFormateado = 'Total final: $' + _this2.totalFinalFacturas; // Paginación
@@ -3189,7 +3196,8 @@ Vue.component('VueCtkDateTimePickerEnd', vue_ctk_date_time_picker__WEBPACK_IMPOR
 
         _this2.facturas.forEach(function (element) {
           if (element.Estado === 'FACTURADA') {
-            _this2.totalVentas += element.Total;
+            console.log(element);
+            _this2.totalVentas += parseFloat(element.Total);
           }
         });
 

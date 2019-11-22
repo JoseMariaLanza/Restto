@@ -2,6 +2,8 @@
 
 @section('content')
 <div class="container">
-    <ventas />
+    @can('ventas.index')
+        <ventas />
+    @endcan
 </div>
 @endsection

@@ -325,6 +325,7 @@ export default {
             }
             axios.post('/ventas/buscar', params)
             .then(res => {
+                console.log(res);
                 this.facturas = res.data.facturas.data;
                 this.totalFinalFacturas = res.data.TotalFinalFacturas;
                 this.totalFinalFacturasFormateado = 'Total final: $' + this.totalFinalFacturas;
@@ -333,7 +334,8 @@ export default {
                 this.pagination = res.data.pagination;
                 this.facturas.forEach(element => {
                 if(element.Estado === 'FACTURADA'){
-                    this.totalVentas += element.Total;
+                    console.log(element);
+                    this.totalVentas += parseFloat(element.Total);
                 }
                 })
                 this.totalVentasFormateado = 'Total de la página: $' + this.totalVentas;

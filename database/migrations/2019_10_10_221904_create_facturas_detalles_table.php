@@ -23,7 +23,8 @@ class CreateFacturasDetallesTable extends Migration
             $table->decimal('Cantidad', 20, 3);
             $table->decimal('Subtotal', 20, 2);
             $table->text('Descripcion');
-            $table->enum('Estado', ['EN PREPARACIÓN', 'PREPARADA', 'ENTREGADA', 'FACTURADA', 'ANULADA']);
+            // $table->enum('Estado', ['EN PREPARACIÓN', 'PREPARADA', 'ENTREGADA', 'FACTURADA', 'ANULADA']);
+            $table->enum('Estado', ['REGISTRADA', 'ANULADA']);
             $table->string('Campo_Extra_1')->nullable();
             $table->string('Campo_Extra_2')->nullable();
             $table->timestamps();

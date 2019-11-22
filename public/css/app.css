@@ -73,12 +73,6 @@ body {
   color: #212529;
   text-align: left;
   background-color: #f8fafc;
-  /* Imagen de fondo: a implementar en el futuro */
-  /* background: url('/images/parquet-background.jpg') no-repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  background-size: cover;
-  -o-background-size: cover; */
 }
 
 [tabindex="-1"]:focus {
@@ -591,8 +585,6 @@ pre code {
   padding-left: 15px;
   margin-right: auto;
   margin-left: auto;
-  /* Activar solo si se pone una imagen de fondo en body */
-  /* background-color: #f8fafc; */
 }
 
 @media (min-width: 576px) {

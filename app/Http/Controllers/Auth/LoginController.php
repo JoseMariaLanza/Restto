@@ -25,7 +25,13 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = 'ventas'; // 'Empleado/Detalles/{id}';
+    // protected $redirectTo = 'ventas'; // 'Empleado/Detalles/{id}';
+    // protected $redirectTo = 'Empleado/Detalles/{id}';
+    protected function redirectTo()
+    {
+        $userId = auth()->user()->id;
+        return '/Empleado/Detalles/'.$userId;
+    }
 
     /**
      * Create a new controller instance.

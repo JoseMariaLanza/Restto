@@ -26,13 +26,18 @@ class RegisterController extends Controller
     */
 
     use RegistersUsers;
-
     /**
      * Where to redirect users after registration.
      *
      * @var string
      */
-    protected $redirectTo = '/Empleado/Editar/{id}';
+    // protected $redirectTo = 'ventas'; // '/Empleado/Editar/{id}';
+    // protected $redirectTo = '/Empleado/Editar/{id}';
+    protected function redirectTo()
+    {
+        $userId = auth()->user()->id;
+        return '/Empleado/Editar/'.$userId;
+    }
 
     /**
      * Create a new controller instance.
@@ -77,10 +82,12 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return $this->usersManagement->crearUsuario([
+        $user =  $this->usersManagement->crearUsuario([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password'])
         ]);
+        $idUsuario = $user->id;
+        return $user;
     }
 }

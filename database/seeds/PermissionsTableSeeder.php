@@ -92,65 +92,59 @@ class PermissionsTableSeeder extends Seeder
             'slug'          => 'ventas.updateState',
             'description'   => 'Abrir o cerrar una caja del sistema',
         ]);
-
         Permission::create([
             'name'          => 'Visualizar ventas',
             'slug'          => 'ventas.index',
             'description'   => 'Puede visualizar las ventas realizadas',
         ]);
-
-        Permission::create([
-            'name'          => 'Anular facturas',
-            'slug'          => 'ventas.anular',
-            'description'   => 'Puede anular cualquier venta del sistema',
-        ]);
-
         Permission::create([
             'name'          => 'Ingresar una venta en el sistema',
-            'slug'          => 'ventas.destroy',
+            'slug'          => 'ventas.create',
             'description'   => 'Creación de facturas y detalles',
         ]);
-
+        Permission::create([
+            'name'          => 'Modificar una venta',
+            'slug'          => 'ventas.edit',
+            'description'   => 'Puede modificar cualquier venta del sistema',
+        ]);
+        Permission::create([
+            'name'          => 'Anular facturas',
+            'slug'          => 'ventas.destroy',
+            'description'   => 'Puede anular cualquier venta del sistema',
+        ]);
         Permission::create([
             'name'          => 'Visualizar mesas',
             'slug'          => 'mesas.index',
         ]);
-
         Permission::create([
             'name'          => 'Creación de mesas',
             'slug'          => 'mesas.create',
         ]);
-
         Permission::create([
             'name'          => 'Edición de mesa',
-            'slug'          => 'mesa.edit',
-            'description'   => 'Puede editar la descripción de la mesa',
+            'slug'          => 'mesas.edit',
+            'description'   => 'Puede editar las mesas',
         ]);
-
         Permission::create([
             'name'          => 'Eliminar mesa',
-            'slug'          => 'mesa.destroy',
+            'slug'          => 'mesas.destroy',
             'description'   => 'Puede eliminar una mesa',
         ]);
-
         Permission::create([
             'name'          => 'Visualizar menu',
             'slug'          => 'menu.index',
             'description'   => 'Puede ver los items que conforman el menú',
         ]);
-
         Permission::create([
             'name'          => 'Creación de item',
             'slug'          => 'menu.create',
             'description'   => 'Puede crear un item el cual forma parte de un menú',
         ]);
-
         Permission::create([
             'name'          => 'Eliminación de item',
             'slug'          => 'menu.destroy',
             'description'   => 'Puede eliminar un item el cual forma parte de un menú',
         ]);
-
         Permission::create([
             'name'          => 'Edición de item',
             'slug'          => 'menu.edit',
