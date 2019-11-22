@@ -104,6 +104,7 @@ class SalesController extends Controller
             if($caja->Terminal == gethostname())
             {
                 $fechaInicio = $caja->Fecha_Hora_Apertura;
+                $caja->Monto_Final = null;
                 // $request->fechaInicio = $fechaInicio;
                 // $fechaFin = $now->format('d/m/Y H:i:s');
                 // $request->fechaFin = $fechaFin;

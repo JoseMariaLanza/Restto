@@ -43,7 +43,7 @@
                                                     <span class="input-group-text">$</span>
                                                 </div>
                                             {{ Form::hidden('Monto_Inicial', null) }}
-                                            {{ Form::number('Monto_Final', null, [ 'class' => 'form-control', 'step' => '0.1', 'placeholder' => 'Monto final en caja', 'value' => "old('Monto_Final')" ]) }}                                        
+                                            {{ Form::number('Monto_Final', null, [ 'class' => 'form-control', 'step' => '0.1', 'placeholder' => 'Monto final', 'value' => "old('Monto_Final')" ]) }}
                                             </div>
                                         </div>
                                         @endif
