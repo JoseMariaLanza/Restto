@@ -388,7 +388,7 @@ export default {
         axios.get('/ventas/create')
         .then(res => {
             this.facturas = res.data;
-            console.log(this.facturas);
+            
             this.facturas.forEach(element => {
                 if(element.Estado === 'FACTURADA'){
                     this.totalVentas += element.Total;

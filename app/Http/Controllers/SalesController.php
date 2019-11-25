@@ -85,53 +85,69 @@ class SalesController extends Controller
         // o bien se muestra el formulario de apertura de caja, en el cual
         // se debe ingresar el monto inicial y el estado 'ABIERTA'
 
-        $cajas = Caja::where('Estado', 'CERRADA')->get();
-        if ($cajas != null)
-        {
-            foreach($cajas as $caja)
-            {
-                if($caja->Terminal == gethostname())
-                {
-                    return view('Ventas.Caja.partials.formAbrir', compact('caja'))
-                        ->with('mensaje', 'Debe abrir la caja para empezar a vender');
-                }
+        $caja = Caja::where('id', 1)->first();
+        if ($caja->Estado === 'CERRADA'){
+            return view('Ventas.Caja.partials.formAbrir', compact('caja'));
+        }
+        else{
+            $fechaInicio = $caja->Fecha_Hora_Apertura;
+            $caja->Monto_Final = null;
+            if($request->ajax()){
+                $facturas = $this->salesManagement->obtenerFacturasDelDia($fechaInicio)->get();
+                return $facturas;
+            }
+            else{
+                return view('Ventas.Crear', compact('caja'));
             }
         }
 
-        $cajas = Caja::where('Estado', 'ABIERTA')->get();
-        foreach($cajas as $caja)
-        {
-            if($caja->Terminal == gethostname())
-            {
-                $fechaInicio = $caja->Fecha_Hora_Apertura;
-                $caja->Monto_Final = null;
-                // $request->fechaInicio = $fechaInicio;
-                // $fechaFin = $now->format('d/m/Y H:i:s');
-                // $request->fechaFin = $fechaFin;
+        // $cajas = Caja::where('Estado', 'CERRADA')->get();
+        // if ($cajas != null)
+        // {
+        //     foreach($cajas as $caja)
+        //     {
+        //         if($caja->Terminal == gethostname())
+        //         {
+        //             return view('Ventas.Caja.partials.formAbrir', compact('caja'))
+        //                 ->with('mensaje', 'Debe abrir la caja para empezar a vender');
+        //         }
+        //     }
+        // }
 
-                if ($request->ajax()) //$request->ajax()) // ($request->isMethod('get') && $request->ajax())
-                {
-                    $facturas = $this->salesManagement->obtenerFacturasDelDia($fechaInicio)->get();
-                    // return[
-                    //     'paginate' => [
-                    //         'total' => $facturas->total(),
-                    //         'current_page' => $facturas->currentPage(),
-                    //         'per_page' => $facturas->perPage(),
-                    //         'last_page' => $facturas->lastPage(),
-                    //         'from' => $facturas->firstItem(),
-                    //         'to' => $facturas->lastPage()
-                    //     ],
-                    //     'facturas' => $facturas
-                    // ];
-                    return $facturas;
-                }
-                else
-                {
-                    return view('Ventas.Crear', compact('caja'));
-                }
+        // $cajas = Caja::where('Estado', 'ABIERTA')->get();
+        // foreach($cajas as $caja)
+        // {
+        //     if ($caja->id === 1)// if($caja->Terminal == gethostname())
+        //     {
+        //         $fechaInicio = $caja->Fecha_Hora_Apertura;
+        //         $caja->Monto_Final = null;
+        //         // $request->fechaInicio = $fechaInicio;
+        //         // $fechaFin = $now->format('d/m/Y H:i:s');
+        //         // $request->fechaFin = $fechaFin;
+
+        //         if ($request->ajax()) //$request->ajax()) // ($request->isMethod('get') && $request->ajax())
+        //         {
+        //             $facturas = $this->salesManagement->obtenerFacturasDelDia($fechaInicio)->get();
+        //             // return[
+        //             //     'paginate' => [
+        //             //         'total' => $facturas->total(),
+        //             //         'current_page' => $facturas->currentPage(),
+        //             //         'per_page' => $facturas->perPage(),
+        //             //         'last_page' => $facturas->lastPage(),
+        //             //         'from' => $facturas->firstItem(),
+        //             //         'to' => $facturas->lastPage()
+        //             //     ],
+        //             //     'facturas' => $facturas
+        //             // ];
+        //             return $facturas;
+        //         }
+        //         else
+        //         {
+        //             return view('Ventas.Crear', compact('caja'));
+        //         }
                 
-            }
-        }
+        //     }
+        // }
     }
 
     /**

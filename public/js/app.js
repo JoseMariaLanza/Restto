@@ -2410,7 +2410,6 @@ __webpack_require__.r(__webpack_exports__);
 
     axios.get('/ventas/create').then(function (res) {
       _this.facturas = res.data;
-      console.log(_this.facturas);
 
       _this.facturas.forEach(function (element) {
         if (element.Estado === 'FACTURADA') {
